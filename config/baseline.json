@@ -24,5 +24,51 @@
     "per_contour_iterations": 250,
     "per_contour_min_points": 20,
     "per_contour_min_inlier_ratio": 0.35
+  },
+  "inner_pair_selector": {
+    "area_ratio_min": 1.2,
+    "area_ratio_max": 4.0,
+    "center_distance_major_ratio": 0.12,
+    "axis_ratio_difference": 0.05,
+    "min_quality_ratio": 0.1,
+    "max_candidates": 10
+  },
+  "zhang2019_arc": {
+    "min_arc_points": 8,
+    "max_arcs": 40,
+    "group_sizes": [3],
+    "min_distinct_quadrants": 3,
+    "max_arc_combinations": 600,
+    "max_fit_points": 500,
+    "min_axis_px": 8.0,
+    "min_axis_ratio": 0.10,
+    "max_axis_diagonal_ratio": 1.0,
+    "center_margin_ratio": 0.0,
+    "edge_distance_threshold_px": 2.5,
+    "min_group_fit_ratio": 0.55,
+    "validation_samples": 360,
+    "angular_bins": 72,
+    "min_edge_density": 0.12,
+    "min_angular_coverage": 0.12,
+    "polarity_samples": 96,
+    "polarity_offset_ratio": 0.035,
+    "polarity_weight": 0.20,
+    "duplicate_center_ratio": 0.04,
+    "duplicate_axis_ratio": 0.06,
+    "max_candidates": 20
+  },
+  "zhang2019_inner_selector": {
+    "max_considered_candidates": 20,
+    "area_ratio_min": 1.03,
+    "area_ratio_max": 4.0,
+    "center_distance_major_ratio": 0.10,
+    "axis_ratio_difference": 0.15,
+    "min_quality_ratio": 0.05,
+    "min_pair_to_top_score": 0.25
+  },
+  "aamed": {
+    "theta_fsa": 1.0471975512,
+    "length_fsa": 3.4,
+    "validation_threshold": 0.77
   }
 }

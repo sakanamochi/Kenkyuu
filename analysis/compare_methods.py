@@ -5,7 +5,6 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-METHODS = ("contour_fit", "canny_ransac")
 
 
 def resolve_project_path(value: str) -> Path:
@@ -16,13 +15,20 @@ def resolve_project_path(value: str) -> Path:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="楕円検出方式の結果を比較する")
     parser.add_argument("--dataset", required=True)
+    parser.add_argument(
+        "--methods",
+        nargs="+",
+        default=("contour_fit", "canny_ransac"),
+    )
     return parser.parse_args()
 
 
 def main() -> None:
-    dataset_dir = resolve_project_path(parse_args().dataset)
+    args = parse_args()
+    dataset_dir = resolve_project_path(args.dataset)
+    methods = tuple(args.methods)
     rows_by_method = {}
-    for method in METHODS:
+    for method in methods:
         with (dataset_dir / "results" / method / "summary.csv").open(
             encoding="utf-8-sig", newline=""
         ) as file:
@@ -33,13 +39,15 @@ def main() -> None:
     sample_ids = sorted(set.intersection(*(set(rows) for rows in rows_by_method.values())))
     comparison_rows = []
     for sample_id in sample_ids:
-        reference = rows_by_method[METHODS[0]][sample_id]
+        reference = rows_by_method[methods[0]][sample_id]
         row = {
             "sample_id": sample_id,
             "camera_id": reference["camera_id"],
             "lighting_id": reference["lighting_id"],
+            "degradation": reference.get("degradation", "clean"),
+            "severity": reference.get("severity", "0"),
         }
-        for method in METHODS:
+        for method in methods:
             result = rows_by_method[method][sample_id]
             row[f"{method}_status"] = result["status"]
             row[f"{method}_match"] = result["top1_matches_ground_truth"]
@@ -59,7 +67,7 @@ def main() -> None:
         method: json.loads(
             (results_dir / method / "summary.json").read_text(encoding="utf-8")
         )
-        for method in METHODS
+        for method in methods
     }
     (results_dir / "comparison.json").write_text(
         json.dumps(summaries, ensure_ascii=False, indent=2), encoding="utf-8"

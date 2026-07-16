@@ -1,0 +1,81 @@
+{
+  "experiment_id": "literature_baseline_comparison_v1",
+  "baseline_config": "config/baseline.json",
+  "cnn_config": "config/research_experiment.json",
+  "output_dir": "output/experiments/paf_second_stage_v1/literature_baselines",
+  "primary_methods": [
+    "zhang2019_arc_reproduction",
+    "cnn_ransac"
+  ],
+  "ablation_methods": [
+    "contour_fit",
+    "canny_ransac",
+    "canny_ransac_inner_pair"
+  ],
+  "reference": {
+    "title": "Real-Time Docking Ring Detection Based on the Geometrical Shape for an On-Orbit Spacecraft",
+    "authors": ["Limin Zhang", "Wang Pan", "Xianghua Ma"],
+    "journal": "Sensors",
+    "year": 2019,
+    "volume": 19,
+    "issue": 23,
+    "article": 5243,
+    "doi": "10.3390/s19235243",
+    "url": "https://doi.org/10.3390/s19235243",
+    "implementation_note": "著者コードの移植ではなく、論文の処理構成を参考にした再現実装"
+  },
+  "methods": {
+    "contour_fit": "Contour fit（補足）",
+    "canny_ransac": "Canny + RANSAC",
+    "canny_ransac_inner_pair": "Canny + RANSAC + 内周prior",
+    "zhang2019_arc_reproduction": "Zhang 2019型（再現実装）",
+    "cnn_ransac": "CNN + weighted RANSAC",
+    "aamed": "AAMED（任意）"
+  },
+  "datasets": [
+    {
+      "id": "ood",
+      "label": "OOD CG",
+      "dataset_dir": "output/datasets/research_ood_base_v1",
+      "split": "ood_test",
+      "results": {
+        "contour_fit": "contour_fit_ood",
+        "canny_ransac": "canny_ransac_ood",
+        "canny_ransac_inner_pair": "canny_ransac_inner_pair_ood",
+        "zhang2019_arc_reproduction": "zhang2019_arc_ood",
+        "cnn_ransac": "cnn_ransac_support_ood",
+        "aamed": "aamed_ood"
+      },
+      "representative_samples": [
+        "camera_t010_a045_d039.0_o00__light_t020_a060_e01.5__bg_space",
+        "camera_t030_a045_d039.0_o00__light_t020_a060_e01.5__bg_space",
+        "camera_t050_a045_d039.0_o00__light_t020_a060_e01.5__bg_space",
+        "camera_t067_a045_d039.0_o00__light_t020_a060_e01.5__bg_earth",
+        "camera_t082_a045_d039.0_o00__light_t020_a060_e01.5__bg_space"
+      ],
+      "representative_titles": ["傾斜10°", "傾斜30°", "傾斜50°", "傾斜67°・地球", "傾斜82°"]
+    },
+    {
+      "id": "diagnostic",
+      "label": "撮像・遮蔽診断",
+      "dataset_dir": "output/datasets/paf_diagnostics_v1",
+      "split": "diagnostic_test",
+      "results": {
+        "contour_fit": "contour_fit_diagnostic",
+        "canny_ransac": "canny_ransac_diagnostic",
+        "canny_ransac_inner_pair": "canny_ransac_inner_pair_diagnostic",
+        "zhang2019_arc_reproduction": "zhang2019_arc_diagnostic",
+        "cnn_ransac": "cnn_ransac_support_diagnostic",
+        "aamed": "aamed_diagnostic"
+      },
+      "representative_samples": [
+        "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__clean_s0000_v00",
+        "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__black_rectangle_s0250_v01",
+        "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__sensor_whiteout_s1000_v08",
+        "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__sensor_black_crush_s0250_v09",
+        "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__lens_flare_s1000_v16"
+      ],
+      "representative_titles": ["Clean", "遮蔽25%", "白飛び100%", "黒つぶれ25%", "フレア100%"]
+    }
+  ]
+}

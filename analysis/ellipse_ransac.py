@@ -57,6 +57,28 @@ def _ellipse_perimeter(ellipse) -> float:
     )
 
 
+def _ransac_hypothesis_score(
+    consensus_weight: float,
+    ellipse,
+    coverage: float,
+    settings: dict,
+) -> float:
+    """支持量・角度被覆・周長補正から仮説スコアを計算する。
+
+    perimeter_power=1.0 は従来の支持密度、0.0 はCNN尤度の総支持量を使う。
+    中間値は小楕円優遇を連続的に弱めるアブレーション用である。
+    """
+    perimeter_power = float(settings.get("perimeter_power", 1.0))
+    if not 0.0 <= perimeter_power <= 1.0:
+        raise ValueError("perimeter_powerは0.0から1.0の範囲で指定してください")
+    perimeter = max(_ellipse_perimeter(ellipse), 1e-9)
+    return float(
+        consensus_weight
+        / (perimeter**perimeter_power)
+        * coverage
+    )
+
+
 def _is_valid_ellipse(ellipse, image_shape, settings: dict) -> bool:
     (cx, cy), (axis_1, axis_2), angle = ellipse
     values = np.array([cx, cy, axis_1, axis_2, angle], dtype=np.float64)
@@ -120,8 +142,9 @@ def fit_ellipse_ransac(
             continue
         coverage = _angular_coverage(points[inlier_mask], ellipse, angular_bins)
         consensus_weight = float(weights[inlier_mask].sum())
-        support_density = consensus_weight / max(_ellipse_perimeter(ellipse), 1e-9)
-        score = support_density * coverage
+        score = _ransac_hypothesis_score(
+            consensus_weight, ellipse, coverage, settings
+        )
         if best is None or score > best["score"]:
             best = {
                 "ellipse": ellipse,
@@ -168,11 +191,10 @@ def fit_ellipse_ransac(
         "point_count": len(points),
         "angular_coverage": coverage,
         "mean_inlier_distance_px": float(np.mean(distances[inlier_mask])),
-        "score": float(
-            weights[inlier_mask].sum()
-            / max(_ellipse_perimeter(ellipse), 1e-9)
-            * coverage
+        "score": _ransac_hypothesis_score(
+            float(weights[inlier_mask].sum()), ellipse, coverage, settings
         ),
+        "perimeter_power": float(settings.get("perimeter_power", 1.0)),
     }
 
 
@@ -235,3 +257,78 @@ def fit_contour_ransac_candidates(
 
     candidates.sort(key=lambda item: item["selection_score"], reverse=True)
     return candidates
+
+
+def _ellipse_area_proxy(ellipse) -> float:
+    return float(ellipse[1][0] * ellipse[1][1])
+
+
+def _ellipse_axis_ratio(ellipse) -> float:
+    axis_1, axis_2 = ellipse[1]
+    return float(min(axis_1, axis_2) / max(axis_1, axis_2))
+
+
+def select_paf_inner_candidate(candidates: list[dict], settings: dict) -> dict | None:
+    """同心・相似な二重輪郭では小さい側を内周候補として選ぶ。
+
+    幾何品質だけでは内外の意味を区別できないため、これはPAFが同心二重輪郭を
+    持つという明示的なCAD事前知識を使う。条件を満たす対が無ければ従来順位へ戻る。
+    """
+    if not candidates:
+        return None
+    maximum = int(settings.get("max_candidates", 10))
+    considered = candidates[:maximum]
+    best_pair = None
+    for smaller in considered:
+        smaller_area = _ellipse_area_proxy(smaller["ellipse"])
+        smaller_center = np.asarray(smaller["ellipse"][0], dtype=np.float64)
+        for larger in considered:
+            larger_area = _ellipse_area_proxy(larger["ellipse"])
+            if larger_area <= smaller_area:
+                continue
+            area_ratio = larger_area / smaller_area
+            if not (
+                float(settings["area_ratio_min"])
+                <= area_ratio
+                <= float(settings["area_ratio_max"])
+            ):
+                continue
+            larger_center = np.asarray(larger["ellipse"][0], dtype=np.float64)
+            larger_major = max(larger["ellipse"][1])
+            center_ratio = float(np.linalg.norm(smaller_center - larger_center) / larger_major)
+            if center_ratio > float(settings["center_distance_major_ratio"]):
+                continue
+            shape_difference = abs(
+                _ellipse_axis_ratio(smaller["ellipse"])
+                - _ellipse_axis_ratio(larger["ellipse"])
+            )
+            if shape_difference > float(settings["axis_ratio_difference"]):
+                continue
+            quality_ratio = min(
+                smaller["selection_score"], larger["selection_score"]
+            ) / max(smaller["selection_score"], larger["selection_score"], 1e-9)
+            if quality_ratio < float(settings["min_quality_ratio"]):
+                continue
+            compatibility = (
+                1.0 - center_ratio / float(settings["center_distance_major_ratio"])
+            ) * (1.0 - shape_difference / float(settings["axis_ratio_difference"]))
+            pair_score = (
+                min(smaller["selection_score"], larger["selection_score"])
+                * compatibility
+            )
+            if best_pair is None or pair_score > best_pair[0]:
+                best_pair = (
+                    pair_score,
+                    smaller,
+                    {
+                        "area_ratio": area_ratio,
+                        "center_distance_major_ratio": center_ratio,
+                        "axis_ratio_difference": shape_difference,
+                        "quality_ratio": quality_ratio,
+                        "pair_score": pair_score,
+                    },
+                )
+    selected = dict(best_pair[1] if best_pair else candidates[0])
+    selected["selection_mode"] = "inner_pair_prior" if best_pair else "quality_fallback"
+    selected["inner_pair"] = best_pair[2] if best_pair else None
+    return selected

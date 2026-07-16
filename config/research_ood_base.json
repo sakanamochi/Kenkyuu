@@ -1,0 +1,61 @@
+{
+  "experiment_id": "research_ood_base_v1",
+  "model_path": "3d_models/1194M_3/1194M_3.obj",
+  "output_dir": "output/datasets/research_ood_base_v1",
+  "default_split": "ood_test",
+  "sample_conditions": {"degradation": "clean", "severity": 0.0},
+  "save_preview_blend": true,
+  "normalize_model_axes": true,
+  "lighting_direction_mode": "object_spherical",
+  "render": {
+    "engine": "BLENDER_EEVEE",
+    "width": 480,
+    "height": 480
+  },
+  "world": {
+    "color": [0.0, 0.0, 0.0],
+    "strength": 0.0
+  },
+  "target_ring": {
+    "description": "PAF内周面のカメラ側エッジ",
+    "z": 4.73574,
+    "radius": 5.41875,
+    "tolerance": 0.0001,
+    "expected_vertex_count": 88
+  },
+  "materials": {
+    "アルミニウム_-_サテン": {
+      "base_color": [0.62, 0.65, 0.70],
+      "metallic": 0.85,
+      "roughness": 0.32
+    },
+    "PEEK": {
+      "base_color": [0.38, 0.22, 0.09],
+      "metallic": 0.0,
+      "roughness": 0.45
+    }
+  },
+  "camera_grid": {
+    "tilt_deg": [10, 30, 50, 67, 82],
+    "azimuth_deg": [45, 135, 225, 315],
+    "collapse_axis_azimuth": false,
+    "distances": [39.0],
+    "targets": [[0.0, 0.0, 0.0]],
+    "lens_mm": 55.0
+  },
+  "lighting": [
+    {"id": "light_t020_a060_e01.5", "tilt_deg": 20.0, "azimuth_deg": 60.0, "angle_deg": 0.53, "energy": 1.5},
+    {"id": "light_t020_a180_e05.0", "tilt_deg": 20.0, "azimuth_deg": 180.0, "angle_deg": 0.53, "energy": 5.0},
+    {"id": "light_t060_a060_e03.0", "tilt_deg": 60.0, "azimuth_deg": 60.0, "angle_deg": 0.53, "energy": 3.0},
+    {"id": "light_t060_a180_e01.5", "tilt_deg": 60.0, "azimuth_deg": 180.0, "angle_deg": 0.53, "energy": 1.5},
+    {"id": "light_t060_a300_e05.0", "tilt_deg": 60.0, "azimuth_deg": 300.0, "angle_deg": 0.53, "energy": 5.0},
+    {"id": "light_t085_a060_e05.0", "tilt_deg": 85.0, "azimuth_deg": 60.0, "angle_deg": 0.53, "energy": 5.0},
+    {"id": "light_t085_a180_e03.0", "tilt_deg": 85.0, "azimuth_deg": 180.0, "angle_deg": 0.53, "energy": 3.0},
+    {"id": "light_t085_a300_e01.5", "tilt_deg": 85.0, "azimuth_deg": 300.0, "angle_deg": 0.53, "energy": 1.5}
+  ],
+  "backgrounds": [
+    {"id": "space", "type": "space"},
+    {"id": "earth", "type": "earth", "depth": 46.0, "radius": 22.0, "offset": [5.0, -2.0]},
+    {"id": "moon", "type": "moon", "depth": 52.0, "radius": 17.0, "offset": [-15.0, 6.0]}
+  ]
+}

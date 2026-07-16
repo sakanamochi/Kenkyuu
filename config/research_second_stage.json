@@ -1,0 +1,18 @@
+{
+  "experiment_id": "paf_second_stage_v1",
+  "base_config": "config/research_experiment.json",
+  "ood_render_config": "config/research_ood_base.json",
+  "ood_dataset_dir": "output/datasets/research_ood_base_v1",
+  "artifacts_dir": "output/experiments/paf_second_stage_v1",
+  "diagnostics": {
+    "dataset_dir": "output/datasets/paf_diagnostics_v1",
+    "effects": ["black_rectangle", "sensor_whiteout", "sensor_black_crush", "lens_flare"],
+    "severities": [0.25, 0.50, 0.75, 1.00]
+  },
+  "model_ablation": {
+    "base_channels": [2, 4, 8, 16],
+    "seeds": [20260716, 20260717, 20260718],
+    "epochs": 18,
+    "evaluation_splits": ["validation", "ood_test"]
+  }
+}

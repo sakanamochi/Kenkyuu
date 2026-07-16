@@ -17,6 +17,7 @@ def parse_args() -> argparse.Namespace:
     arguments = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else []
     parser = argparse.ArgumentParser(description="PAFの条件付きCGデータセットを生成する")
     parser.add_argument("--config", required=True, help="実験設定JSON")
+    parser.add_argument("--limit-samples", type=int, default=None, help="描画確認用の上限")
     return parser.parse_args(arguments)
 
 
@@ -47,20 +48,28 @@ def expand_camera_settings(config: dict) -> list[dict]:
         return config["cameras"]
     grid = config["camera_grid"]
     settings = []
+    distances = grid["distances"] if "distances" in grid else [grid["distance"]]
+    targets = grid.get("targets", [grid.get("target", [0.0, 0.0, 0.0])])
     for tilt_deg in grid["tilt_deg"]:
         azimuths = grid["azimuth_deg"]
         if float(tilt_deg) == 0.0 and grid.get("collapse_axis_azimuth", True):
             azimuths = azimuths[:1]
-        for azimuth_deg in azimuths:
+        for azimuth_deg, distance, target_index in itertools.product(
+            azimuths, distances, range(len(targets))
+        ):
             direction = spherical_direction(float(tilt_deg), float(azimuth_deg))
-            location = direction * float(grid["distance"])
+            location = direction * float(distance)
+            target = targets[target_index]
             settings.append(
                 {
-                    "id": f"camera_t{int(tilt_deg):03d}_a{int(azimuth_deg):03d}",
+                    "id": (
+                        f"camera_t{int(tilt_deg):03d}_a{int(azimuth_deg):03d}"
+                        f"_d{float(distance):05.1f}_o{target_index:02d}"
+                    ),
                     "tilt_deg": float(tilt_deg),
                     "azimuth_deg": float(azimuth_deg),
                     "location": list(location),
-                    "target": grid.get("target", [0.0, 0.0, 0.0]),
+                    "target": target,
                     "lens_mm": float(grid["lens_mm"]),
                 }
             )
@@ -71,18 +80,26 @@ def expand_lighting_settings(config: dict) -> list[dict]:
     if "lighting_grid" not in config:
         return config["lighting"]
     grid = config["lighting_grid"]
-    return [
-        {
-            "id": f"light_t{int(tilt_deg):03d}_a{int(azimuth_deg):03d}",
-            "tilt_deg": float(tilt_deg),
-            "azimuth_deg": float(azimuth_deg),
-            "angle_deg": float(grid.get("angle_deg", 0.0)),
-            "energy": float(grid["energy"]),
-        }
-        for tilt_deg, azimuth_deg in itertools.product(
-            grid["tilt_deg"], grid["azimuth_deg"]
-        )
-    ]
+    settings = []
+    energies = grid["energies"] if "energies" in grid else [grid["energy"]]
+    for tilt_deg in grid["tilt_deg"]:
+        azimuths = grid["azimuth_deg"]
+        if float(tilt_deg) == 0.0 and grid.get("collapse_axis_azimuth", True):
+            azimuths = azimuths[:1]
+        for azimuth_deg, energy in itertools.product(azimuths, energies):
+            settings.append(
+                {
+                    "id": (
+                        f"light_t{int(tilt_deg):03d}_a{int(azimuth_deg):03d}"
+                        f"_e{float(energy):04.1f}"
+                    ),
+                    "tilt_deg": float(tilt_deg),
+                    "azimuth_deg": float(azimuth_deg),
+                    "angle_deg": float(grid.get("angle_deg", 0.0)),
+                    "energy": float(energy),
+                }
+            )
+    return settings
 
 
 def configure_sun(
@@ -224,6 +241,88 @@ def apply_materials(settings: dict) -> None:
         principled.inputs["Roughness"].default_value = float(values["roughness"])
 
 
+def _planet_material(name: str, colors: list[list[float]], scale: float):
+    material = bpy.data.materials.new(name=name)
+    material.use_nodes = True
+    nodes = material.node_tree.nodes
+    links = material.node_tree.links
+    nodes.clear()
+    output = nodes.new("ShaderNodeOutputMaterial")
+    principled = nodes.new("ShaderNodeBsdfPrincipled")
+    noise = nodes.new("ShaderNodeTexNoise")
+    ramp = nodes.new("ShaderNodeValToRGB")
+    noise.inputs["Scale"].default_value = float(scale)
+    noise.inputs["Detail"].default_value = 7.0
+    noise.inputs["Roughness"].default_value = 0.72
+    ramp.color_ramp.elements.remove(ramp.color_ramp.elements[1])
+    positions = [0.0, 0.38, 0.58, 0.78]
+    for index, (position, color) in enumerate(zip(positions, colors)):
+        element = ramp.color_ramp.elements[0] if index == 0 else ramp.color_ramp.elements.new(position)
+        element.position = position
+        element.color = (*color, 1.0)
+    principled.inputs["Roughness"].default_value = 0.9
+    if "Emission Color" in principled.inputs:
+        links.new(ramp.outputs["Color"], principled.inputs["Emission Color"])
+        principled.inputs["Emission Strength"].default_value = 0.35
+    links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], principled.inputs["Base Color"])
+    links.new(principled.outputs["BSDF"], output.inputs["Surface"])
+    return material
+
+
+def create_background_object():
+    """実写素材に依存しないEarth/Moon風の背景天体を作る。"""
+    bpy.ops.mesh.primitive_uv_sphere_add(segments=64, ring_count=32, radius=1.0)
+    background = bpy.context.object
+    background.name = "PROCEDURAL_BACKGROUND_BODY"
+    background.hide_render = True
+    try:
+        background.visible_shadow = False
+    except AttributeError:
+        pass
+    earth = _planet_material(
+        "BACKGROUND_EARTH",
+        [[0.01, 0.03, 0.12], [0.02, 0.18, 0.55], [0.05, 0.42, 0.12], [0.82, 0.86, 0.78]],
+        3.2,
+    )
+    moon = _planet_material(
+        "BACKGROUND_MOON",
+        [[0.025, 0.025, 0.03], [0.12, 0.12, 0.13], [0.35, 0.34, 0.33], [0.68, 0.66, 0.62]],
+        5.5,
+    )
+    background.data.materials.append(earth)
+    return background, {"earth": earth, "moon": moon}
+
+
+def configure_background(
+    background,
+    materials: dict,
+    setting: dict,
+    camera,
+    target: Vector,
+) -> None:
+    background_type = setting.get("type", "space")
+    background.hide_render = background_type == "space"
+    if background.hide_render:
+        return
+    if background_type not in materials:
+        raise ValueError(f"未対応の背景です: {background_type}")
+    view_direction = (target - camera.location).normalized()
+    camera_rotation = camera.matrix_world.to_quaternion()
+    right = camera_rotation @ Vector((1.0, 0.0, 0.0))
+    up = camera_rotation @ Vector((0.0, 1.0, 0.0))
+    offset = setting.get("offset", [0.0, 0.0])
+    background.location = (
+        target
+        + view_direction * float(setting.get("depth", 45.0))
+        + right * float(offset[0])
+        + up * float(offset[1])
+    )
+    radius = float(setting.get("radius", 20.0))
+    background.scale = (radius, radius, radius)
+    background.data.materials[0] = materials[background_type]
+
+
 def project_target_points(scene, camera, target_object, target_indices) -> list[list[float]]:
     bpy.context.view_layer.update()
     points = []
@@ -283,18 +382,33 @@ def main() -> None:
     scene.camera = camera
     bpy.ops.object.light_add(type="SUN")
     sun = bpy.context.object
+    background_object, background_materials = create_background_object()
 
     camera_settings = expand_camera_settings(config)
     lighting_settings = expand_lighting_settings(config)
+    background_settings = config.get("backgrounds", [{"id": "space", "type": "space"}])
+    include_background_id = "backgrounds" in config
     samples = []
-    for camera_setting, lighting_setting in itertools.product(
-        camera_settings, lighting_settings
+    for camera_setting, lighting_setting, background_setting in itertools.product(
+        camera_settings, lighting_settings, background_settings
     ):
+        if args.limit_samples is not None and len(samples) >= args.limit_samples:
+            break
         sample_id = f"{camera_setting['id']}__{lighting_setting['id']}"
+        if include_background_id:
+            sample_id += f"__bg_{background_setting['id']}"
         camera.location = Vector(camera_setting["location"])
         camera.data.lens = float(camera_setting["lens_mm"])
         target = Vector(camera_setting.get("target", [0.0, 0.0, 0.0]))
         look_at(camera, target)
+        bpy.context.view_layer.update()
+        configure_background(
+            background_object,
+            background_materials,
+            background_setting,
+            camera,
+            target,
+        )
 
         ray_direction = configure_sun(
             sun,
@@ -329,6 +443,8 @@ def main() -> None:
                     ),
                     "ray_direction": ray_direction,
                 },
+                **({"background": background_setting} if include_background_id else {}),
+                **config.get("sample_conditions", {}),
             },
         }
         label_path.write_text(
@@ -342,6 +458,7 @@ def main() -> None:
                 "image": image_path.relative_to(dataset_dir).as_posix(),
                 "label": label_path.relative_to(dataset_dir).as_posix(),
                 "conditions": label["conditions"],
+                **({"split": config["default_split"]} if "default_split" in config else {}),
             }
         )
         print(f"Generated: {sample_id}")
@@ -352,6 +469,7 @@ def main() -> None:
         "target_ring": config["target_ring"],
         "camera_count": len(camera_settings),
         "lighting_count": len(lighting_settings),
+        "background_count": len(background_settings),
         "sample_count": len(samples),
         "samples": samples,
     }

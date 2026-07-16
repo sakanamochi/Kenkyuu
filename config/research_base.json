@@ -1,14 +1,14 @@
 {
-  "experiment_id": "factorial_v1",
+  "experiment_id": "research_base_v1",
   "model_path": "3d_models/1194M_3/1194M_3.obj",
-  "output_dir": "output/datasets/factorial_v1",
+  "output_dir": "output/datasets/research_base_v1",
   "save_preview_blend": true,
   "normalize_model_axes": true,
   "lighting_direction_mode": "object_spherical",
   "render": {
     "engine": "BLENDER_EEVEE",
-    "width": 640,
-    "height": 640
+    "width": 480,
+    "height": 480
   },
   "world": {
     "color": [0.0, 0.0, 0.0],
@@ -34,16 +34,21 @@
     }
   },
   "camera_grid": {
-    "tilt_deg": [0, 15, 30, 45, 60, 75],
+    "tilt_deg": [0, 20, 40, 60, 75],
     "azimuth_deg": [0, 90, 180, 270],
     "collapse_axis_azimuth": true,
-    "distance": 41.0,
-    "target": [0.0, 0.0, 0.0],
+    "distances": [34.0, 44.0],
+    "targets": [
+      [0.0, 0.0, 0.0],
+      [-1.5, 0.0, 0.0],
+      [1.5, 0.0, 0.0]
+    ],
     "lens_mm": 55.0
   },
   "lighting_grid": {
-    "tilt_deg": [0, 15, 30, 45, 60, 75],
-    "azimuth_deg": [0],
+    "tilt_deg": [0, 45, 75],
+    "azimuth_deg": [0, 120, 240],
+    "collapse_axis_azimuth": true,
     "energy": 3.0,
     "angle_deg": 0.0
   }

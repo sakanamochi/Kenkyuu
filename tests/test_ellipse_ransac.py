@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from analysis.ellipse_baseline import evaluate_ellipses
-from analysis.ellipse_ransac import fit_ellipse_ransac
+from analysis.ellipse_ransac import _ransac_hypothesis_score, fit_ellipse_ransac
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -90,6 +90,34 @@ class EllipseRansacTest(unittest.TestCase):
         evaluation = evaluate_ellipses(result["ellipse"], expected, (320, 480, 3))
         self.assertGreater(evaluation["ellipse_iou"], 0.85)
 
+    def test_perimeter_power_controls_small_ellipse_preference(self) -> None:
+        small = ((100.0, 100.0), (30.0, 12.0), 0.0)
+        large = ((100.0, 100.0), (120.0, 48.0), 0.0)
+
+        density_small = _ransac_hypothesis_score(
+            100.0, small, 1.0, {"perimeter_power": 1.0}
+        )
+        density_large = _ransac_hypothesis_score(
+            100.0, large, 1.0, {"perimeter_power": 1.0}
+        )
+        support_small = _ransac_hypothesis_score(
+            100.0, small, 1.0, {"perimeter_power": 0.0}
+        )
+        support_large = _ransac_hypothesis_score(
+            100.0, large, 1.0, {"perimeter_power": 0.0}
+        )
+
+        self.assertGreater(density_small, density_large)
+        self.assertAlmostEqual(support_small, support_large)
+
+    def test_perimeter_power_rejects_invalid_values(self) -> None:
+        with self.assertRaises(ValueError):
+            _ransac_hypothesis_score(
+                100.0,
+                ((100.0, 100.0), (30.0, 12.0), 0.0),
+                1.0,
+                {"perimeter_power": 1.1},
+            )
 
 if __name__ == "__main__":
     unittest.main()

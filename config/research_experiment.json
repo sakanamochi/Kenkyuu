@@ -1,0 +1,53 @@
+{
+  "experiment_id": "paf_robustness_v3",
+  "base_render_config": "config/research_base.json",
+  "base_dataset_dir": "output/datasets/research_base_v1",
+  "stress_dataset_dir": "output/datasets/paf_robustness_v3",
+  "artifacts_dir": "output/experiments/paf_robustness_v3",
+  "seed": 20260716,
+  "input_size": 256,
+  "split": {
+    "group_key": "camera_id",
+    "train_fraction": 0.70,
+    "validation_fraction": 0.15
+  },
+  "degradations": {
+    "types": ["occlusion", "whiteout", "black_crush"],
+    "train_variants_per_base": 3,
+    "train_severity_min": 0.10,
+    "train_severity_max": 0.80,
+    "validation_severities": [0.30, 0.60],
+    "test_severities": [0.20, 0.40, 0.60, 0.80, 0.90, 1.00]
+  },
+  "model": {
+    "base_channels": 16
+  },
+  "training": {
+    "epochs": 12,
+    "batch_size": 16,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "positive_weight": 12.0,
+    "dice_weight": 1.0,
+    "num_workers": 0
+  },
+  "cnn_ransac": {
+    "probability_threshold": 0.35,
+    "max_points": 6000,
+    "iterations": 450,
+    "distance_threshold_px": 2.0,
+    "min_inliers": 45,
+    "min_axis_px": 6.0,
+    "min_axis_ratio": 0.10,
+    "max_axis_diagonal_ratio": 2.0,
+    "angular_bins": 72,
+    "refine_iterations": 3,
+    "perimeter_power": 0.0,
+    "random_seed": 20260716
+  },
+  "evaluation": {
+    "split": "test",
+    "success_ellipse_iou": 0.80,
+    "methods": ["zhang2019_arc_reproduction", "cnn_ransac"]
+  }
+}
