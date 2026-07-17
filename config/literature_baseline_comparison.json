@@ -5,11 +5,11 @@
   "output_dir": "output/experiments/paf_second_stage_v1/literature_baselines",
   "primary_methods": [
     "zhang2019_arc_reproduction",
+    "kojima2021_fornaciari_reproduction",
     "cnn_ransac"
   ],
   "ablation_methods": [
     "contour_fit",
-    "canny_ransac",
     "canny_ransac_inner_pair"
   ],
   "reference": {
@@ -26,9 +26,9 @@
   },
   "methods": {
     "contour_fit": "Contour fit（補足）",
-    "canny_ransac": "Canny + RANSAC",
-    "canny_ransac_inner_pair": "Canny + RANSAC + 内周prior",
+    "canny_ransac_inner_pair": "Canny + 輪郭別RANSAC",
     "zhang2019_arc_reproduction": "Zhang 2019型（再現実装）",
+    "kojima2021_fornaciari_reproduction": "Kojima 2021採用法（Fornaciari 2014再現実装）",
     "cnn_ransac": "CNN + weighted RANSAC",
     "aamed": "AAMED（任意）"
   },
@@ -40,9 +40,9 @@
       "split": "ood_test",
       "results": {
         "contour_fit": "contour_fit_ood",
-        "canny_ransac": "canny_ransac_ood",
         "canny_ransac_inner_pair": "canny_ransac_inner_pair_ood",
         "zhang2019_arc_reproduction": "zhang2019_arc_ood",
+        "kojima2021_fornaciari_reproduction": "kojima2021_fornaciari_ood",
         "cnn_ransac": "cnn_ransac_support_ood",
         "aamed": "aamed_ood"
       },
@@ -62,9 +62,9 @@
       "split": "diagnostic_test",
       "results": {
         "contour_fit": "contour_fit_diagnostic",
-        "canny_ransac": "canny_ransac_diagnostic",
         "canny_ransac_inner_pair": "canny_ransac_inner_pair_diagnostic",
         "zhang2019_arc_reproduction": "zhang2019_arc_diagnostic",
+        "kojima2021_fornaciari_reproduction": "kojima2021_fornaciari_diagnostic",
         "cnn_ransac": "cnn_ransac_support_diagnostic",
         "aamed": "aamed_diagnostic"
       },
@@ -72,10 +72,9 @@
         "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__clean_s0000_v00",
         "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__black_rectangle_s0250_v01",
         "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__sensor_whiteout_s1000_v08",
-        "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__sensor_black_crush_s0250_v09",
-        "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__lens_flare_s1000_v16"
+        "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__sensor_black_crush_s0250_v09"
       ],
-      "representative_titles": ["Clean", "遮蔽25%", "白飛び100%", "黒つぶれ25%", "フレア100%"]
+      "representative_titles": ["Clean", "遮蔽25%", "白飛び100%", "黒つぶれ25%"]
     }
   ]
 }

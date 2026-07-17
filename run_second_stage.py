@@ -59,7 +59,7 @@ def main() -> None:
     parser.add_argument(
         "--include-ransac-audit",
         action="store_true",
-        help="旧Canny方式の内周候補選択アブレーションも再実行する",
+        help="Canny + 輪郭別RANSACの内周候補選択監査も再実行する",
     )
     parser.add_argument("--skip-cnn", action="store_true")
     parser.add_argument("--skip-summary", action="store_true")
@@ -119,15 +119,15 @@ def main() -> None:
             "zhang2019_arc_reproduction",
             "diagnostic_test",
             "zhang2019_arc_diagnostic",
-            "--resume",
+            *(("--resume",) if args.skip_prepare else ()),
         )
         if args.include_classic_ablations:
             classic(ood, "contour_fit", "ood_test", "contour_fit_ood")
             classic(
                 ood,
-                "canny_ransac",
+                "canny_ransac_inner_pair",
                 "ood_test",
-                "canny_ransac_ood",
+                "canny_ransac_inner_pair_ood",
                 "--paired-ransac-seed",
                 "--resume",
             )
@@ -139,20 +139,20 @@ def main() -> None:
             )
             classic(
                 diagnostics,
-                "canny_ransac",
+                "canny_ransac_inner_pair",
                 "diagnostic_test",
-                "canny_ransac_diagnostic",
+                "canny_ransac_inner_pair_diagnostic",
                 "--paired-ransac-seed",
                 "--resume",
             )
     if args.include_ransac_audit:
-        source = ROOT / "output/datasets/paf_robustness_v1"
+        source = ROOT / "output/datasets/paf_robustness_v3"
         for split in ("train", "validation", "test"):
             classic(
                 source,
-                "canny_ransac",
+                "canny_ransac_inner_pair",
                 split,
-                "canny_ransac_tuning",
+                "canny_ransac_inner_pair_tuning",
                 "--degradation",
                 "clean",
                 "--resume",
@@ -165,7 +165,7 @@ def main() -> None:
                 "--dataset",
                 str(source),
                 "--method",
-                "canny_ransac_tuning",
+                "canny_ransac_inner_pair_tuning",
                 "--output",
                 str(path(config["artifacts_dir"]) / "ransac_audit/clean"),
             ]
@@ -175,23 +175,9 @@ def main() -> None:
                 sys.executable,
                 "-m",
                 "paflab.experiments.tune_inner_pair_selector",
+                "--results-name",
+                "canny_ransac_inner_pair_tuning",
             ]
-        )
-        classic(
-            ood,
-            "canny_ransac_inner_pair",
-            "ood_test",
-            "canny_ransac_inner_pair_ood",
-            "--reuse-candidates-from",
-            "canny_ransac_ood",
-        )
-        classic(
-            diagnostics,
-            "canny_ransac_inner_pair",
-            "diagnostic_test",
-            "canny_ransac_inner_pair_diagnostic",
-            "--reuse-candidates-from",
-            "canny_ransac_diagnostic",
         )
     if not args.skip_cnn:
         run(

@@ -12,9 +12,11 @@ from matplotlib.patches import Ellipse, FancyBboxPatch
 
 from analysis.ellipse_baseline import evaluate_ellipses, preprocess_image
 from analysis.ellipse_ransac import _point_distances
+from paflab.camera_effects import EFFECTS
 from paflab.reporting.build_summary_figures import Predictor, setup_style
 from paflab.image_io import imread, imwrite
 from paflab.labels import fit_label_ellipse, rasterize_ring_mask, scale_ellipse
+from paflab.prepare_diagnostic_dataset import diagnostic_seed
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -24,12 +26,17 @@ DIAGNOSTIC = ROOT / "output/datasets/paf_diagnostics_v1"
 OUTPUT = ROOT / "output/presentation_assets/progress_meeting_1_v1"
 FIGURES = OUTPUT / "figures"
 PANELS = OUTPUT / "panels"
+OPENCV_INNER_PAIR_SUMMARY = (
+    ROOT
+    / "output/experiments/paf_second_stage_v1/opencv_inner_pair_ablation/summary.csv"
+)
 
 TEXT = "#182230"
 MUTED = "#667085"
 GRID = "#d0d5dd"
 CLASSIC = "#f59e0b"
 CNN = "#2563eb"
+OPENCV = "#667085"
 SUCCESS = "#21a366"
 FAIL = "#e5484d"
 GT = "#00a6d6"
@@ -38,7 +45,7 @@ LIGHT_ORANGE = "#fff4e5"
 
 BASE_SAMPLE_ID = "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0"
 # 検出系の構成説明では、方式差ではなく処理内容へ注目できるよう、
-# 旧Canny版とCNN版が同一の遮蔽なし入力でともに成功する代表例を固定する。
+# Canny版とCNN版が同一の遮蔽なし入力でともに成功する代表例を固定する。
 DETECTOR_SUCCESS_SAMPLE_ID = (
     "camera_t020_a090_d034.0_o02__light_t000_a000_e03.0"
     "__diagnostic__clean_s0000_v00"
@@ -366,7 +373,10 @@ def canny_prediction(
         cv2.cvtColor(source, cv2.COLOR_RGB2BGR),
         baseline["detector"],
     )
-    detail = load_classic_detail(sample_id, "canny_ransac_diagnostic")
+    detail = load_classic_detail(
+        sample_id,
+        "canny_ransac_inner_pair_diagnostic",
+    )
     candidates = [
         {**candidate, "ellipse": ellipse_from_dict(candidate)}
         for candidate in detail["ransac_candidates"]
@@ -391,9 +401,18 @@ def canny_prediction(
         )
 
     candidate_visualization = source.copy()
-    for index, candidate in enumerate(candidates[:12]):
-        color = FAIL if index == 0 else CLASSIC
-        thickness = 4 if index == 0 else 2
+    selected_ellipse = ellipse_from_dict(detail.get("detected"))
+    for candidate in candidates[:12]:
+        is_selected = bool(
+            selected_ellipse is not None
+            and np.allclose(
+                np.asarray(candidate["ellipse"][0] + candidate["ellipse"][1]),
+                np.asarray(selected_ellipse[0] + selected_ellipse[1]),
+                atol=1e-3,
+            )
+        )
+        color = FAIL if is_selected else CLASSIC
+        thickness = 4 if is_selected else 2
         cv2.ellipse(
             candidate_visualization,
             candidate["ellipse"],
@@ -403,7 +422,7 @@ def canny_prediction(
         )
     predicted, ground_truth, evaluation = classic_prediction(
         sample_id,
-        "canny_ransac_diagnostic",
+        "canny_ransac_inner_pair_diagnostic",
         size,
     )
     return {
@@ -733,11 +752,11 @@ def build_canny_pipeline(
         ("Gaussian平滑化", stages["blurred"]),
         ("Cannyエッジ", stages["edges"]),
         ("輪郭ごとに分割", prediction["contour_visualization"]),
-        ("輪郭ごとにRANSAC", prediction["candidate_visualization"]),
+        ("同心ペアから内周選択", prediction["candidate_visualization"]),
         ("推定内周楕円", output),
     ]
     fig, axes = plt.subplots(1, 6, figsize=(16, 3.8))
-    fig.suptitle("旧Canny＋輪郭別RANSACの処理ブロック", fontsize=22, y=0.99)
+    fig.suptitle("Canny + 輪郭別RANSACの処理ブロック", fontsize=22, y=0.99)
     for index, ((title, panel), ax) in enumerate(zip(panels, axes)):
         show_image(ax, panel, title)
         if index < len(axes) - 1:
@@ -746,7 +765,10 @@ def build_canny_pipeline(
     fig.text(
         0.5,
         0.02,
-        "Cannyで得た輪郭を分離し、それぞれへ独立にRANSAC楕円推定を適用",
+        (
+            "各輪郭へ独立にRANSAC楕円推定を適用し、"
+            "同心・相似な二重楕円では小さい側を内周として選択"
+        ),
         ha="center",
         fontsize=11,
         color=MUTED,
@@ -990,14 +1012,50 @@ def build_degradation_grid(diagnostic_samples: dict[str, dict]) -> Path:
         ),
     ]
     columns = ["Clean", "25%", "50%", "75%", "100%"]
+    clean_sample = diagnostic_samples[DIAGNOSTIC_IDS["clean"]]
+    source = imread(DIAGNOSTIC / clean_sample["image"], cv2.IMREAD_COLOR)
+    if source is None:
+        raise FileNotFoundError(DIAGNOSTIC / clean_sample["image"])
+    label = read_json(DIAGNOSTIC / clean_sample["label"])
+    ground_truth = fit_label_ellipse(label)
+    experiment_id = read_json(ROOT / "config/research_second_stage.json")[
+        "experiment_id"
+    ]
+
     fig, axes = plt.subplots(3, 5, figsize=(14.5, 8.7))
     fig.suptitle("初期実験で付与した劣化の強度", fontsize=22, y=0.985)
     for row, (row_label, keys) in enumerate(row_definitions):
         for column, key in enumerate(keys):
             sample = diagnostic_samples[DIAGNOSTIC_IDS[key]]
+            conditions = sample["conditions"]
+            effect = conditions["degradation"]
+            severity = float(conditions["severity"])
+            if effect == "clean":
+                rendered = source.copy()
+            else:
+                seed = diagnostic_seed(
+                    experiment_id,
+                    clean_sample["conditions"]["base_sample_id"],
+                    effect,
+                    severity,
+                )
+                rng = np.random.default_rng(seed)
+                if effect == "black_rectangle":
+                    rendered, _ = EFFECTS[effect](
+                        source,
+                        ground_truth,
+                        severity,
+                        rng=rng,
+                    )
+                else:
+                    rendered, _ = EFFECTS[effect](
+                        source,
+                        severity,
+                        rng=rng,
+                    )
             show_image(
                 axes[row, column],
-                load_rgb(DIAGNOSTIC, sample),
+                cv2.cvtColor(rendered, cv2.COLOR_BGR2RGB),
                 columns[column] if row == 0 else None,
             )
             if column == 0:
@@ -1062,7 +1120,7 @@ def build_method_comparison_examples(
         if column == 0:
             axes[0, column].set_ylabel("入力", fontsize=13, labelpad=12)
             axes[1, column].set_ylabel(
-                "旧Canny\n＋輪郭別RANSAC", fontsize=12, labelpad=12
+                "Canny +\n輪郭別RANSAC", fontsize=12, labelpad=12
             )
             axes[2, column].set_ylabel(
                 "CNN + RANSAC", fontsize=12, labelpad=12
@@ -1100,18 +1158,47 @@ def effect_rows(
     return [{**clean, "severity": "0.0"}, *effect_values]
 
 
-def plot_effect_chart(ax, rows: list[dict], effect: str, title: str) -> None:
-    for method, label, color in (
-        ("canny_ransac", "旧Canny + 輪郭別RANSAC", CLASSIC),
-        ("cnn_ransac_support", "CNN + RANSAC", CNN),
-    ):
+def load_opencv_inner_pair_rows() -> list[dict]:
+    """OpenCV楕円候補へ内周priorを加えたアブレーション結果を図表形式へ変換する。"""
+    return [
+        {
+            "method": "contour_fit_inner_pair",
+            "degradation": row["degradation"],
+            "severity": row["severity"],
+            "sample_count": row["sample_count"],
+            "success_count": row["inner_pair_success_count"],
+            "success_rate": row["inner_pair_success_rate"],
+        }
+        for row in read_csv(OPENCV_INNER_PAIR_SUMMARY)
+    ]
+
+
+def plot_effect_chart(
+    ax,
+    rows: list[dict],
+    effect: str,
+    title: str,
+    method_specs: tuple[tuple[str, str, str, str, str], ...] | None = None,
+) -> None:
+    if method_specs is None:
+        method_specs = (
+            ("canny_ransac_inner_pair", "Canny + 輪郭別RANSAC", CLASSIC, "o", "-"),
+            ("cnn_ransac_support", "CNN + RANSAC", CNN, "o", "-"),
+        )
+    for method, label, color, marker, linestyle in method_specs:
         values = effect_rows(rows, method, effect)
         x = np.asarray([float(row["severity"]) * 100 for row in values])
         y = np.asarray([float(row["success_rate"]) * 100 for row in values])
-        low = np.asarray([float(row["cluster_ci95_low"]) * 100 for row in values])
-        high = np.asarray([float(row["cluster_ci95_high"]) * 100 for row in values])
-        ax.plot(x, y, marker="o", linewidth=2.6, markersize=6, label=label, color=color)
-        ax.fill_between(x, low, high, color=color, alpha=0.10)
+        ax.plot(
+            x,
+            y,
+            marker=marker,
+            linestyle=linestyle,
+            linewidth=2.6,
+            markersize=6,
+            label=label,
+            color=color,
+        )
     ax.set_title(title, fontsize=15, pad=10)
     ax.set_xlim(-2, 102)
     ax.set_ylim(-3, 103)
@@ -1126,6 +1213,7 @@ def build_result_charts() -> list[Path]:
     rows = read_csv(
         ROOT / "output/experiments/paf_second_stage_v1/diagnostic_curves.csv"
     )
+    rows.extend(load_opencv_inner_pair_rows())
     definitions = [
         ("black_rectangle", "単純黒矩形"),
         ("sensor_whiteout", "センサ白飛びproxy"),
@@ -1171,6 +1259,37 @@ def build_result_charts() -> list[Path]:
         )
         fig.tight_layout(rect=(0.03, 0.06, 0.99, 0.99))
         paths.append(save_figure(fig, f"09-{index}-{effect}-curve.png"))
+
+    # OpenCV候補にも同じPAF内周priorを適用し、候補選択条件を揃えた3方式を示す。
+    opencv_specs = (
+        ("contour_fit_inner_pair", "OpenCV fitEllipse", OPENCV, "^", "--"),
+        ("canny_ransac_inner_pair", "Canny + 輪郭別RANSAC", CLASSIC, "s", "-"),
+        ("cnn_ransac_support", "CNN + RANSAC", CNN, "o", "-"),
+    )
+    fig, axes = plt.subplots(1, 3, figsize=(16, 5.4))
+    fig.suptitle("OpenCV単純楕円推定を含む初期実験結果", fontsize=22, y=0.99)
+    for ax, (effect, title) in zip(axes, definitions):
+        plot_effect_chart(ax, rows, effect, title, opencv_specs)
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(
+        handles,
+        labels,
+        loc="lower center",
+        ncol=3,
+        frameon=False,
+        fontsize=10.5,
+        bbox_to_anchor=(0.5, 0.01),
+    )
+    fig.text(
+        0.985,
+        0.02,
+        "成功条件：楕円IoU ≥ 0.80　各条件 n=112",
+        ha="right",
+        fontsize=10.5,
+        color=MUTED,
+    )
+    fig.tight_layout(rect=(0.02, 0.11, 0.99, 0.93), w_pad=1.4)
+    paths.append(save_figure(fig, "11-initial-results-with-opencv-fit.png"))
     return paths
 
 
@@ -1216,8 +1335,8 @@ def build_system_overview(
         cnn_output,
     ]
     titles = [
-        ["入力", "Cannyエッジ", "輪郭別RANSAC候補", "推定楕円"],
-        ["入力", "CNNリング尤度", "閾値点群", "推定楕円"],
+        ["入力", "Cannyエッジ", "同心ペアから内周選択", "推定楕円"],
+        ["入力", "CNN内周尤度", "閾値点群", "推定楕円"],
     ]
     fig, axes = plt.subplots(2, 4, figsize=(13.8, 7.4))
     fig.suptitle("設計した2つの検出系", fontsize=22, y=0.99)
@@ -1229,7 +1348,7 @@ def build_system_overview(
             if column < 3:
                 add_flow_arrow(axes[row, column])
     axes[0, 0].set_ylabel(
-        "旧Canny版", fontsize=15, labelpad=14, color=CLASSIC, fontweight=500
+        "Canny版", fontsize=15, labelpad=14, color=CLASSIC, fontweight=500
     )
     axes[1, 0].set_ylabel(
         "CNN版", fontsize=15, labelpad=14, color=CNN, fontweight=500
@@ -1252,7 +1371,12 @@ def write_chart_values() -> Path:
     rows = read_csv(
         ROOT / "output/experiments/paf_second_stage_v1/diagnostic_curves.csv"
     )
-    target_methods = {"canny_ransac", "cnn_ransac_support"}
+    rows.extend(load_opencv_inner_pair_rows())
+    target_methods = {
+        "contour_fit_inner_pair",
+        "canny_ransac_inner_pair",
+        "cnn_ransac_support",
+    }
     target_effects = {
         "clean",
         "black_rectangle",
@@ -1322,7 +1446,8 @@ def main() -> None:
             "714枚 = 102カメラ条件 × 7照明条件",
             "正解ラベルはPAF内周輪郭",
             "成功条件は楕円IoU 0.80以上",
-            "第1回の比較対象は旧Canny＋輪郭別RANSAC",
+            "第1回の比較対象はCanny + 輪郭別RANSAC（同心二重楕円の内周prior）",
+            "OpenCV fitEllipse統制は輪郭別楕円候補へ同心二重楕円の内周priorを適用",
             "学習・テストはカメラ条件単位で分割し、異なる視点条件を使用",
             (
                 "輪郭分断の問題を受け、次回までにZhang et al. "

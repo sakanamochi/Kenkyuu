@@ -13,9 +13,6 @@ SELECT * FROM source_black_rectangle ORDER BY severity, method_label;
 CREATE VIEW report_cnn_effects AS
 SELECT * FROM source_cnn_effects ORDER BY effect_label, severity;
 
-CREATE VIEW report_ransac_selection AS
-SELECT * FROM source_ransac_selection ORDER BY success_rate;
-
 CREATE VIEW report_model_latency AS
 SELECT * FROM source_model_latency ORDER BY parameter_count, device;
 

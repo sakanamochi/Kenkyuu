@@ -36,8 +36,8 @@ def main() -> None:
     if len({s["conditions"]["lighting_id"] for s in ood_manifest["samples"]}) != 8:
         errors.append("OOD lighting count is not 8")
 
-    if len(diagnostic_manifest["samples"]) != 1904:
-        errors.append("diagnostic sample count is not 1904")
+    if len(diagnostic_manifest["samples"]) != 1456:
+        errors.append("diagnostic sample count is not 1456")
     diagnostic_groups = Counter(
         (
             sample["conditions"]["degradation"],
@@ -45,7 +45,7 @@ def main() -> None:
         )
         for sample in diagnostic_manifest["samples"]
     )
-    if len(diagnostic_groups) != 17 or set(diagnostic_groups.values()) != {112}:
+    if len(diagnostic_groups) != 13 or set(diagnostic_groups.values()) != {112}:
         errors.append(f"diagnostic condition grid is invalid: {diagnostic_groups}")
 
     result_paths = {
@@ -55,7 +55,6 @@ def main() -> None:
             "cnn_ransac_support": ood
             / "results/cnn_ransac_support_ood/summary.csv",
             "contour_fit": ood / "results/contour_fit_ood/summary.csv",
-            "canny_ransac": ood / "results/canny_ransac_ood/summary.csv",
             "canny_ransac_inner_pair": ood
             / "results/canny_ransac_inner_pair_ood/summary.csv",
             "cnn_ransac": ood / "results/cnn_ransac_v3_ood/summary.csv",
@@ -66,7 +65,6 @@ def main() -> None:
             "cnn_ransac_support": diagnostic
             / "results/cnn_ransac_support_diagnostic/summary.csv",
             "contour_fit": diagnostic / "results/contour_fit_diagnostic/summary.csv",
-            "canny_ransac": diagnostic / "results/canny_ransac_diagnostic/summary.csv",
             "canny_ransac_inner_pair": diagnostic
             / "results/canny_ransac_inner_pair_diagnostic/summary.csv",
             "cnn_ransac": diagnostic / "results/cnn_ransac_v3_diagnostic/summary.csv",
@@ -96,8 +94,8 @@ def main() -> None:
         sample["conditions"]["base_sample_id"]
         for sample in diagnostic_manifest["samples"]
     )
-    if len(paired_groups) != 112 or set(paired_groups.values()) != {17}:
-        errors.append("diagnostic paired groups are not 112 x 17")
+    if len(paired_groups) != 112 or set(paired_groups.values()) != {13}:
+        errors.append("diagnostic paired groups are not 112 x 13")
 
     ablation = load_csv(output / "model_ablation/summary.csv")
     if len(ablation) != 24:

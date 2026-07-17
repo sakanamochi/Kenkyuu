@@ -27,8 +27,8 @@ def ellipse(values: dict):
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="PAF内周の二重輪郭priorをtrainで調整しholdout評価する")
-    parser.add_argument("--dataset", default="output/datasets/paf_robustness_v1")
-    parser.add_argument("--results-name", default="canny_ransac_tuning")
+    parser.add_argument("--dataset", default="output/datasets/paf_robustness_v3")
+    parser.add_argument("--results-name", default="canny_ransac_inner_pair_tuning")
     parser.add_argument("--output", default="output/experiments/paf_second_stage_v1/ransac_audit/inner_pair")
     return parser.parse_args()
 
@@ -40,8 +40,6 @@ def load_samples(dataset: Path, results_name: str) -> dict[str, list[dict]]:
         if sample.get("split") not in groups or sample["conditions"].get("degradation") != "clean":
             continue
         detail_path = dataset / "results" / results_name / "details" / f"{sample['sample_id']}.json"
-        if not detail_path.exists():
-            detail_path = dataset / "results" / "canny_ransac" / "details" / f"{sample['sample_id']}.json"
         detail = json.loads(detail_path.read_text(encoding="utf-8"))
         ground_truth = ellipse(detail["ground_truth"])
         candidates = []

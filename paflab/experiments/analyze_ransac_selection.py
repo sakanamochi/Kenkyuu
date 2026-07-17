@@ -27,7 +27,7 @@ def ellipse_from_dict(values: dict):
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="RANSAC候補順位とoracle候補存在率を監査する")
     parser.add_argument("--dataset", default="output/datasets/paf_robustness_v3")
-    parser.add_argument("--method", default="canny_ransac")
+    parser.add_argument("--method", default="canny_ransac_inner_pair")
     parser.add_argument("--split", default="test")
     parser.add_argument("--degradation", default="clean")
     parser.add_argument("--iou-threshold", type=float, default=0.8)

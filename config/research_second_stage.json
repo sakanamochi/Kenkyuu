@@ -6,7 +6,7 @@
   "artifacts_dir": "output/experiments/paf_second_stage_v1",
   "diagnostics": {
     "dataset_dir": "output/datasets/paf_diagnostics_v1",
-    "effects": ["black_rectangle", "sensor_whiteout", "sensor_black_crush", "lens_flare"],
+    "effects": ["black_rectangle", "sensor_whiteout", "sensor_black_crush"],
     "severities": [0.25, 0.50, 0.75, 1.00]
   },
   "model_ablation": {

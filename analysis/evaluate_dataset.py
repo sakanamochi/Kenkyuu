@@ -17,7 +17,12 @@ from ellipse_baseline import (
     preprocess_image,
 )
 from ellipse_ransac import fit_contour_ransac_candidates, select_paf_inner_candidate
-from image_io import imread, imwrite
+from fornaciari_ellipse_detector import (
+    KOJIMA_2021_FORNACIARI_REFERENCE,
+    detect_fornaciari_candidates,
+    draw_fornaciari_arcs,
+)
+from paflab.image_io import imread, imwrite
 from zhang_arc_detector import (
     ZHANG_2019_REFERENCE,
     detect_zhang_arc_candidates,
@@ -47,9 +52,9 @@ def parse_args() -> argparse.Namespace:
         "--method",
         choices=(
             "contour_fit",
-            "canny_ransac",
             "canny_ransac_inner_pair",
             "zhang2019_arc_reproduction",
+            "kojima2021_fornaciari_reproduction",
             "aamed",
         ),
         default="contour_fit",
@@ -168,11 +173,12 @@ def main() -> None:
         detail_path = details_dir / f"{sample_id}.json"
         if args.resume and detail_path.exists():
             detail = json.loads(detail_path.read_text(encoding="utf-8"))
-            if (
-                args.method == "zhang2019_arc_reproduction"
-                and detail.get("method_reference") != ZHANG_2019_REFERENCE
-            ):
-                detail["method_reference"] = ZHANG_2019_REFERENCE
+            expected_reference = {
+                "zhang2019_arc_reproduction": ZHANG_2019_REFERENCE,
+                "kojima2021_fornaciari_reproduction": KOJIMA_2021_FORNACIARI_REFERENCE,
+            }.get(args.method)
+            if expected_reference and detail.get("method_reference") != expected_reference:
+                detail["method_reference"] = expected_reference
                 detail_path.write_text(
                     json.dumps(detail, ensure_ascii=False, indent=2),
                     encoding="utf-8",
@@ -182,6 +188,7 @@ def main() -> None:
             candidate_key = {
                 "contour_fit": "candidates",
                 "zhang2019_arc_reproduction": "arc_candidates",
+                "kojima2021_fornaciari_reproduction": "fornaciari_candidates",
                 "aamed": "aamed_candidates",
             }.get(args.method, "ransac_candidates")
             row = {
@@ -257,6 +264,38 @@ def main() -> None:
                 candidate_visualization = draw_zhang_arcs(
                     image, arc_stages, arc_candidates
                 )
+        elif args.method == "kojima2021_fornaciari_reproduction":
+            fornaciari_candidates, fornaciari_stages = detect_fornaciari_candidates(
+                image,
+                settings["detector"],
+                settings["fornaciari2014_arc"],
+            )
+            if fornaciari_candidates:
+                # Kojima論文に候補選択規則はないため、PAFの内外周CAD事前知識を別段で加える。
+                fornaciari_result = select_paf_inner_candidate(
+                    fornaciari_candidates, settings["kojima2021_inner_selector"]
+                )
+                detected = fornaciari_result["ellipse"]
+                method_detail["selection_mode"] = fornaciari_result["selection_mode"]
+                method_detail["inner_pair"] = fornaciari_result.get("inner_pair")
+            method_detail["arc_count"] = len(fornaciari_stages["arcs"])
+            method_detail["automatic_canny_thresholds"] = {
+                "low": fornaciari_stages["canny_low"],
+                "high": fornaciari_stages["canny_high"],
+            }
+            method_detail["fornaciari_candidates"] = [
+                {
+                    "rank": rank,
+                    **ellipse_to_dict(candidate["ellipse"]),
+                    **{key: value for key, value in candidate.items() if key != "ellipse"},
+                }
+                for rank, candidate in enumerate(fornaciari_candidates, start=1)
+            ]
+            candidates = fornaciari_candidates
+            if not args.no_images:
+                candidate_visualization = draw_fornaciari_arcs(
+                    image, fornaciari_stages, fornaciari_candidates
+                )
         elif args.method == "aamed":
             aamed_candidates = detect_aamed_candidates(image, settings["aamed"])
             if aamed_candidates:
@@ -314,12 +353,9 @@ def main() -> None:
                     random_seed=sample_seed,
                 )
             if ransac_candidates:
-                ransac_result = (
-                    select_paf_inner_candidate(
-                        ransac_candidates, settings["inner_pair_selector"]
-                    )
-                    if args.method == "canny_ransac_inner_pair"
-                    else ransac_candidates[0]
+                # Canny候補は必ず同心二重楕円の内周priorで選択する。
+                ransac_result = select_paf_inner_candidate(
+                    ransac_candidates, settings["inner_pair_selector"]
                 )
                 detected = ransac_result["ellipse"]
                 method_detail["selection_mode"] = ransac_result.get(
@@ -371,7 +407,7 @@ def main() -> None:
             **condition_columns(sample["conditions"]),
             "candidate_count": (
                 len(ransac_candidates)
-                if args.method in ("canny_ransac", "canny_ransac_inner_pair")
+                if args.method == "canny_ransac_inner_pair"
                 else len(candidates)
             ),
             "status": "no_detection",
@@ -393,8 +429,12 @@ def main() -> None:
             "evaluation": None,
             **method_detail,
         }
-        if args.method == "zhang2019_arc_reproduction":
-            detail["method_reference"] = ZHANG_2019_REFERENCE
+        method_reference = {
+            "zhang2019_arc_reproduction": ZHANG_2019_REFERENCE,
+            "kojima2021_fornaciari_reproduction": KOJIMA_2021_FORNACIARI_REFERENCE,
+        }.get(args.method)
+        if method_reference:
+            detail["method_reference"] = method_reference
 
         if detected is not None:
             evaluation = evaluate_ellipses(detected, ground_truth, image.shape)
@@ -457,8 +497,12 @@ def main() -> None:
             for name in metric_names
         },
     }
-    if args.method == "zhang2019_arc_reproduction":
-        aggregate["method_reference"] = ZHANG_2019_REFERENCE
+    method_reference = {
+        "zhang2019_arc_reproduction": ZHANG_2019_REFERENCE,
+        "kojima2021_fornaciari_reproduction": KOJIMA_2021_FORNACIARI_REFERENCE,
+    }.get(args.method)
+    if method_reference:
+        aggregate["method_reference"] = method_reference
     (results_dir / "summary.json").write_text(
         json.dumps(aggregate, ensure_ascii=False, indent=2),
         encoding="utf-8",

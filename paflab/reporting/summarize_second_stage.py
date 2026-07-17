@@ -197,7 +197,6 @@ def main() -> None:
         "cnn_ransac_support": ood_dataset
         / "results/cnn_ransac_support_ood/summary.csv",
         "contour_fit": ood_dataset / "results/contour_fit_ood/summary.csv",
-        "canny_ransac": ood_dataset / "results/canny_ransac_ood/summary.csv",
         "canny_ransac_inner_pair": ood_dataset
         / "results/canny_ransac_inner_pair_ood/summary.csv",
         "cnn_ransac": ood_dataset / "results/cnn_ransac_v3_ood/summary.csv",
@@ -208,7 +207,6 @@ def main() -> None:
         "cnn_ransac_support": diagnostics
         / "results/cnn_ransac_support_diagnostic/summary.csv",
         "contour_fit": diagnostics / "results/contour_fit_diagnostic/summary.csv",
-        "canny_ransac": diagnostics / "results/canny_ransac_diagnostic/summary.csv",
         "canny_ransac_inner_pair": diagnostics
         / "results/canny_ransac_inner_pair_diagnostic/summary.csv",
         "canny_global_ransac": diagnostics

@@ -35,7 +35,7 @@
 
 - CNNモデル幅・seed比較
 - CNN RANSACの周長補正比較
-- 旧Canny方式の内周候補選択監査
+- Canny + 輪郭別RANSACの内周候補選択監査
 - 推論速度計測
 
 通常の研究実行では、ルートの `run_research.py`、`run_second_stage.py`、

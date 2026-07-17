@@ -12,7 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 METHOD_LABELS = {
     "zhang2019_arc_reproduction": "Zhang 2019型（再現実装）",
     "contour_fit": "Contour fit",
-    "canny_ransac": "Canny + RANSAC",
+    "canny_ransac_inner_pair": "Canny + 輪郭別RANSAC",
     "cnn_ransac": "CNN + weighted RANSAC",
 }
 DEGRADATION_LABELS = {
@@ -338,7 +338,7 @@ def main() -> None:
                 "- 主比較はZhang 2019型（再現実装）とCNN + weighted RANSACである。\n"
                 "- Zhang型はCanny後の分断弧を統合し、実エッジ支持で候補楕円を検証する。\n"
                 "- 完全遮蔽と完全白飛びでは全方式0%。情報が消失した入力で成功を捏造していない。\n"
-                "- 旧Canny全点・輪郭別・内周prior方式は補足アブレーションとして別保存する。"
+                "- Canny + 輪郭別RANSACは内周priorを含む単一方式として保存する。"
             ),
         },
         {"id": "overall_chart", "type": "chart", "chartId": "overall_success"},

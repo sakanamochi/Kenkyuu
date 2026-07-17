@@ -14,8 +14,7 @@ METHOD_LABELS = {
     "zhang2019_arc_reproduction": "Zhang 2019型（再現実装）",
     "cnn_ransac_support": "CNN + weighted RANSAC",
     "contour_fit": "Contour fit",
-    "canny_ransac": "Canny + RANSAC",
-    "canny_ransac_inner_pair": "Canny + RANSAC + 内周prior",
+    "canny_ransac_inner_pair": "Canny + 輪郭別RANSAC",
     "cnn_ransac": "CNN + weighted RANSAC",
 }
 PRIMARY_METHODS = {"zhang2019_arc_reproduction", "cnn_ransac_support"}
@@ -24,7 +23,6 @@ EFFECT_LABELS = {
     "black_rectangle": "黒矩形遮蔽",
     "sensor_whiteout": "センサ白飛びproxy",
     "sensor_black_crush": "センサ黒つぶれproxy",
-    "lens_flare": "レンズフレアproxy",
 }
 
 
@@ -95,10 +93,6 @@ def main() -> None:
     ood_tilt = read_csv(OUTPUT / "ood_by_camera_tilt.csv")
     diagnostic = read_csv(OUTPUT / "diagnostic_curves.csv")
     latency = read_csv(OUTPUT / "model_ablation/latency.csv")
-    ransac_audit = load_json(OUTPUT / "ransac_audit/clean/summary.json")
-    ransac_pair = load_json(
-        OUTPUT / "ransac_audit/inner_pair/selection_result.json"
-    )
 
     for row in model_rows:
         for key, value in list(row.items()):
@@ -188,21 +182,11 @@ def main() -> None:
             "best_classic_ood_rate": method_rates["zhang2019_arc_reproduction"],
             "minimum_width": minimum_width,
             "minimum_parameters": minimum_model["parameter_count"],
-            "ransac_clean_before": ransac_pair["quality_only_rates"]["test"],
-            "ransac_clean_after": ransac_pair["rates"]["test"],
-            "ransac_clean_gain": ransac_pair["rates"]["test"]
-            - ransac_pair["quality_only_rates"]["test"],
-            "candidate_oracle_rate": ransac_audit["oracle_success_rate"],
         }
-    ]
-    ransac_rows = [
-        {"selection": "従来top-1品質スコア", "success_rate": ransac_pair["quality_only_rates"]["test"]},
-        {"selection": "同心二重楕円の内周prior", "success_rate": ransac_pair["rates"]["test"]},
-        {"selection": "候補oracle上限", "success_rate": ransac_audit["oracle_success_rate"]},
     ]
 
     questions = [
-        {"priority": 1, "question": "train/testの漏洩はないか", "answer": "camera_id単位で分離。OOD 480枚とdiagnostic 1,904枚は既存CNNへ未使用。", "remaining": "実写・形状個体は未分離"},
+        {"priority": 1, "question": "train/testの漏洩はないか", "answer": "camera_id単位で分離。OOD 480枚とdiagnostic 1,456枚は既存CNNへ未使用。", "remaining": "実写・形状個体は未分離"},
         {"priority": 2, "question": "未知角度・未知照明に一般化するか", "answer": "10–50°は100%、67°は67.7%、82°は0%。未知照明8条件は70.0–76.7%。", "remaining": "82°近傍の訓練追加と連続角度評価"},
         {"priority": 3, "question": "CNNは本当に必要か", "answer": f"OODはCNN {method_rates['cnn_ransac_support']:.1%}、Zhang 2019型 {method_rates['zhang2019_arc_reproduction']:.1%}。黒矩形遮蔽曲線も同一条件で比較。", "remaining": "実機計算量・実写で再確認"},
         {"priority": 4, "question": "RANSACは何を選んでいるか", "answer": "従来はcoverage×inlier ratio÷distance。内外の意味はない。CAD priorでclean 76.8→86.6%。", "remaining": "背景・劣化下では改善幅を再評価"},
@@ -225,7 +209,6 @@ def main() -> None:
             "ood_tilt": ood_tilt,
             "black_rectangle": black_rectangle,
             "cnn_effects": cnn_effects,
-            "ransac_selection": ransac_rows,
             "model_latency": latency,
             "professor_questions": questions,
         },
@@ -240,9 +223,8 @@ def main() -> None:
         {"id": "ood_tilt_results", "label": "OOD pose results", "path": "output/experiments/paf_second_stage_v1/ood_by_camera_tilt.csv", "description": "未知姿勢480枚のcamera cluster集計。"},
         {"id": "ood_background_results", "label": "OOD background results", "path": "output/experiments/paf_second_stage_v1/ood_by_background.csv", "description": "space/Earth/Moon背景各160枚のcamera cluster集計。"},
         {"id": "diagnostic_results", "label": "Camera-effect diagnostic curves", "path": "output/experiments/paf_second_stage_v1/diagnostic_curves.csv", "description": "黒矩形遮蔽と物理motivated camera-effect proxyの強度曲線。"},
-        {"id": "ransac_selection_audit", "label": "RANSAC candidate-selection audit", "path": "output/experiments/paf_second_stage_v1/ransac_audit/inner_pair/selection_result.json", "description": "train調整、validation tie-break、test一回評価の内周選択結果。"},
         {"id": "model_latency", "label": "Model latency benchmark", "path": "output/experiments/paf_second_stage_v1/model_ablation/latency.csv", "description": "256x256、batch 1、同一PCでのCPU/GPU推論時間。"},
-        {"id": "camera_effects_code", "label": "Camera-effect implementation", "path": "paflab/camera_effects.py", "description": "露光、飽和、shot/read noise、black-level、量子化、flare proxyの実装。"},
+        {"id": "camera_effects_code", "label": "Camera-effect implementation", "path": "paflab/camera_effects.py", "description": "露光、飽和、shot/read noise、black-level、量子化proxyの実装。"},
         {"id": "professor_questions", "label": "Professor-question audit", "path": "output/experiments/paf_second_stage_v1/professor_questions.json", "description": "想定質問、現時点の回答、残る検証を分離した監査表。"},
         {"id": "second_stage_validation", "label": "Second-stage validation report", "path": "output/experiments/paf_second_stage_v1/validation_report.json", "description": "サンプル数、条件バランス、方式間ID、12 run、112×17 paired groupの検算。"},
     ]
@@ -258,8 +240,7 @@ def main() -> None:
             {"id": "second_ood_tilt", "title": "未知カメラ傾斜角と成功率", "subtitle": "10–50°は補間、67°・82°は訓練範囲外寄りの性能境界。", "showDescription": True, "type": "line", "dataset": "ood_tilt", "sourceId": "ood_tilt_results", "encodings": {"x": {"field": "camera_tilt_deg", "type": "quantitative", "label": "カメラ傾斜角（deg）"}, "y": {"field": "success_rate", "type": "quantitative", "label": "成功率", "format": "percent"}, "color": {"field": "method_label", "type": "nominal", "label": "方式"}, "tooltip": [{"field": "sample_count", "label": "画像数", "format": "number"}, {"field": "cluster_ci95_low", "label": "95% CI下限", "format": "percent"}, {"field": "cluster_ci95_high", "label": "95% CI上限", "format": "percent"}]}},
             {"id": "second_ood_background", "title": "背景別OOD成功率", "subtitle": "space、procedural Earth、procedural Moonを各160枚で比較。", "showDescription": True, "type": "bar", "dataset": "ood_background", "sourceId": "ood_background_results", "encodings": {"x": {"field": "background", "type": "nominal", "label": "背景"}, "y": {"field": "success_rate", "type": "quantitative", "label": "成功率", "format": "percent"}, "color": {"field": "method_label", "type": "nominal", "label": "方式"}, "tooltip": [{"field": "sample_count", "label": "画像数", "format": "number"}, {"field": "cluster_ci95_low", "label": "95% CI下限", "format": "percent"}, {"field": "cluster_ci95_high", "label": "95% CI上限", "format": "percent"}]}},
             {"id": "second_black_rectangle", "title": "黒矩形遮蔽の強度と成功率", "subtitle": "物体形状をなぞらない単純な全高黒帯でCNNの構造補完を診断。", "showDescription": True, "type": "line", "dataset": "black_rectangle", "sourceId": "diagnostic_results", "encodings": {"x": {"field": "severity", "type": "quantitative", "label": "遮蔽幅 / 画像幅"}, "y": {"field": "success_rate", "type": "quantitative", "label": "成功率", "format": "percent"}, "color": {"field": "method_label", "type": "nominal", "label": "方式"}, "tooltip": [{"field": "sample_count", "label": "画像数", "format": "number"}, {"field": "cluster_ci95_low", "label": "95% CI下限", "format": "percent"}, {"field": "cluster_ci95_high", "label": "95% CI上限", "format": "percent"}]}},
-            {"id": "second_cnn_effects", "title": "CNNのカメラ効果proxy耐性", "subtitle": "白飛び・黒つぶれ・flareは実機校正前のphysics-motivated proxy。", "showDescription": True, "type": "line", "dataset": "cnn_effects", "sourceId": "diagnostic_results", "encodings": {"x": {"field": "severity", "type": "quantitative", "label": "効果強度"}, "y": {"field": "success_rate", "type": "quantitative", "label": "成功率", "format": "percent"}, "color": {"field": "effect_label", "type": "nominal", "label": "効果"}, "tooltip": [{"field": "sample_count", "label": "画像数", "format": "number"}, {"field": "cluster_ci95_low", "label": "95% CI下限", "format": "percent"}, {"field": "cluster_ci95_high", "label": "95% CI上限", "format": "percent"}]}},
-            {"id": "second_ransac_selection", "title": "RANSAC候補選択の分解", "subtitle": "候補生成上限と、従来/内周priorのtop-1成功率をclean testで比較。", "showDescription": True, "type": "bar", "dataset": "ransac_selection", "sourceId": "ransac_selection_audit", "encodings": {"x": {"field": "selection", "type": "nominal", "label": "選択規則"}, "y": {"field": "success_rate", "type": "quantitative", "label": "成功率", "format": "percent"}}},
+            {"id": "second_cnn_effects", "title": "CNNのカメラ効果proxy耐性", "subtitle": "白飛び・黒つぶれは実機校正前のphysics-motivated proxy。", "showDescription": True, "type": "line", "dataset": "cnn_effects", "sourceId": "diagnostic_results", "encodings": {"x": {"field": "severity", "type": "quantitative", "label": "効果強度"}, "y": {"field": "success_rate", "type": "quantitative", "label": "成功率", "format": "percent"}, "color": {"field": "effect_label", "type": "nominal", "label": "効果"}, "tooltip": [{"field": "sample_count", "label": "画像数", "format": "number"}, {"field": "cluster_ci95_low", "label": "95% CI下限", "format": "percent"}, {"field": "cluster_ci95_high", "label": "95% CI上限", "format": "percent"}]}},
         ]
     )
     manifest["tables"].extend(
@@ -275,7 +256,6 @@ def main() -> None:
         "second_ood_background",
         "second_black_rectangle",
         "second_cnn_effects",
-        "second_ransac_selection",
         "second_model_table",
         "second_latency",
         "second_questions",
@@ -293,13 +273,11 @@ def main() -> None:
         {"id": "second_ood_finding", "type": "markdown", "body": "## 未知姿勢・照明・背景\n\n学習に無い角度10/30/50/67/82°、未知の太陽方向・強度8条件、space/Earth/Moon背景を直交配置した。未知照明だけでなく、どの姿勢・背景で壊れるかを層別して報告する。"},
         {"id": "second_ood_tilt_chart", "type": "chart", "chartId": "second_ood_tilt"},
         {"id": "second_ood_background_chart", "type": "chart", "chartId": "second_ood_background"},
-        {"id": "second_ransac_finding", "type": "markdown", "sourceId": "ransac_selection_audit", "body": "## 補足：旧Canny-RANSACの候補選択監査\n\nこの節は主ベースラインではなく、輪郭ごとRANSACとPAF固有内周priorの効果を分解するアブレーションである。主比較には、分断弧を統合するZhang 2019型（再現実装）を使用する。"},
-        {"id": "second_ransac_chart", "type": "chart", "chartId": "second_ransac_selection"},
-        {"id": "second_diagnostic_finding", "type": "markdown", "sourceId": "diagnostic_results", "body": "## 遮蔽とカメラ効果を分離する\n\nCNNの構造補完能力は、形状をなぞらない全高黒矩形で診断する。白飛び・黒つぶれ・flareは別系列とし、露光・飽和・ノイズ・量子化・既知太陽方向からのflareをphysics-motivated proxyとして実装した。"},
+        {"id": "second_diagnostic_finding", "type": "markdown", "sourceId": "diagnostic_results", "body": "## 遮蔽とカメラ効果を分離する\n\nCNNの構造補完能力は、形状をなぞらない全高黒矩形で診断する。白飛び・黒つぶれは露光・飽和・ノイズ・量子化に基づくproxyとして実装した。"},
         {"id": "second_black_chart", "type": "chart", "chartId": "second_black_rectangle"},
         {"id": "second_effect_chart", "type": "chart", "chartId": "second_cnn_effects"},
-        {"id": "second_physics_limits", "type": "markdown", "sourceId": "camera_effects_code", "body": "## 光学・センサモデルの解釈限界\n\n現在の効果は実機物理量へ校正されていない。白飛びは線形露光→full-well clip→shot noise→bloom、黒つぶれは低露光→read noise→black-level clip→量子化、flareはCGの太陽投影位置を使うveiling glare・ghost・bloomである。Blenderの[Glare compositor](https://docs.blender.org/manual/en/latest/compositing/types/filter/glare.html)と[color management](https://docs.blender.org/manual/en/latest/render/color_management.html)を利用できるが、実センサ性能の主張にはHDR線形出力、PSF、応答曲線、full-well/read-noise校正が必要。"},
-        {"id": "second_validation", "type": "markdown", "sourceId": "second_stage_validation", "body": "## 第2段階の結果監査\n\nOOD 480枚、診断1,904枚、全方式のサンプルID、4幅×3 seed×2評価を再集計した。診断は112個の元画像それぞれにcleanと4効果×4強度の17条件があり、同一組では共通のRANSAC seed keyを使う。劣化用サンプルIDの違いによる乱数交絡を除いた。"},
+        {"id": "second_physics_limits", "type": "markdown", "sourceId": "camera_effects_code", "body": "## 光学・センサモデルの解釈限界\n\n現在の効果は実機物理量へ校正されていない。白飛びは線形露光→full-well clip→shot noise→bloom、黒つぶれは低露光→read noise→black-level clip→量子化である。実センサ性能の主張にはHDR線形出力、PSF、応答曲線、full-well/read-noise校正が必要。"},
+        {"id": "second_validation", "type": "markdown", "sourceId": "second_stage_validation", "body": "## 第2段階の結果監査\n\nOOD 480枚、診断1,456枚、全方式のサンプルID、4幅×3 seed×2評価を再集計した。診断は112個の元画像それぞれにcleanと3効果×4強度の13条件があり、同一組では共通のRANSAC seed keyを使う。劣化用サンプルIDの違いによる乱数交絡を除いた。"},
         {"id": "second_questions_intro", "type": "markdown", "body": "## 想定質問と未回答\n\n「答えられること」と「次の検証が必要なこと」を分離した。未回答を隠さず、次の実験設計へ直結させる。"},
         {"id": "second_questions_table", "type": "table", "tableId": "second_questions"},
         {"id": "second_positioning", "type": "markdown", "body": "## 先行研究との位置づけと新規性候補\n\n合成→実写のdomain gapは[SPEED+](https://arxiv.org/abs/2110.03101)が明確に示し、Earth背景を含むレンダリングは[URSO](https://arxiv.org/abs/1907.04298)、texture randomizationは[Parkら](https://arxiv.org/abs/1909.00392)に先行例がある。CNNでサンプリングを誘導するRANSACも[Neural-Guided RANSAC](https://arxiv.org/abs/1905.04132)や[Generalized Differentiable RANSAC](https://openaccess.thecvf.com/content/ICCV2023/html/Wei_Generalized_Differentiable_RANSAC_ICCV_2023_paper.html)があるため、CNN+RANSAC自体を新規性とはしない。ドッキングリングの幾何選択には[2026年のellipse detector](https://www.mdpi.com/1424-8220/26/2/396)もある。\n\n有望な独自軸は、(1) PAF内周という意味選択をsemantic CNNと明示的CAD priorで比較すること、(2)軌道・姿勢から既知の太陽方向をCNNへ条件付けし、画像だけのモデルとの照明OOD差を検証すること、(3)リング径・厚み・支持構造を変えたPAF family splitで形状一般化を測ること。既知太陽方向案は今回の限定検索では直接同一構成を確認できなかったが、現時点では新規性候補であり、網羅的調査前に新規性を断定しない。"},

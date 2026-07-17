@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import math
-
 import cv2
 import numpy as np
 
@@ -31,25 +29,22 @@ def black_rectangle(
     *,
     rng: np.random.Generator,
 ) -> tuple[np.ndarray, dict]:
-    """画像全高の黒い矩形帯で、学習方式の有用性を単純に検査する。"""
+    """左右どちらかの画像端から伸びる黒矩形で単純遮蔽を検査する。"""
     severity = _severity(severity)
     if severity == 0.0:
         return image.copy(), {"severity": 0.0}
     height, width = image.shape[:2]
-    center_x = float(ellipse[0][0]) + float(rng.uniform(-0.18, 0.18)) * max(
-        ellipse[1]
-    )
     patch_width = max(1, round(width * severity))
-    left = int(np.clip(round(center_x - patch_width / 2), 0, width))
-    right = int(np.clip(left + patch_width, 0, width))
-    if right - left < patch_width:
-        left = max(0, right - patch_width)
+    side = "left" if int(rng.integers(0, 2)) == 0 else "right"
+    left = 0 if side == "left" else width - patch_width
+    right = left + patch_width
     result = image.copy()
     result[:, left:right] = 0
     return result, {
         "severity": severity,
+        "side": side,
         "rectangle_xyxy": [left, 0, right, height],
-        "definition": "画像全高の黒矩形帯。幅は画像幅×severity",
+        "definition": "左右いずれかの画像端から伸びる黒矩形。幅は画像幅×severity",
     }
 
 
@@ -92,11 +87,15 @@ def sensor_black_crush(
     severity = _severity(severity)
     if severity == 0.0:
         return image.copy(), {"severity": 0.0}
-    exposure_stops = -5.0 * severity
-    black_level = 0.015 + 0.14 * severity
-    bits = max(4, round(8 - 4 * severity))
+    # 暗い宇宙背景が多い画像では線形な5段低下が50%付近でほぼ全面黒になるため、
+    # 後半ほど変化を緩め、最大強度でも明部の形状がわずかに残る範囲へ校正する。
+    exposure_stops = -2.5 * severity**1.25
+    black_level = 0.004 + 0.021 * severity**1.5
+    bits = max(6, round(8 - 2 * severity))
     linear = _linearize(image) * (2.0**exposure_stops)
-    linear += rng.normal(0.0, 0.002 + 0.008 * severity, linear.shape).astype(np.float32)
+    linear += rng.normal(0.0, 0.0015 + 0.003 * severity, linear.shape).astype(
+        np.float32
+    )
     linear = np.clip((linear - black_level) / (1.0 - black_level), 0.0, 1.0)
     levels = 2**bits - 1
     linear = np.rint(linear * levels) / levels
@@ -105,78 +104,10 @@ def sensor_black_crush(
         "exposure_stops": exposure_stops,
         "black_level": black_level,
         "quantization_bits": bits,
-        "definition": "低露光、read noise、黒レベルclipping、低bit量子化の近似",
-    }
-
-
-def _sun_uv(conditions: dict) -> tuple[float, float, float]:
-    camera = conditions["camera"]
-    location = np.asarray(camera["location"], dtype=np.float64)
-    target = np.asarray(camera.get("target", [0.0, 0.0, 0.0]), dtype=np.float64)
-    forward = target - location
-    forward /= np.linalg.norm(forward)
-    reference_up = np.array([0.0, 0.0, 1.0], dtype=np.float64)
-    if abs(float(np.dot(forward, reference_up))) > 0.95:
-        reference_up = np.array([0.0, 1.0, 0.0], dtype=np.float64)
-    right = np.cross(forward, reference_up)
-    right /= np.linalg.norm(right)
-    up = np.cross(right, forward)
-    ray = np.asarray(conditions["lighting"]["ray_direction"], dtype=np.float64)
-    source = -ray / np.linalg.norm(ray)
-    depth = float(np.dot(source, forward))
-    lens_mm = float(camera.get("lens_mm", 55.0))
-    tangent = 36.0 / (2.0 * lens_mm)
-    safe_depth = max(abs(depth), 0.15)
-    u = 0.5 + float(np.dot(source, right)) / (2.0 * safe_depth * tangent)
-    v = 0.5 - float(np.dot(source, up)) / (2.0 * safe_depth * tangent)
-    visibility = 1.0 if depth > 0 else 0.15
-    return u, v, visibility
-
-
-def lens_flare(
-    image: np.ndarray,
-    conditions: dict,
-    severity: float,
-    *,
-    rng: np.random.Generator,
-) -> tuple[np.ndarray, dict]:
-    """CGの太陽方向を用いたveiling glare、ghost、bloomの決定論的近似。"""
-    severity = _severity(severity)
-    if severity == 0.0:
-        return image.copy(), {"severity": 0.0}
-    height, width = image.shape[:2]
-    u, v, visibility = _sun_uv(conditions)
-    source = np.array([u * width, v * height], dtype=np.float32)
-    center = np.array([width / 2.0, height / 2.0], dtype=np.float32)
-    yy, xx = np.indices((height, width), dtype=np.float32)
-    overlay = np.zeros((height, width, 3), dtype=np.float32)
-
-    distance2 = (xx - source[0]) ** 2 + (yy - source[1]) ** 2
-    veil_sigma = width * (0.18 + 0.28 * severity)
-    veil = np.exp(-distance2 / (2.0 * veil_sigma**2))[..., None]
-    overlay += veil * np.array([1.0, 0.82, 0.58], dtype=np.float32) * 0.55
-
-    for fraction, radius, strength in ((0.25, 0.055, 0.24), (0.55, 0.035, 0.18), (0.82, 0.075, 0.12)):
-        ghost_center = source + (center - source) * fraction
-        ghost_distance = np.sqrt((xx - ghost_center[0]) ** 2 + (yy - ghost_center[1]) ** 2)
-        ring = np.exp(-((ghost_distance - width * radius) ** 2) / (2.0 * (width * 0.012) ** 2))
-        color = np.array([0.45, 0.72, 1.0], dtype=np.float32)
-        overlay += ring[..., None] * color * strength
-
-    linear = _linearize(image)
-    highlights = np.clip((linear.mean(axis=2) - 0.65) / 0.35, 0.0, 1.0)
-    bloom = cv2.GaussianBlur(highlights, (0, 0), 3.0 + 16.0 * severity)[..., None]
-    jitter = float(rng.uniform(0.96, 1.04))
-    linear = np.clip(
-        linear + (overlay * visibility * severity * jitter) + bloom * 0.35 * severity,
-        0.0,
-        1.0,
-    )
-    return _encode(linear), {
-        "severity": severity,
-        "sun_uv": [u, v],
-        "sun_front_visibility": visibility,
-        "definition": "CG太陽方向に整合したveiling glare、ghost、highlight bloomの近似",
+        "definition": (
+            "緩やかな低露光、read noise、黒レベルclipping、"
+            "低bit量子化の近似"
+        ),
     }
 
 
@@ -184,5 +115,4 @@ EFFECTS = {
     "black_rectangle": black_rectangle,
     "sensor_whiteout": sensor_whiteout,
     "sensor_black_crush": sensor_black_crush,
-    "lens_flare": lens_flare,
 }

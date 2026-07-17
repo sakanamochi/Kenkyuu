@@ -326,10 +326,9 @@ def build_diagnostic_grid(predictor: Predictor, samples: dict[str, dict]) -> Pat
         "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__black_rectangle_s0250_v01",
         "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__sensor_whiteout_s1000_v08",
         "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__sensor_black_crush_s0250_v09",
-        "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__lens_flare_s1000_v16",
     ]
-    titles = ["Clean", "黒矩形 25%", "白飛び 100%", "黒つぶれ 25%", "Flare 100%"]
-    fig, axes = plt.subplots(4, 5, figsize=(15.8, 12.1))
+    titles = ["Clean", "黒矩形 25%", "白飛び 100%", "黒つぶれ 25%"]
+    fig, axes = plt.subplots(4, 4, figsize=(13.2, 12.1))
     fig.suptitle(
         "撮像・遮蔽診断：同じ元画像に効果だけを付与",
         fontsize=21,
@@ -477,7 +476,6 @@ def build_quantitative_summary() -> Path:
         ("black_rectangle", 0.25, "黒矩形\n25%"),
         ("sensor_whiteout", 1.0, "白飛び\n100%"),
         ("sensor_black_crush", 0.25, "黒つぶれ\n25%"),
-        ("lens_flare", 1.0, "Flare\n100%"),
     ]
     x = np.arange(len(keys))
     width = 0.36
@@ -578,11 +576,10 @@ def build_overview_poster(predictor: Predictor, ood_samples: dict[str, dict], di
         "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__black_rectangle_s0250_v01",
         "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__sensor_whiteout_s1000_v08",
         "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__sensor_black_crush_s0250_v09",
-        "camera_t020_a090_d034.0_o02__light_t045_a000_e03.0__diagnostic__lens_flare_s1000_v16",
     ]
     diag_images = [predictor.predict(DIAGNOSTIC, diagnostic_samples[sample_id])["image"] for sample_id in diag_ids]
-    add_thumbnail_strip(ax, diag_images, ["Clean", "黒矩形25%", "白飛び", "黒つぶれ", "Flare"])
-    ax.set_title("2. 遮蔽・撮像効果proxy（1,904枚）", loc="left", fontsize=14, fontweight=500, pad=10)
+    add_thumbnail_strip(ax, diag_images, ["Clean", "黒矩形25%", "白飛び", "黒つぶれ"])
+    ax.set_title("2. 遮蔽・撮像効果proxy（1,456枚）", loc="left", fontsize=14, fontweight=500, pad=10)
     ax.text(
         0.02,
         0.02,

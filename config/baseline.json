@@ -66,6 +66,33 @@
     "min_quality_ratio": 0.05,
     "min_pair_to_top_score": 0.25
   },
+  "fornaciari2014_arc": {
+    "canny_sigma": 0.33,
+    "canny_low_floor": 30,
+    "canny_high_floor": 90,
+    "min_arc_points": 8,
+    "min_bounding_box_short_side_px": 2.0,
+    "max_arcs": 40,
+    "max_arc_combinations": 600,
+    "max_fit_points": 500,
+    "min_axis_px": 8.0,
+    "min_axis_ratio": 0.10,
+    "max_axis_diagonal_ratio": 1.0,
+    "center_margin_ratio": 0.0,
+    "equation_tolerance": 0.10,
+    "min_score": 0.55,
+    "duplicate_center_ratio": 0.10,
+    "duplicate_axis_ratio": 0.10,
+    "max_candidates": 20
+  },
+  "kojima2021_inner_selector": {
+    "area_ratio_min": 2.0,
+    "area_ratio_max": 4.0,
+    "center_distance_major_ratio": 0.15,
+    "axis_ratio_difference": 0.15,
+    "min_quality_ratio": 0.05,
+    "max_candidates": 20
+  },
   "aamed": {
     "theta_fsa": 1.0471975512,
     "length_fsa": 3.4,

@@ -32,6 +32,18 @@ def stable_seed(*parts: object) -> int:
     return zlib.crc32("|".join(map(str, parts)).encode("utf-8")) % (2**32)
 
 
+def diagnostic_seed(
+    experiment_id: str,
+    base_sample_id: str,
+    effect: str,
+    severity: float,
+) -> int:
+    """黒矩形だけは強度間で同じ画面端を選び、進行方向を固定する。"""
+    if effect == "black_rectangle":
+        return stable_seed(experiment_id, base_sample_id, effect)
+    return stable_seed(experiment_id, base_sample_id, effect, severity)
+
+
 def main() -> None:
     args = parse_args()
     suite = json.loads(project_path(args.config).read_text(encoding="utf-8"))
@@ -61,17 +73,18 @@ def main() -> None:
             for severity in suite["diagnostics"]["severities"]
         ]
         for variant_index, (effect, severity) in enumerate(variants):
-            seed = stable_seed(suite["experiment_id"], base_sample["sample_id"], effect, severity)
+            seed = diagnostic_seed(
+                suite["experiment_id"],
+                base_sample["sample_id"],
+                effect,
+                severity,
+            )
             rng = np.random.default_rng(seed)
             if effect == "clean":
                 rendered = image.copy()
                 metadata = {"definition": "未劣化"}
             elif effect == "black_rectangle":
                 rendered, metadata = EFFECTS[effect](image, ellipse, severity, rng=rng)
-            elif effect == "lens_flare":
-                rendered, metadata = EFFECTS[effect](
-                    image, base_sample["conditions"], severity, rng=rng
-                )
             else:
                 rendered, metadata = EFFECTS[effect](image, severity, rng=rng)
             sample_id = (

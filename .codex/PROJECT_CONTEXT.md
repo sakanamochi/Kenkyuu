@@ -9,10 +9,10 @@
 ### 第1回で示す内容
 
 - CG評価環境、714枚の内訳、学習・評価データの構成
-- 旧 `canny_ransac`（Canny輪郭ごとのRANSAC）とCNN方式
+- Canny + 輪郭別RANSAC（内周priorを含む）とCNN方式
 - RANSACとCNN学習の要点
 - 単純黒矩形、白飛びproxy、黒つぶれproxyの初期結果
-- 旧方式では遮蔽で分断された左右の弧を統合できないこと
+- Canny方式では遮蔽で分断された左右の弧を統合できないこと
 - 次回までにZhang et al. (2019)型をベースラインとして導入する予定
 
 第1回では地球・月背景、未知角度別の詳細結果、Zhang型の実験結果は扱わない。
@@ -73,16 +73,25 @@ On-Orbit Spacecraft,” Sensors, 19(23), 5243, 2019.
 
 ## 補足・アブレーションへ移した方式
 
+- `kojima2021_fornaciari_reproduction`: Kojima et al. (2021) がPAFの内外周楕円検出に
+  採用したFornaciari et al. (2014)の再現実装。勾配方向2群と凸性から4種類の弧を作り、
+  3弧を統合して楕円方程式への適合率で検証する。原論文の分解1次元Hough投票は
+  `fitEllipseDirect` に置換した。複数候補からPAF内周を選ぶ同心・相似ペアpriorは
+  本評価用の追加処理であり、Kojima論文に記載された自動選択処理ではない。
 - `canny_global_ransac`: Canny全エッジ点を単一RANSACへ入力。
   遮蔽で分断された弧は同時に扱えるが、外周・溝・付属部品も同時に入り、診断1,904枚で4.0%。
-- `canny_ransac`: Canny輪郭ごとのRANSAC。遮蔽で別輪郭になった弧を統合できない。
-- `canny_ransac_inner_pair`: 上記候補へPAF同心二重輪郭priorを追加。
-  PAF固有priorの効果を調べる監査用であり、主古典ベースラインではない。
+- `canny_ransac_inner_pair`: Canny輪郭ごとにRANSACを適用し、PAF同心二重輪郭の
+  内周priorで候補を選ぶ。表示名は「Canny + 輪郭別RANSAC」に統一する。
 - `contour_fit`: 輪郭ごとのOpenCV楕円フィット。最小統制。
 
 これらの集計結果は研究判断の記録として残す。専用コードは現行判断の再検証に必要なものだけを
 `paflab/experiments/` に残す。現在の研究成果物ではZhang型とCNNを主比較とするが、
-第1回進捗報告だけは上記の時系列に従い旧Canny方式とCNNを表示する。
+第1回進捗報告だけは上記の時系列に従いCanny方式とCNNを表示する。
+
+Kojima採用法の同一条件での初回評価は、OOD 480枚で71/480（14.8%）、撮像診断
+1,456枚で126/1,456（8.7%）。同じIoU 0.80基準のZhang 2019型（再現実装）は
+それぞれ250/480（52.1%）、556/1,456（38.2%）だった。これは再現実装間の比較であり、
+原論文が報告した性能同士の比較ではない。
 
 ## 重要な過去判断
 
@@ -107,6 +116,6 @@ On-Orbit Spacecraft,” Sensors, 19(23), 5243, 2019.
 .venv\Scripts\python.exe -m paflab.reporting.summarize_second_stage
 .venv\Scripts\python.exe -m paflab.reporting.build_summary_figures
 
-# 第1回進捗報告用の図版（旧Canny方式とCNN）
+# 第1回進捗報告用の図版（Canny + 輪郭別RANSACとCNN）
 .venv\Scripts\python.exe -m paflab.reporting.build_first_progress_figures
 ```

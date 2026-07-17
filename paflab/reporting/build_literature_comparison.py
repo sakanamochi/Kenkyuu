@@ -249,7 +249,7 @@ def build_grid(
         "CNN + RANSAC",
     ]
     if include_ablations:
-        rows[3:3] = ["Contour fit", "Canny + RANSAC", "+ 内周prior"]
+        rows[3:3] = ["Contour fit", "Canny + 輪郭別RANSAC"]
     fig, axes = plt.subplots(len(rows), len(sample_ids), figsize=(16.3, 22.5))
     fig.suptitle(
         f"{dataset_config['label']}：入力・中間表現・推定楕円の対応比較",
@@ -282,7 +282,6 @@ def build_grid(
         if include_ablations:
             classic_methods = [
                 "contour_fit",
-                "canny_ransac",
                 "canny_ransac_inner_pair",
                 *classic_methods,
             ]

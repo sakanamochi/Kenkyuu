@@ -18,7 +18,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--methods",
         nargs="+",
-        default=("contour_fit", "canny_ransac"),
+        default=("contour_fit", "canny_ransac_inner_pair"),
     )
     return parser.parse_args()
 

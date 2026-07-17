@@ -69,7 +69,7 @@ def main() -> None:
     parser.add_argument(
         "--include-ablations",
         action="store_true",
-        help="主比較に加えて旧Canny・輪郭方式も再評価・表示する",
+        help="主比較に加えてCanny + 輪郭別RANSAC等も再評価・表示する",
     )
     parser.add_argument("--with-aamed", action="store_true")
     parser.add_argument("--rerun-cnn", action="store_true")
@@ -95,6 +95,15 @@ def main() -> None:
                     baseline_config,
                     "--resume",
                 )
+            if "kojima2021_fornaciari_reproduction" in methods_to_run:
+                evaluate_classic(
+                    dataset,
+                    split,
+                    "kojima2021_fornaciari_reproduction",
+                    results["kojima2021_fornaciari_reproduction"],
+                    baseline_config,
+                    "--resume",
+                )
             if "contour_fit" in methods_to_run:
                 evaluate_classic(
                     dataset,
@@ -104,16 +113,6 @@ def main() -> None:
                     baseline_config,
                     "--resume",
                 )
-            if "canny_ransac" in methods_to_run:
-                evaluate_classic(
-                    dataset,
-                    split,
-                    "canny_ransac",
-                    results["canny_ransac"],
-                    baseline_config,
-                    "--paired-ransac-seed",
-                    "--resume",
-                )
             if "canny_ransac_inner_pair" in methods_to_run:
                 evaluate_classic(
                     dataset,
@@ -121,8 +120,8 @@ def main() -> None:
                     "canny_ransac_inner_pair",
                     results["canny_ransac_inner_pair"],
                     baseline_config,
-                    "--reuse-candidates-from",
-                    results["canny_ransac"],
+                    "--paired-ransac-seed",
+                    "--resume",
                 )
             cnn_summary = dataset / "results" / results["cnn_ransac"] / "summary.json"
             if args.rerun_cnn or not cnn_summary.exists():
