@@ -10,7 +10,8 @@
 - 実行入口: `run.py`
 - 設定: `config/experiment.json`
 - Pythonパッケージ: `paf_ring_detection/`
-- Zhang型: `paf_ring_detection/methods/zhang2019.py`
+- Zhang型論文コア: `paf_ring_detection/methods/zhang2019.py`
+- Zhang型PAF固有後処理: `paf_ring_detection/methods/zhang2019_paf.py`
 - CNN: `paf_ring_detection/methods/cnn.py`
 - weighted RANSAC: `paf_ring_detection/methods/ransac.py`
 - 標準Canny + 輪郭分離:
@@ -51,8 +52,10 @@
 
 ```text
 Zhang 2019型（再現実装）
-入力 → Canny → 勾配方向・凸性による弧抽出 → 複数弧のグループ化
-     → 最小二乗楕円 → 実エッジ支持による検証 → 内周候補
+入力 → Canny → 勾配象限・凸性による弧抽出
+     → 隣接弧の位置・接線制約 → 三弧の中心整合
+     → 最小二乗楕円 → 弧上点の中心光線距離による適合度検証
+     → PAF固有の全周支持・輝度極性・同心内周選択
 
 CNN方式
 入力 → Tiny U-Netリング尤度 → 閾値点群 → weighted RANSAC → 内周楕円
@@ -87,13 +90,16 @@ On-Orbit Spacecraft,” Sensors, 19(23), 5243, 2019.
 「宇宙機画像から投影楕円となるリング内周を、分断弧の統合で検出する」という問題設定が
 本研究の古典比較として最も近い。
 
-`analysis/zhang_arc_detector.py` は論文の処理順を参考にしたPython再現実装であり、
+`paf_ring_detection/methods/zhang2019.py` は論文の処理順を参考にした
+Python再現実装であり、
 著者コードの逐語的移植や完全再現ではない。論文との差分は少なくとも以下を含む。
 
 - OpenCVによるCanny・Sobel・`fitEllipseDirect`を使用
 - 計算量を固定するため弧数・組合せ数を制限
-- PAF画像向けに実エッジ支持、角度被覆、内外輝度を得点化
-- 同心候補が存在する場合だけ内側を選ぶ最終選択を追加
+- 平行弦中点法は離散弧上の補間と`fitLine`で数値実装
+- `zhang2019_paf.py`でPAF画像向けに全周エッジ支持、角度被覆、
+  内外輝度を得点化
+- 同ファイルで同心候補が存在する場合だけ内側を選ぶ最終選択を追加
 
 したがって論文そのものの性能として結果を引用してはならない。
 

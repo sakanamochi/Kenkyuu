@@ -31,7 +31,8 @@ paf_ring_detection/
     ransac.py                  weighted RANSAC
     canny_contour_ransac.py    標準Canny・輪郭分離・内周選択
     cnn_ransac.py              CNNとRANSACの接続
-    zhang2019.py               Zhang 2019型（再現実装）
+    zhang2019.py               Zhang 2019型（再現実装）の論文コア
+    zhang2019_paf.py           PAF固有の候補評価・内周選択
 tests/                         研究処理を壊していないか確認
 output/                        データ・重み・結果（Git管理外）
 ```
@@ -90,7 +91,8 @@ Gaussian平滑化と標準Cannyでエッジを抽出し、連結輪郭ごとに�
 - 楕円IoU
 - weighted RANSAC
 - CNNの入出力
-- Zhang型の分断弧統合と正規出典
+- Zhang型の象限・凸性、弧ペア制約、中心整合、中心光線距離
+- Zhang型の論文コアとPAF固有後処理の分離
 
 ## 出力
 
@@ -117,6 +119,10 @@ Limin Zhang, Wang Pan, Xianghua Ma,
 On-Orbit Spacecraft,” Sensors, 19(23), 5243, 2019.
 DOI: `10.3390/s19235243`
 
-`methods/zhang2019.py` は論文の処理構成を参考にしたPython再現実装です。
+`methods/zhang2019.py` は、勾配象限と凸性による弧選別、隣接象限の
+位置・接線制約、三弧の中心整合、最小二乗楕円、弧上点の中心光線距離による
+適合度検証を、論文の処理構成に沿って実装したPython再現実装です。
+全周エッジ支持、内外輝度極性、同心候補対からの内周選択は論文コアではないため、
+`methods/zhang2019_paf.py` にPAF固有後処理として分離しています。
 著者コードの移植ではないため、成果物では必ず
 「Zhang 2019型（再現実装）」と表記します。

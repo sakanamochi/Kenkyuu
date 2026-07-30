@@ -27,6 +27,9 @@ from paf_ring_detection.methods.cnn import load_model
 from paf_ring_detection.methods.cnn_ransac import detect_from_probability
 from paf_ring_detection.methods.zhang2019 import (
     detect_zhang_arc_candidates,
+)
+from paf_ring_detection.methods.zhang2019_paf import (
+    score_zhang_candidates_for_paf,
     select_zhang_inner_boundary,
 )
 
@@ -73,12 +76,20 @@ def _evaluate_zhang(
     for index, sample in enumerate(samples, start=1):
         image = read_image(dataset_dir / sample["image"])
         truth = label_ellipse(read_json(dataset_dir / sample["label"]))
-        candidates, _ = detect_zhang_arc_candidates(
+        candidates, stages = detect_zhang_arc_candidates(
             image,
             settings["preprocess"],
             settings["detector"],
         )
-        selected = select_zhang_inner_boundary(candidates, settings["selector"])
+        candidates = score_zhang_candidates_for_paf(
+            candidates,
+            stages,
+            settings["paf_postprocess"]["candidate_validation"],
+        )
+        selected = select_zhang_inner_boundary(
+            candidates,
+            settings["paf_postprocess"]["selector"],
+        )
         row = _result_row(sample, "zhang2019_reproduction")
         detected = selected["ellipse"] if selected else None
         _add_evaluation(
