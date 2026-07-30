@@ -14,7 +14,7 @@
 - CNN: `paf_ring_detection/methods/cnn.py`
 - weighted RANSAC: `paf_ring_detection/methods/ransac.py`
 - 共通評価: `paf_ring_detection/evaluate.py`
-- 通常出力: `output/minimal_results/`
+- 通常出力: `output/results/`
 
 旧`analysis/`、旧`paflab/`、GUI、アブレーション、発表専用生成コードは
 このブランチから外し、mainブランチのGit履歴へ残している。

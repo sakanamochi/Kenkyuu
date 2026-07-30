@@ -11,12 +11,12 @@
   ],
 
   "paths": {
-    "base_dataset": "output/datasets/research_base_v1",
-    "training_dataset": "output/datasets/paf_robustness_v3",
-    "ood_dataset": "output/datasets/research_ood_base_v1",
-    "diagnostic_dataset": "output/datasets/paf_diagnostics_v1",
-    "checkpoint": "output/experiments/paf_robustness_v3/cnn_best.pt",
-    "results": "output/minimal_results"
+    "base_dataset": "output/datasets/base_cg",
+    "training_dataset": "output/datasets/cnn_training",
+    "ood_dataset": "output/datasets/ood_evaluation",
+    "diagnostic_dataset": "output/datasets/diagnostic_evaluation",
+    "checkpoint": "output/models/cnn_best.pt",
+    "results": "output/results"
   },
 
   "split": {
@@ -107,11 +107,11 @@
 
   "evaluation_datasets": {
     "ood": {
-      "path": "output/datasets/research_ood_base_v1",
+      "path": "output/datasets/ood_evaluation",
       "split": "ood_test"
     },
     "diagnostic": {
-      "path": "output/datasets/paf_diagnostics_v1",
+      "path": "output/datasets/diagnostic_evaluation",
       "split": "diagnostic_test"
     }
   }

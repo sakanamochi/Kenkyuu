@@ -88,7 +88,7 @@ render → prepare → train → evaluate → report
 通常評価では大量の中間画像やサンプル別JSONを保存しません。
 
 ```text
-output/minimal_results/
+output/results/
   ood/
     zhang2019.csv / .json
     cnn_ransac.csv / .json

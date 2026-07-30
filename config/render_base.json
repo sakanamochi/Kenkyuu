@@ -1,7 +1,7 @@
 {
-  "experiment_id": "research_base_v1",
+  "experiment_id": "base_cg",
   "model_path": "assets/1194M_3/1194M_3.obj",
-  "output_dir": "output/datasets/research_base_v1",
+  "output_dir": "output/datasets/base_cg",
   "save_preview_blend": true,
   "normalize_model_axes": true,
   "lighting_direction_mode": "object_spherical",
