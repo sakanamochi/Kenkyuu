@@ -52,6 +52,19 @@ def _configure_japanese_font() -> None:
             return
 
 
+def _style_boxed_axes(axis) -> None:
+    """四辺を表示し、上下左右の目盛りを内向きにそろえる。"""
+    for spine in axis.spines.values():
+        spine.set_visible(True)
+    axis.tick_params(
+        axis="both",
+        which="both",
+        direction="in",
+        top=True,
+        right=True,
+    )
+
+
 def _success_by_severity(
     csv_path: Path,
     degradation: str,
@@ -121,8 +134,7 @@ def _build_diagnostic_severity_figure(
         axis.set_ylim(-2, 102)
         axis.set_yticks((0, 20, 40, 60, 80, 100))
         axis.grid(axis="y", color="#d1d5db", linewidth=0.8)
-        axis.spines["top"].set_visible(False)
-        axis.spines["right"].set_visible(False)
+        _style_boxed_axes(axis)
     axes[0].set_ylabel("成功率（%）")
     figure.suptitle("撮像劣化強度別の検出成功率", fontsize=18)
     handles, labels = axes[0].get_legend_handles_labels()
@@ -201,6 +213,7 @@ def build_report(config: dict) -> None:
     axis.set_xticks(list(x), names)
     axis.set_ylabel("Success rate [%]")
     axis.set_ylim(0, 100)
+    _style_boxed_axes(axis)
     axis.legend()
     figure.tight_layout()
     figure.savefig(result_root / "comparison.png", dpi=160)
