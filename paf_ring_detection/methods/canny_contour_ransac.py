@@ -1,4 +1,4 @@
-"""円周輪郭を優先するCanny前処理と共通RANSACを接続する。"""
+"""標準Cannyの連結輪郭と共通RANSACを接続する。"""
 
 from __future__ import annotations
 
@@ -8,10 +8,9 @@ import numpy as np
 from paf_ring_detection.methods.ransac import fit_ellipse_ransac
 
 
-def extract_curve_contours(image: np.ndarray, settings: dict) -> dict:
-    """畳み込み勾配から中心方向のエッジだけを残し、輪郭を分離する。"""
+def extract_canny_contours(image: np.ndarray, settings: dict) -> dict:
+    """Gaussian平滑化、Canny、連結輪郭抽出だけを行う。"""
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
     blur_size = int(settings["blur_kernel_size"])
     blurred = cv2.GaussianBlur(
         gray,
@@ -23,175 +22,35 @@ def extract_curve_contours(image: np.ndarray, settings: dict) -> dict:
         int(settings["canny_low"]),
         int(settings["canny_high"]),
     )
-
-    # Sobel畳み込みで得た勾配が推定中心を向くエッジを円周候補とする。
-    sobel_size = int(settings["sobel_kernel_size"])
-    gradient_x = cv2.Sobel(
-        blurred,
-        cv2.CV_32F,
-        1,
-        0,
-        ksize=sobel_size,
-    )
-    gradient_y = cv2.Sobel(
-        blurred,
-        cv2.CV_32F,
-        0,
-        1,
-        ksize=sobel_size,
-    )
-    center = _estimate_circular_center(
-        edges,
-        gradient_x,
-        gradient_y,
-        settings,
-    )
-    radial_alignment = _radial_gradient_alignment(
-        edges,
-        gradient_x,
-        gradient_y,
-        center,
-    )
-    circular_edges = np.where(
-        (edges > 0)
-        & (radial_alignment >= float(settings["min_radial_alignment"])),
-        255,
-        0,
-    ).astype(np.uint8)
     contours, _ = cv2.findContours(
-        circular_edges,
+        edges,
         cv2.RETR_LIST,
         cv2.CHAIN_APPROX_NONE,
     )
 
     minimum_points = int(settings["min_contour_points"])
-    minimum_spread_ratio = float(settings["min_contour_spread_ratio"])
-    curve_contours = []
+    separated_contours = []
     for contour in contours:
-        points = contour[:, 0, :].astype(np.float64)
-        if len(points) < minimum_points:
+        if len(contour) < minimum_points:
             continue
-
-        # PCAの短軸/長軸分散比が小さい輪郭は、ほぼ直線のリブとして除外する。
-        covariance = np.cov(points, rowvar=False)
-        eigenvalues = np.linalg.eigvalsh(covariance)
-        if eigenvalues[-1] <= 1e-9:
-            continue
-        spread_ratio = float(eigenvalues[0] / eigenvalues[-1])
-        if spread_ratio < minimum_spread_ratio:
-            continue
-        curve_contours.append(
+        separated_contours.append(
             {
                 "contour": contour,
-                "point_count": len(points),
-                "spread_ratio": spread_ratio,
+                "point_count": len(contour),
             }
         )
 
-    curve_contours.sort(key=lambda item: item["point_count"], reverse=True)
+    separated_contours.sort(
+        key=lambda item: item["point_count"],
+        reverse=True,
+    )
     maximum_contours = int(settings["max_contours"])
     return {
         "gray": gray,
         "blurred": blurred,
-        "canny_edges": edges,
-        "gradient_x": gradient_x,
-        "gradient_y": gradient_y,
-        "estimated_center": center,
-        "radial_alignment": radial_alignment,
-        "edges": circular_edges,
-        "contours": curve_contours[:maximum_contours],
+        "edges": edges,
+        "contours": separated_contours[:maximum_contours],
     }
-
-
-def _radial_gradient_alignment(
-    edges: np.ndarray,
-    gradient_x: np.ndarray,
-    gradient_y: np.ndarray,
-    center: tuple[float, float],
-) -> np.ndarray:
-    """勾配と中心方向の平行度を0から1で返す。"""
-    height, width = edges.shape
-    columns, rows = np.meshgrid(
-        np.arange(width, dtype=np.float32),
-        np.arange(height, dtype=np.float32),
-    )
-    radial_x = columns - float(center[0])
-    radial_y = rows - float(center[1])
-    radial_norm = np.hypot(radial_x, radial_y)
-    gradient_norm = np.hypot(gradient_x, gradient_y)
-    dot_product = gradient_x * radial_x + gradient_y * radial_y
-    alignment = np.abs(dot_product) / np.maximum(
-        radial_norm * gradient_norm,
-        1e-6,
-    )
-    alignment[edges == 0] = 0.0
-    return alignment
-
-
-def _estimate_circular_center(
-    edges: np.ndarray,
-    gradient_x: np.ndarray,
-    gradient_y: np.ndarray,
-    settings: dict,
-) -> tuple[float, float]:
-    """画像中央付近から、円周方向の勾配支持が最大になる中心を探す。"""
-    rows, columns = np.nonzero(edges)
-    height, width = edges.shape
-    image_center = (width / 2.0, height / 2.0)
-    if len(rows) == 0:
-        return image_center
-
-    maximum_points = int(settings["center_search_max_points"])
-    if len(rows) > maximum_points:
-        indices = np.linspace(
-            0,
-            len(rows) - 1,
-            maximum_points,
-            dtype=np.int64,
-        )
-        rows = rows[indices]
-        columns = columns[indices]
-
-    point_gradient_x = gradient_x[rows, columns].astype(np.float64)
-    point_gradient_y = gradient_y[rows, columns].astype(np.float64)
-    gradient_norm = np.hypot(point_gradient_x, point_gradient_y)
-    magnitude_scale = max(float(np.percentile(gradient_norm, 95)), 1e-6)
-    weights = np.minimum(gradient_norm / magnitude_scale, 1.0)
-    power = float(settings["center_alignment_power"])
-
-    radius_x = width * float(settings["center_search_radius_ratio"])
-    radius_y = height * float(settings["center_search_radius_ratio"])
-    step = int(settings["center_search_step_px"])
-    candidate_x = np.arange(
-        image_center[0] - radius_x,
-        image_center[0] + radius_x + 1,
-        step,
-    )
-    candidate_x = np.unique(np.append(candidate_x, image_center[0]))
-    candidate_y = np.arange(
-        image_center[1] - radius_y,
-        image_center[1] + radius_y + 1,
-        step,
-    )
-    candidate_y = np.unique(np.append(candidate_y, image_center[1]))
-
-    best_center = image_center
-    best_score = -1.0
-    for center_y in candidate_y:
-        radial_y = rows.astype(np.float64) - center_y
-        for center_x in candidate_x:
-            radial_x = columns.astype(np.float64) - center_x
-            radial_norm = np.hypot(radial_x, radial_y)
-            dot_product = point_gradient_x * radial_x + point_gradient_y * radial_y
-            alignment = np.abs(dot_product) / np.maximum(
-                gradient_norm * radial_norm,
-                1e-6,
-            )
-            score = float(np.sum(weights * alignment**power))
-            if score > best_score:
-                best_score = score
-                best_center = (float(center_x), float(center_y))
-    return best_center
 
 
 def _fit_contour_candidates(
@@ -223,7 +82,6 @@ def _fit_contour_candidates(
             {
                 **result,
                 "contour_index": contour_index,
-                "contour_spread_ratio": item["spread_ratio"],
                 "inlier_ratio": inlier_ratio,
                 "selection_score": selection_score,
             }
@@ -331,8 +189,8 @@ def detect_canny_contour_ransac(
     ransac_settings: dict,
     random_seed: int,
 ) -> tuple[dict | None, dict]:
-    """円周優先Canny、輪郭分離、共通RANSACでPAF内周を検出する。"""
-    stages = extract_curve_contours(image, settings["preprocess"])
+    """標準Canny、輪郭分離、共通RANSACでPAF内周を検出する。"""
+    stages = extract_canny_contours(image, settings["preprocess"])
     candidates = _fit_contour_candidates(
         stages,
         image.shape,

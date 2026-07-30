@@ -3,7 +3,7 @@ import numpy as np
 
 from paf_ring_detection.methods.canny_contour_ransac import (
     detect_canny_contour_ransac,
-    extract_curve_contours,
+    extract_canny_contours,
 )
 
 
@@ -14,14 +14,7 @@ def _settings() -> tuple[dict, dict]:
             "blur_sigma": 1.2,
             "canny_low": 40,
             "canny_high": 120,
-            "sobel_kernel_size": 3,
-            "center_search_radius_ratio": 0.15,
-            "center_search_step_px": 6,
-            "center_search_max_points": 8000,
-            "center_alignment_power": 2.0,
-            "min_radial_alignment": 0.40,
             "min_contour_points": 20,
-            "min_contour_spread_ratio": 0.01,
             "max_contours": 30,
         },
         "selector": {
@@ -65,14 +58,23 @@ def _ring_with_radial_ribs() -> np.ndarray:
     return image
 
 
-def test_radial_gradient_filter_reduces_canny_edge_pixels():
+def test_preprocess_is_standard_gaussian_and_canny():
     detector, _ = _settings()
     image = _ring_with_radial_ribs()
-    stages = extract_curve_contours(image, detector["preprocess"])
+    settings = detector["preprocess"]
+    stages = extract_canny_contours(image, settings)
 
-    assert np.count_nonzero(stages["edges"]) < np.count_nonzero(
-        stages["canny_edges"]
+    expected_blur = cv2.GaussianBlur(
+        cv2.cvtColor(image, cv2.COLOR_BGR2GRAY),
+        (settings["blur_kernel_size"], settings["blur_kernel_size"]),
+        settings["blur_sigma"],
     )
+    expected_edges = cv2.Canny(
+        expected_blur,
+        settings["canny_low"],
+        settings["canny_high"],
+    )
+    assert np.array_equal(stages["edges"], expected_edges)
     assert len(stages["contours"]) >= 2
 
 

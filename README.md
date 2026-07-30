@@ -2,7 +2,7 @@
 
 PAFのCG画像から内周楕円を検出し、次の3方式を比較する個人研究用コードです。
 
-- 円周優先Canny + 輪郭分離 + 共通RANSAC
+- 標準Canny + 輪郭分離 + 共通RANSAC
 - Zhang 2019型（再現実装）
 - CNNリング尤度 + weighted RANSAC
 
@@ -29,7 +29,7 @@ paf_ring_detection/
   methods/
     cnn.py                     Tiny U-Net
     ransac.py                  weighted RANSAC
-    canny_contour_ransac.py    畳み込み勾配・輪郭分離・内周選択
+    canny_contour_ransac.py    標準Canny・輪郭分離・内周選択
     cnn_ransac.py              CNNとRANSACの接続
     zhang2019.py               Zhang 2019型（再現実装）
 tests/                         研究処理を壊していないか確認
@@ -71,12 +71,12 @@ py -3.10 -m venv .venv
 render → prepare → train → evaluate → report
 ```
 
-### 円周優先Canny方式
+### Canny統制方式
 
-Gaussian・Sobel畳み込みで勾配を求め、画像中央付近を探索して円周の中心を推定します。
-その中心を向く勾配だけを残すことで、円周と直交する放射リブを抑えます。
-残ったエッジは連結輪郭ごとに分離して `methods/ransac.py` の共通RANSACへ渡し、
-同心・相似な候補対の小さい側を内周として選びます。
+Gaussian平滑化と標準Cannyでエッジを抽出し、連結輪郭ごとに分離して
+`methods/ransac.py` の共通RANSACへ渡します。PAFの既知形状として、
+同心・相似な内外周候補対の小さい側だけを内周として選びます。
+この方式は先行研究の再現ではなく、CNNによるエッジ抽出の寄与を見る統制比較です。
 
 ## テスト
 
