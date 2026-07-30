@@ -1,6 +1,23 @@
-# PAF内周リング検出研究: Codex引き継ぎコンテキスト
+# PAF内周リング検出研究: Codex引き継ぎコンテキスト（旧構成の記録）
 
 更新日: 2026-07-17
+
+## 2026-07-30 最小構成ブランチ
+
+`codex/minimal-research-environment`では、下記本文に記録された旧構成を整理した。
+研究上の判断と結果の履歴は本文に残すが、現在の実行構成はREADMEを正とする。
+
+- 実行入口: `run.py`
+- 設定: `config/experiment.json`
+- Pythonパッケージ: `paf_ring_detection/`
+- Zhang型: `paf_ring_detection/methods/zhang2019.py`
+- CNN: `paf_ring_detection/methods/cnn.py`
+- weighted RANSAC: `paf_ring_detection/methods/ransac.py`
+- 共通評価: `paf_ring_detection/evaluate.py`
+- 通常出力: `output/minimal_results/`
+
+旧`analysis/`、旧`paflab/`、GUI、アブレーション、発表専用生成コードは
+このブランチから外し、mainブランチのGit履歴へ残している。
 
 ## 進捗報告の時系列
 
