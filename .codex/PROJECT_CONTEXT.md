@@ -13,6 +13,8 @@
 - Zhang型: `paf_ring_detection/methods/zhang2019.py`
 - CNN: `paf_ring_detection/methods/cnn.py`
 - weighted RANSAC: `paf_ring_detection/methods/ransac.py`
+- 円周優先Canny + 輪郭分離:
+  `paf_ring_detection/methods/canny_contour_ransac.py`
 - 共通評価: `paf_ring_detection/evaluate.py`
 - 通常出力: `output/results/`
 
@@ -44,8 +46,8 @@
 
 ## 現在の主比較
 
-主古典ベースラインは `zhang2019_arc_reproduction`、学習方式はCNNリング尤度と
-weighted RANSACの組合せである。
+主古典ベースラインは `zhang2019_arc_reproduction`、追加する古典方式は円周優先Canny
+と輪郭分離、学習方式はCNNリング尤度とweighted RANSACの組合せである。
 
 ```text
 Zhang 2019型（再現実装）
@@ -54,6 +56,10 @@ Zhang 2019型（再現実装）
 
 CNN方式
 入力 → Tiny U-Netリング尤度 → 閾値点群 → weighted RANSAC → 内周楕円
+
+Canny方式
+入力 → Gaussian/Sobel畳み込み → 中心方向の勾配選択 → Canny輪郭の分離
+     → CNN方式と共通のRANSAC実装 → 同心候補対から内周選択
 ```
 
 主比較に使う結果:

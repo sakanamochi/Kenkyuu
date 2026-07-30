@@ -1,4 +1,4 @@
-"""Zhang 2019型（再現実装）とCNN方式を同じIoU基準で評価する。"""
+"""Canny、Zhang 2019型（再現実装）、CNNを同じIoU基準で評価する。"""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ import csv
 import zlib
 from pathlib import Path
 
+import cv2
 import torch
 from torch.utils.data import DataLoader
 
@@ -19,6 +20,9 @@ from paf_ring_detection.data import (
     write_json,
 )
 from paf_ring_detection.geometry import evaluate_ellipses
+from paf_ring_detection.methods.canny_contour_ransac import (
+    detect_canny_contour_ransac,
+)
 from paf_ring_detection.methods.cnn import load_model
 from paf_ring_detection.methods.cnn_ransac import detect_from_probability
 from paf_ring_detection.methods.zhang2019 import (
@@ -87,6 +91,53 @@ def _evaluate_zhang(
         rows.append(row)
         if index % 50 == 0:
             print(f"Zhang型: {index}/{len(samples)}")
+    return rows
+
+
+def _evaluate_canny(
+    config: dict,
+    dataset_dir: Path,
+    split: str,
+    limit: int | None,
+) -> list[dict]:
+    """CNNと同じ入力寸法・同じRANSAC実装でCanny方式を評価する。"""
+    rows = []
+    samples = load_samples(dataset_dir, split)[:limit]
+    input_size = int(config["input_size"])
+    for index, sample in enumerate(samples, start=1):
+        source_image = read_image(dataset_dir / sample["image"])
+        image = cv2.resize(
+            source_image,
+            (input_size, input_size),
+            interpolation=cv2.INTER_AREA,
+        )
+        label = read_json(dataset_dir / sample["label"])
+        scale = input_size / float(label["image_width"])
+        truth = scaled_ellipse(label_ellipse(label), scale)
+        seed_key = sample["conditions"].get(
+            "base_sample_id", sample["sample_id"]
+        )
+        random_seed = (
+            config["seed"] + zlib.crc32(seed_key.encode("utf-8"))
+        ) % (2**32)
+        selected, _ = detect_canny_contour_ransac(
+            image,
+            config["canny_contour_ransac"],
+            config["ransac"],
+            random_seed,
+        )
+        row = _result_row(sample, "canny_contour_shared_ransac")
+        detected = selected["ellipse"] if selected else None
+        _add_evaluation(
+            row,
+            detected,
+            truth,
+            image.shape,
+            config["success_iou"],
+        )
+        rows.append(row)
+        if index % 50 == 0:
+            print(f"Canny方式: {index}/{len(samples)}")
     return rows
 
 
@@ -160,11 +211,12 @@ def _save_results(output: Path, rows: list[dict]) -> dict:
 
 
 def evaluate(config: dict, limit: int | None = None) -> None:
-    """設定に記載したデータセットを2方式で評価する。"""
+    """設定に記載したデータセットを3方式で評価する。"""
     result_root = Path(config["paths"]["results"])
     for dataset_name, dataset in config["evaluation_datasets"].items():
         dataset_dir = Path(dataset["path"])
         for method, evaluator in (
+            ("canny_contour_ransac", _evaluate_canny),
             ("zhang2019", _evaluate_zhang),
             ("cnn_ransac", _evaluate_cnn),
         ):

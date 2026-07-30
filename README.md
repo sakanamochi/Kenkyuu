@@ -1,7 +1,8 @@
 # PAF内周リング検出
 
-PAFのCG画像から内周楕円を検出し、次の2方式を比較する個人研究用コードです。
+PAFのCG画像から内周楕円を検出し、次の3方式を比較する個人研究用コードです。
 
+- 円周優先Canny + 輪郭分離 + 共通RANSAC
 - Zhang 2019型（再現実装）
 - CNNリング尤度 + weighted RANSAC
 
@@ -23,11 +24,12 @@ paf_ring_detection/
   prepare.py                   学習・診断データ作成
   geometry.py                  楕円IoUなどの共通計算
   train.py                     CNN学習
-  evaluate.py                  2方式の共通評価
+  evaluate.py                  3方式の共通評価
   report.py                    summary.jsonと比較図
   methods/
     cnn.py                     Tiny U-Net
     ransac.py                  weighted RANSAC
+    canny_contour_ransac.py    畳み込み勾配・輪郭分離・内周選択
     cnn_ransac.py              CNNとRANSACの接続
     zhang2019.py               Zhang 2019型（再現実装）
 tests/                         研究処理を壊していないか確認
@@ -69,6 +71,13 @@ py -3.10 -m venv .venv
 render → prepare → train → evaluate → report
 ```
 
+### 円周優先Canny方式
+
+Gaussian・Sobel畳み込みで勾配を求め、画像中央付近を探索して円周の中心を推定します。
+その中心を向く勾配だけを残すことで、円周と直交する放射リブを抑えます。
+残ったエッジは連結輪郭ごとに分離して `methods/ransac.py` の共通RANSACへ渡し、
+同心・相似な候補対の小さい側を内周として選びます。
+
 ## テスト
 
 ```powershell
@@ -90,9 +99,11 @@ render → prepare → train → evaluate → report
 ```text
 output/results/
   ood/
+    canny_contour_ransac.csv / .json
     zhang2019.csv / .json
     cnn_ransac.csv / .json
   diagnostic/
+    canny_contour_ransac.csv / .json
     zhang2019.csv / .json
     cnn_ransac.csv / .json
   summary.json

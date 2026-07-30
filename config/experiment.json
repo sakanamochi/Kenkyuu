@@ -63,6 +63,32 @@
     "random_seed": 20260716
   },
 
+  "canny_contour_ransac": {
+    "preprocess": {
+      "blur_kernel_size": 5,
+      "blur_sigma": 1.2,
+      "canny_low": 50,
+      "canny_high": 140,
+      "sobel_kernel_size": 3,
+      "center_search_radius_ratio": 0.15,
+      "center_search_step_px": 6,
+      "center_search_max_points": 8000,
+      "center_alignment_power": 2.0,
+      "min_radial_alignment": 0.40,
+      "min_contour_points": 24,
+      "min_contour_spread_ratio": 0.01,
+      "max_contours": 30
+    },
+    "selector": {
+      "area_ratio_min": 1.20,
+      "area_ratio_max": 4.0,
+      "center_distance_major_ratio": 0.12,
+      "axis_ratio_difference": 0.10,
+      "min_quality_ratio": 0.10,
+      "max_candidates": 12
+    }
+  },
+
   "zhang2019": {
     "preprocess": {
       "blur_kernel_size": 5,
