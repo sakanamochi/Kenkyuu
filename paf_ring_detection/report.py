@@ -159,6 +159,7 @@ def _build_diagnostic_severity_figure(
 
 def build_report(config: dict) -> None:
     result_root = Path(config["paths"]["results"])
+    _configure_japanese_font()
     summary = {}
 
     for dataset_name in config["evaluation_datasets"]:
@@ -184,6 +185,10 @@ def build_report(config: dict) -> None:
     write_json(result_root / "summary.json", summary)
 
     names = list(summary)
+    dataset_labels = {
+        "ood": "OOD評価",
+        "diagnostic": "撮像診断",
+    }
     x = range(len(names))
     canny_rates = [
         summary[name]["canny_contour_shared_ransac"] * 100 for name in names
@@ -196,22 +201,29 @@ def build_report(config: dict) -> None:
         [value - 0.26 for value in x],
         canny_rates,
         0.26,
-        label="Canny contour + shared RANSAC",
+        label=METHODS[0][1],
+        color=METHODS[0][2],
     )
     axis.bar(
         list(x),
         zhang_rates,
         0.26,
-        label="Zhang 2019 reproduction",
+        label=METHODS[1][1],
+        color=METHODS[1][2],
     )
     axis.bar(
         [value + 0.26 for value in x],
         cnn_rates,
         0.26,
-        label="CNN + weighted RANSAC",
+        label=METHODS[2][1],
+        color=METHODS[2][2],
     )
-    axis.set_xticks(list(x), names)
-    axis.set_ylabel("Success rate [%]")
+    axis.set_xticks(
+        list(x),
+        [dataset_labels.get(name, name) for name in names],
+    )
+    axis.set_xlabel("評価データセット")
+    axis.set_ylabel("成功率（%）")
     axis.set_ylim(0, 100)
     _style_boxed_axes(axis)
     axis.legend()
