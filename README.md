@@ -110,6 +110,7 @@ output/results/
     cnn_ransac.csv / .json
   summary.json
   comparison.png
+  diagnostic_by_severity.png
 ```
 
 ## Zhang型の出典
