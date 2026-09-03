@@ -1,0 +1,67 @@
+{"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"第4回　カメラ班ミーティング","textShapes":2}
+{"kind":"shape","id":"sh/7qp4be9c","slide":1,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/ts7md4r2","slide":1,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/547294r6","slide":1,"name":"タイトル 1","placeholder":"title","text":"第4回　カメラ班ミーティング","textPreview":"第4回　カメラ班ミーティング","textChars":14,"textLines":1,"bbox":[112,99.29,1056,246.51]}
+{"kind":"textbox","id":"sh/k3yl0zql","slide":1,"name":"字幕 2","placeholder":"subtitle","text":"2026年7月31日\nB4　伊藤弘道","textPreview":"2026年7月31日 | B4　伊藤弘道","textChars":18,"textLines":2,"bbox":[153.27,466.43,1056,120]}
+{"kind":"slide","id":"sl/hwbqtkby","slide":2,"title":"Real-Time Docking Ring Detection Based on the","textShapes":1}
+{"kind":"shape","id":"sh/b29kza94","slide":2,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/x4r21kru","slide":2,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/q5wjelsz","slide":2,"name":"テキスト ボックス 8","text":"Real-Time Docking Ring Detection Based on the\nGeometrical Shape for an On-Orbit Spacecraft\n\nZhang, Pan, Ma／Sensors 2019\nDOI: 10.3390/s19235243","textPreview":"Real-Time Docking Ring Detection Based on the | Geometrical Shape for an On-Orbit Spacecraft |  | Zhang, Pan, Ma／Sensors 2019 | DOI: 10.3...","textChars":142,"textLines":5,"bbox":[50,238.83,1180,326.4]}
+{"kind":"slide","id":"sl/ofy9wn61","slide":3,"title":"元論文はドッキングリング内周を3段階で検出","textShapes":2}
+{"kind":"shape","id":"sh/298ryl4v","slide":3,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/obq90bml","slide":3,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/pcjqtg36","slide":3,"name":"テキスト ボックス 6","text":"元論文はドッキングリング内周を3段階で検出","textPreview":"元論文はドッキングリング内周を3段階で検出","textChars":21,"textLines":1,"bbox":[26.18,61.09,1180,61.39]}
+{"kind":"textbox","id":"sh/m5cra54z","slide":3,"name":"テキスト ボックス 1","text":"【目的】\n宇宙機画像から、ドッキングリング内周の楕円パラメータを高速に求める\n\n【処理】\n① Cannyエッジから弧を抽出し、勾配方向と凸性で4象限に分類\n② 位置・接線・中心の幾何制約を満たす三弧を同一楕円として統合\n③ 最小二乗で楕円を推定し、弧点との適合度で候補を検証\n\n【論文中の評価】\n実画像31枚で検出性能を比較し、平均処理時間27.38 msを報告","textPreview":"【目的】 | 宇宙機画像から、ドッキングリング内周の楕円パラメータを高速に求める |  | 【処理】 | ① Cannyエッジから弧を抽出し、勾配方向と凸性で4象限に分類 | ② 位置・接線・中心の幾何制約を満たす三弧を同一楕円として統合 | ③ 最小二乗で楕円を推定し、弧...","textChars":181,"textLines":10,"bbox":[70,172,1110,420]}
+{"kind":"slide","id":"sl/jyx0ra1s","slide":4,"title":"三弧統合で分断エッジから内周楕円を復元","textShapes":4}
+{"kind":"shape","id":"sh/rm1k7yt4","slide":4,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/doj29oba","slide":4,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/sna103ap","slide":4,"name":"テキスト ボックス 6","text":"三弧統合で分断エッジから内周楕円を復元","textPreview":"三弧統合で分断エッジから内周楕円を復元","textChars":19,"textLines":1,"bbox":[26.18,82.27,1180,61.39]}
+{"kind":"textbox","id":"sh/tsrqlc7u","slide":4,"name":"テキスト ボックス 27","text":"再現実装の中間処理（代表例）","textPreview":"再現実装の中間処理（代表例）","textChars":14,"textLines":1,"bbox":[377.53,164.68,524.94,48.47]}
+{"kind":"textbox","id":"sh/ilwf69kv","slide":4,"name":"テキスト ボックス 1","text":"・Canny後、勾配象限と凸性が整合する弧だけを残す\n・位置・接線制約と中心整合により、同一楕円らしい三弧を統合","textPreview":"・Canny後、勾配象限と凸性が整合する弧だけを残す | ・位置・接線制約と中心整合により、同一楕円らしい三弧を統合","textChars":56,"textLines":2,"bbox":[38.71,506.02,957.46,74.32]}
+{"kind":"textbox","id":"sh/0ba143al","slide":4,"name":"テキスト ボックス 1","text":"・統合弧へ最小二乗楕円を当て、中心光線距離による適合点率で検証","textPreview":"・統合弧へ最小二乗楕円を当て、中心光線距離による適合点率で検証","textChars":31,"textLines":1,"bbox":[38.71,590.38,902.76,42.01]}
+{"kind":"image","id":"im/s3etcnmd","slide":4,"name":"図 20","bbox":[38.71,219.79,1202.58,254.5]}
+{"kind":"slide","id":"sl/i107q5of","slide":5,"title":"Zhang 2019型（再現実装）は候補生成＋単純な最終選択","textShapes":4}
+{"kind":"shape","id":"sh/z2tcnm5s","slide":5,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/l4bupwny","slide":5,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/032tgr6d","slide":5,"name":"テキスト ボックス 6","text":"Zhang 2019型（再現実装）は候補生成＋単純な最終選択","textPreview":"Zhang 2019型（再現実装）は候補生成＋単純な最終選択","textChars":30,"textLines":1,"bbox":[26.18,82.27,1180,61.39]}
+{"kind":"textbox","id":"sh/x4vedgvm","slide":5,"name":"テキスト ボックス 10","text":"内包関係があれば内側、なければ全周支持率最大","textPreview":"内包関係があれば内側、なければ全周支持率最大","textChars":22,"textLines":1,"bbox":[230,143.66,960,48.47]}
+{"kind":"textbox","id":"sh/v2twb6dw","slide":5,"name":"テキスト ボックス 1","text":"① 候補生成（論文）：Canny → 弧分類 → 三弧統合 → 楕円当てはめ\n② 最終選択（追加）：内包あり→内側／なし→全周支持率最大","textPreview":"① 候補生成（論文）：Canny → 弧分類 → 三弧統合 → 楕円当てはめ | ② 最終選択（追加）：内包あり→内側／なし→全周支持率最大","textChars":68,"textLines":2,"bbox":[58.01,453.8,421.78,106.63]}
+{"kind":"textbox","id":"sh/58vehgvy","slide":5,"name":"テキスト ボックス 1","text":"著者コードの移植ではなく、論文の処理構成を参考にしたPython再現実装。","textPreview":"著者コードの移植ではなく、論文の処理構成を参考にしたPython再現実装。","textChars":37,"textLines":1,"bbox":[58.01,576.34,634.17,61.39]}
+{"kind":"image","id":"im/5ove5g3m","slide":5,"name":"図 2","bbox":[90,192.13,1090,228]}
+{"kind":"slide","id":"sl/x8f69ofe","slide":6,"title":"撮像診断1,456枚で3方式を同条件比較","textShapes":11}
+{"kind":"shape","id":"sh/87ipkzal","slide":6,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/ml07i9sv","slide":6,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/7m98ru9g","slide":6,"name":"テキスト ボックス 6","text":"撮像診断1,456枚で3方式を同条件比較","textPreview":"撮像診断1,456枚で3方式を同条件比較","textChars":20,"textLines":1,"bbox":[26.18,61.09,1160,61.39]}
+{"kind":"textbox","id":"sh/0fy5k3id","slide":6,"name":"テキスト ボックス 23","text":"黒矩形","textPreview":"黒矩形","textChars":3,"textLines":1,"bbox":[645.91,123.33,67.86,38.78]}
+{"kind":"textbox","id":"sh/ydgnit07","slide":6,"name":"テキスト ボックス 25","text":"学習に未使用のカメラ条件・既知照明","textPreview":"学習に未使用のカメラ条件・既知照明","textChars":17,"textLines":1,"bbox":[123.42,372.62,271.32,29.08]}
+{"kind":"textbox","id":"sh/gju58ji9","slide":6,"name":"テキスト ボックス 27","text":"Clean","textPreview":"Clean","textChars":5,"textLines":1,"bbox":[188.81,125.65,140.56,38.78]}
+{"kind":"textbox","id":"sh/jet8nm1c","slide":6,"name":"テキスト ボックス 29","text":"白飛び","textPreview":"白飛び","textChars":3,"textLines":1,"bbox":[813.79,122.48,92.09,38.78]}
+{"kind":"textbox","id":"sh/50bqpcj2","slide":6,"name":"テキスト ボックス 31","text":"黒つぶれ","textPreview":"黒つぶれ","textChars":4,"textLines":1,"bbox":[981.67,122.48,116.33,38.78]}
+{"kind":"textbox","id":"sh/4f2pgr2h","slide":6,"name":"四角形: 角を丸くする 32","text":"基礎 112枚","textPreview":"基礎 112枚","textChars":7,"textLines":1,"bbox":[420.35,180.23,133.61,48.07]}
+{"kind":"textbox","id":"sh/u907axkf","slide":6,"name":"四角形: 角を丸くする 34","text":"診断 1,456枚","textPreview":"診断 1,456枚","textChars":9,"textLines":1,"bbox":[420.35,242.48,133.61,48.48]}
+{"kind":"textbox","id":"sh/wbipc72l","slide":6,"name":"四角形: 角を丸くする 36","text":"IoU ≥ 0.80","textPreview":"IoU ≥ 0.80","textChars":10,"textLines":1,"bbox":[420.35,305.15,133.61,48.48]}
+{"kind":"textbox","id":"sh/pgbul0fu","slide":6,"name":"テキスト ボックス 1","text":"【基礎画像】\n・学習に未使用の16カメラ条件\n・既知の7照明条件","textPreview":"【基礎画像】 | ・学習に未使用の16カメラ条件 | ・既知の7照明条件","textChars":32,"textLines":3,"bbox":[85.77,402.71,497.85,106.63]}
+{"kind":"textbox","id":"sh/fq9cfqxc","slide":6,"name":"テキスト ボックス 2","text":"【撮像劣化】\n・Clean＋3効果×4強度\n・各効果・各強度112枚","textPreview":"【撮像劣化】 | ・Clean＋3効果×4強度 | ・各効果・各強度112枚","textChars":34,"textLines":3,"bbox":[662.4,401.7,552.04,106.63]}
+{"kind":"image","id":"im/nm5kny5k","slide":6,"name":"図 16","bbox":[155.99,158.7,206.19,206.19]}
+{"kind":"image","id":"im/mlw3etoz","slide":6,"name":"図 18","bbox":[967.13,162.11,145.41,145.41]}
+{"kind":"image","id":"im/xs7mt8nm","slide":6,"name":"図 20","bbox":[787.13,162.18,145.41,145.41]}
+{"kind":"image","id":"im/wrylk361","slide":6,"name":"図 22","bbox":[607.14,162.18,145.41,145.41]}
+{"kind":"slide","id":"sl/gnmp4jqx","slide":7,"title":"撮像診断：Zhang 2019型（再現実装）47.6%、CNN 74.5%","textShapes":3}
+{"kind":"shape","id":"sh/ydkbm5sv","slide":7,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/kzmdova1","slide":7,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/l0vuh0rm","slide":7,"name":"テキスト ボックス 6","text":"撮像診断：Zhang 2019型（再現実装）47.6%、CNN 74.5%","textPreview":"撮像診断：Zhang 2019型（再現実装）47.6%、CNN 74.5%","textChars":37,"textLines":1,"bbox":[26.18,82.27,1180,61.39]}
+{"kind":"textbox","id":"sh/zedcfa9g","slide":7,"name":"テキスト ボックス 1","text":"【1,456枚】\nZhang 2019型（再現実装）\n693枚＝47.6%／Canny 46.8%","textPreview":"【1,456枚】 | Zhang 2019型（再現実装） | 693枚＝47.6%／Canny 46.8%","textChars":49,"textLines":3,"bbox":[12.71,214.25,454.09,126.02]}
+{"kind":"textbox","id":"sh/xcz2l03q","slide":7,"name":"テキスト ボックス 2","text":"CNN 74.5%\n→ 再現実装はCannyと同等\n　CNNより26.9pt低い","textPreview":"CNN 74.5% | → 再現実装はCannyと同等 | 　CNNより26.9pt低い","textChars":40,"textLines":3,"bbox":[12.71,380.01,530.67,126.02]}
+{"kind":"chart","id":"ch/0vqt0je5","slide":7,"name":"Chart","chartType":"bar","title":"撮像診断 成功率（IoU ≥ 0.80）","bbox":[579.51,170.42,674.31,379.17]}
+{"kind":"slide","id":"sl/fu1gfa1s","slide":8,"title":"白飛びに強く、遮蔽と黒つぶれに弱い","textShapes":2}
+{"kind":"shape","id":"sh/ri9g7uhw","slide":8,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/tkby9kzm","slide":8,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/sjix0zy1","slide":8,"name":"テキスト ボックス 6","text":"白飛びに強く、遮蔽と黒つぶれに弱い","textPreview":"白飛びに強く、遮蔽と黒つぶれに弱い","textChars":17,"textLines":1,"bbox":[26.18,82.27,1180,61.39]}
+{"kind":"textbox","id":"sh/svydgb65","slide":8,"name":"テキスト ボックス 20","text":"・白飛び100%でも83.9%　・黒矩形50%で3.6%、75%以上で0%\n・黒つぶれ75%で20.5%、100%で8.9% → 弧の消失が支配的","textPreview":"・白飛び100%でも83.9%　・黒矩形50%で3.6%、75%以上で0% | ・黒つぶれ75%で20.5%、100%で8.9% → 弧の消失が支配的","textChars":73,"textLines":2,"bbox":[26.18,568,1190,86]}
+{"kind":"image","id":"im/krqtkn2x","slide":8,"name":"図 2","bbox":[27.79,215.78,1224.42,325.96]}
+{"kind":"slide","id":"sl/udsvah03","slide":9,"title":"まとめと次回以降","textShapes":3}
+{"kind":"shape","id":"sh/nex4jq5k","slide":9,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/9gzml0nq","slide":9,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/ofq5svm5","slide":9,"name":"テキスト ボックス 6","text":"まとめと次回以降","textPreview":"まとめと次回以降","textChars":8,"textLines":1,"bbox":[26.18,82.27,800,61.39]}
+{"kind":"textbox","id":"sh/0b65obm9","slide":9,"name":"テキスト ボックス 1","text":"【今回】\n・Zhang 2019型（再現実装）を導入\n・撮像診断で47.6%（Canny 46.8%、CNN 74.5%）\n・遮蔽／黒つぶれでは弧不足が主な失敗要因","textPreview":"【今回】 | ・Zhang 2019型（再現実装）を導入 | ・撮像診断で47.6%（Canny 46.8%、CNN 74.5%） | ・遮蔽／黒つぶれでは弧不足が主な失敗要因","textChars":82,"textLines":4,"bbox":[69.48,180.85,953.42,203.57]}
+{"kind":"textbox","id":"sh/bih4na5w","slide":9,"name":"テキスト ボックス 1","text":"【次回以降】\n・model_generalization_studyで未知条件への一般化を検証\n・両方式の失敗例を条件別に整理","textPreview":"【次回以降】 | ・model_generalization_studyで未知条件への一般化を検証 | ・両方式の失敗例を条件別に整理","textChars":63,"textLines":3,"bbox":[69.48,393.97,889.3,126.02]}

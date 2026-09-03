@@ -1,0 +1,1067 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/qwgzig",
+    "id": "qwgzig",
+    "slide": 4,
+    "layoutId": "/ppt/slideLayouts/slideLayout1.xml",
+    "layoutName": "タイトル スライド",
+    "layoutType": "title",
+    "masterLayoutId": "/ppt/slideMasters/slideMaster1.xml",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "Office",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "fontScheme": {
+      "name": "Office",
+      "majorFont": {
+        "latinTypeface": "游ゴシック Light"
+      },
+      "minorFont": {
+        "latinTypeface": "游ゴシック"
+      }
+    },
+    "typefaces": [
+      "Yu Gothic",
+      "游ゴシック",
+      "游ゴシック Light"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "/ppt/slideLayouts/slideLayout1.xml",
+      "name": "タイトル スライド",
+      "type": "title",
+      "parentLayoutId": "/ppt/slideMasters/slideMaster1.xml",
+      "elements": [
+        {
+          "order": 1,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/2",
+          "id": "2",
+          "name": "タイトル 1",
+          "bbox": [
+            160,
+            117.83,
+            960,
+            250.67
+          ],
+          "text": "マスター タイトルの書式設定",
+          "textPreview": "マスター タイトルの書式設定",
+          "resolvedTextStyle": {
+            "anchor": 3,
+            "verticalAlignment": "bottom"
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "マスター タイトルの書式設定",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "マスター タイトルの書式設定"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/3",
+          "id": "3",
+          "name": "字幕 2",
+          "bbox": [
+            160,
+            378.17,
+            960,
+            173.83
+          ],
+          "text": "マスター サブタイトルの書式設定",
+          "textPreview": "マスター サブタイトルの書式設定",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "マスター サブタイトルの書式設定",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "マスター サブタイトルの書式設定"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/4",
+          "id": "4",
+          "name": "日付プレースホルダー 3",
+          "bbox": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "text": "2026/7/17",
+          "textPreview": "2026/7/17",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "2026/7/17",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "2026/7/17"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/5",
+          "id": "5",
+          "name": "フッター プレースホルダー 4",
+          "bbox": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "order": 5,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/6",
+          "id": "6",
+          "name": "スライド番号プレースホルダー 5",
+          "bbox": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "text": "‹#›",
+          "textPreview": "‹#›",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "‹#›",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "‹#›"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scope": "master",
+      "id": "/ppt/slideMasters/slideMaster1.xml",
+      "type": "master",
+      "elements": [
+        {
+          "order": 1,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/2",
+          "id": "2",
+          "name": "タイトル プレースホルダー 1",
+          "bbox": [
+            88,
+            38.33,
+            1104,
+            139.17
+          ],
+          "geometry": "rect",
+          "text": "マスター タイトルの書式設定",
+          "textPreview": "マスター タイトルの書式設定",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "autoFit": "shrinkText",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "マスター タイトルの書式設定",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "マスター タイトルの書式設定"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/3",
+          "id": "3",
+          "name": "テキスト プレースホルダー 2",
+          "bbox": [
+            88,
+            191.67,
+            1104,
+            456.83
+          ],
+          "geometry": "rect",
+          "text": "マスター テキストの書式設定\n第 2 レベル\n第 3 レベル\n第 4 レベル\n第 5 レベル",
+          "textPreview": "マスター テキストの書式設定 | 第 2 レベル | 第 3 レベル | 第 4 レベル | 第 5 レベル",
+          "resolvedTextStyle": {
+            "vertical": 1,
+            "autoFit": "shrinkText",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "マスター テキストの書式設定",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "マスター テキストの書式設定"
+                }
+              ]
+            },
+            {
+              "index": 2,
+              "text": "第 2 レベル",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "第 "
+                },
+                {
+                  "index": 2,
+                  "text": "2 "
+                },
+                {
+                  "index": 3,
+                  "text": "レベル"
+                }
+              ]
+            },
+            {
+              "index": 3,
+              "text": "第 3 レベル",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "第 "
+                },
+                {
+                  "index": 2,
+                  "text": "3 "
+                },
+                {
+                  "index": 3,
+                  "text": "レベル"
+                }
+              ]
+            },
+            {
+              "index": 4,
+              "text": "第 4 レベル",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "第 "
+                },
+                {
+                  "index": 2,
+                  "text": "4 "
+                },
+                {
+                  "index": 3,
+                  "text": "レベル"
+                }
+              ]
+            },
+            {
+              "index": 5,
+              "text": "第 5 レベル",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "第 "
+                },
+                {
+                  "index": 2,
+                  "text": "5 "
+                },
+                {
+                  "index": 3,
+                  "text": "レベル"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/4",
+          "id": "4",
+          "name": "日付プレースホルダー 3",
+          "bbox": [
+            88,
+            667.33,
+            288,
+            38.33
+          ],
+          "geometry": "rect",
+          "text": "2026/7/17",
+          "textPreview": "2026/7/17",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "2026/7/17",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "2026/7/17"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/5",
+          "id": "5",
+          "name": "フッター プレースホルダー 4",
+          "bbox": [
+            424,
+            667.33,
+            432,
+            38.33
+          ],
+          "geometry": "rect",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          }
+        },
+        {
+          "order": 5,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/6",
+          "id": "6",
+          "name": "スライド番号プレースホルダー 5",
+          "bbox": [
+            904,
+            667.33,
+            288,
+            38.33
+          ],
+          "geometry": "rect",
+          "text": "‹#›",
+          "textPreview": "‹#›",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "‹#›",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "‹#›"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/0ryhknyd",
+      "id": "4",
+      "name": "正方形/長方形 3",
+      "bbox": [
+        0,
+        0,
+        1280,
+        48.48
+      ],
+      "geometry": "rect",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 24,
+        "typeface": "游ゴシック",
+        "color": "lt1",
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": ""
+          }
+        ]
+      },
+      "fillColor": "accent1",
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/epwzidg7",
+      "id": "6",
+      "name": "正方形/長方形 5",
+      "bbox": [
+        0,
+        671.52,
+        1280,
+        48.48
+      ],
+      "geometry": "rect",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 24,
+        "typeface": "游ゴシック",
+        "color": "lt1",
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": ""
+          }
+        ]
+      },
+      "fillColor": "accent1",
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/fq50bihs",
+      "id": "7",
+      "name": "テキスト ボックス 6",
+      "bbox": [
+        26.18,
+        82.27,
+        655.88,
+        61.39
+      ],
+      "geometry": "rect",
+      "text": "比較用ベースライン手法実装(仮)",
+      "textPreview": "比較用ベースライン手法実装(仮)",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "fontSize": 24,
+        "typeface": "游ゴシック",
+        "color": "tx1",
+        "alignment": "left",
+        "wrap": "none",
+        "autoFit": "resizeShapeToFitText",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "比較用ベースライン手法実装(仮)"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "比較用ベースライン手法実装(仮)",
+          "runs": [
+            {
+              "index": 1,
+              "text": "比較用ベースライン手法実装",
+              "fontSize": 42.67
+            },
+            {
+              "index": 2,
+              "text": "(",
+              "fontSize": 42.67
+            },
+            {
+              "index": 3,
+              "text": "仮",
+              "fontSize": 42.67
+            },
+            {
+              "index": 4,
+              "text": ")",
+              "fontSize": 42.67
+            }
+          ],
+          "marginLeft": 0
+        }
+      ]
+    },
+    {
+      "order": 4,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/pwjapofa",
+      "id": "31",
+      "name": "図 20",
+      "bbox": [
+        38.71,
+        219.79,
+        1202.58,
+        254.5
+      ],
+      "rotation": 0,
+      "contentType": "image/png",
+      "imageCrop": {
+        "left": 0,
+        "top": 0.1685,
+        "right": 0,
+        "bottom": 0
+      },
+      "asset": {
+        "assetId": "/ppt/media/image7.png",
+        "contentType": "image/png",
+        "byteLength": 551890
+      },
+      "fillImage": {
+        "assetId": "/ppt/media/image7.png",
+        "contentType": "image/png",
+        "byteLength": 551890
+      }
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/0zah8rqx",
+      "id": "24",
+      "name": "正方形/長方形 23",
+      "bbox": [
+        72.26,
+        238.13,
+        104.26,
+        19.85
+      ],
+      "rotation": 0,
+      "geometry": "rect",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 24,
+        "typeface": "游ゴシック",
+        "color": "lt1",
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": ""
+          }
+        ]
+      },
+      "fillColor": "bg1",
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/298betgz",
+      "id": "32",
+      "name": "図 22",
+      "bbox": [
+        107.87,
+        233.56,
+        33.03,
+        25.03
+      ],
+      "contentType": "image/png",
+      "imageCrop": {
+        "left": 0.08412,
+        "top": 0.21732,
+        "right": 0.8884,
+        "bottom": 0.7009
+      },
+      "asset": {
+        "assetId": "/ppt/media/image7.png",
+        "contentType": "image/png",
+        "byteLength": 551890
+      },
+      "fillImage": {
+        "assetId": "/ppt/media/image7.png",
+        "contentType": "image/png",
+        "byteLength": 551890
+      }
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ex8z6h8r",
+      "id": "26",
+      "name": "テキスト ボックス 25",
+      "bbox": [
+        856.82,
+        213.44,
+        182.63,
+        27.47
+      ],
+      "geometry": "rect",
+      "text": "輪郭ごとにRANSAC適用",
+      "textPreview": "輪郭ごとにRANSAC適用",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "fontSize": 24,
+        "typeface": "游ゴシック",
+        "color": "tx1",
+        "alignment": "left",
+        "wrap": "none",
+        "autoFit": "resizeShapeToFitText",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "輪郭ごとにRANSAC適用"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "輪郭ごとにRANSAC適用",
+          "runs": [
+            {
+              "index": 1,
+              "text": "輪郭ごとに",
+              "fontSize": 14.67
+            },
+            {
+              "index": 2,
+              "text": "RANSAC",
+              "fontSize": 14.67
+            },
+            {
+              "index": 3,
+              "text": "適用",
+              "fontSize": 14.67
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "fillColor": "bg1"
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ona1crqt",
+      "id": "28",
+      "name": "テキスト ボックス 27",
+      "bbox": [
+        377.53,
+        164.68,
+        524.94,
+        48.47
+      ],
+      "geometry": "rect",
+      "text": "Cannyエッジ検出+輪郭別RANSAC",
+      "textPreview": "Cannyエッジ検出+輪郭別RANSAC",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "fontSize": 24,
+        "typeface": "游ゴシック",
+        "color": "tx1",
+        "alignment": "left",
+        "wrap": "none",
+        "autoFit": "resizeShapeToFitText",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Cannyエッジ検出+輪郭別RANSAC"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Cannyエッジ検出+輪郭別RANSAC",
+          "runs": [
+            {
+              "index": 1,
+              "text": "Canny",
+              "fontSize": 32
+            },
+            {
+              "index": 2,
+              "text": "エッジ検出",
+              "fontSize": 32
+            },
+            {
+              "index": 3,
+              "text": "+",
+              "fontSize": 32
+            },
+            {
+              "index": 4,
+              "text": "輪郭別",
+              "fontSize": 32
+            },
+            {
+              "index": 5,
+              "text": "RANSAC",
+              "fontSize": 32
+            }
+          ],
+          "marginLeft": 0
+        }
+      ]
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/zilkbqtg",
+      "id": "30",
+      "name": "テキスト ボックス 1",
+      "bbox": [
+        38.71,
+        506.02,
+        957.46,
+        74.32
+      ],
+      "geometry": "rect",
+      "text": "・Cannyエッジを直接RANSACに渡すとPAF内周以外のエッジが偽楕円を形成\n　→連続成分ごとの輪郭に分割し、各輪郭へ独立にRANSACを適用",
+      "textPreview": "・Cannyエッジを直接RANSACに渡すとPAF内周以外のエッジが偽楕円を形成 | 　→連続成分ごとの輪郭に分割し、各輪郭へ独立にRANSACを適用",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "fontSize": 24,
+        "typeface": "游ゴシック",
+        "color": "tx1",
+        "alignment": "left",
+        "wrap": "none",
+        "autoFit": "resizeShapeToFitText",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "・Cannyエッジを直接RANSACに渡すとPAF内周以外のエッジが偽楕円を形成"
+          },
+          {
+            "index": 2,
+            "text": "　→連続成分ごとの輪郭に分割し、各輪郭へ独立にRANSACを適用"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "・Cannyエッジを直接RANSACに渡すとPAF内周以外のエッジが偽楕円を形成",
+          "resolvedTextStyle": {
+            "typeface": "Yu Gothic"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "・",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            },
+            {
+              "index": 2,
+              "text": "Canny",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            },
+            {
+              "index": 3,
+              "text": "エッジを直接",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            },
+            {
+              "index": 4,
+              "text": "RANSAC",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            },
+            {
+              "index": 5,
+              "text": "に渡すと",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            },
+            {
+              "index": 6,
+              "text": "PAF",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            },
+            {
+              "index": 7,
+              "text": "内周以外のエッジが偽楕円を形成",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "　→連続成分ごとの輪郭に分割し、各輪郭へ独立にRANSACを適用",
+          "resolvedTextStyle": {
+            "typeface": "Yu Gothic"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "　→連続成分ごとの輪郭に分割し、各輪郭へ独立に",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            },
+            {
+              "index": 2,
+              "text": "RANSAC",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            },
+            {
+              "index": 3,
+              "text": "を適用",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ]
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/rm507ihw",
+      "id": "3",
+      "name": "テキスト ボックス 1",
+      "bbox": [
+        38.71,
+        590.38,
+        902.76,
+        42.01
+      ],
+      "geometry": "rect",
+      "text": "・テストではRANSACをOpenCV標準の楕円推定に置き換えたものも検証",
+      "textPreview": "・テストではRANSACをOpenCV標準の楕円推定に置き換えたものも検証",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "fontSize": 24,
+        "typeface": "游ゴシック",
+        "color": "tx1",
+        "alignment": "left",
+        "wrap": "none",
+        "autoFit": "resizeShapeToFitText",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "・テストではRANSACをOpenCV標準の楕円推定に置き換えたものも検証"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "・テストではRANSACをOpenCV標準の楕円推定に置き換えたものも検証",
+          "resolvedTextStyle": {
+            "typeface": "Yu Gothic"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "・テストでは",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            },
+            {
+              "index": 2,
+              "text": "RANSAC",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            },
+            {
+              "index": 3,
+              "text": "を",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            },
+            {
+              "index": 4,
+              "text": "OpenCV",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            },
+            {
+              "index": 5,
+              "text": "標準の楕円推定に置き換えたものも検証",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ]
+    }
+  ],
+  "composeRuns": []
+}

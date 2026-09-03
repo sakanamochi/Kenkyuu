@@ -38,6 +38,23 @@ ZHANG_2019_REFERENCE = {
     ),
 }
 
+# Zhang et al. (2019)は、以下の閾値が必要であることと記号だけを示しており、
+# 具体的な数値は掲載していない。中心間距離についても「所定距離内」とだけ
+# 記述され、記号・数値ともに示されていない。
+# したがって、以下は論文値ではなく本再現実装で採用した経験的な設定値である。
+# 値を変更して比較する場合は、このブロックだけを編集する。
+# T_p相当: これ未満の画素数しかない短い円弧を除外する。
+MIN_ARC_POINTS = 8
+
+# 論文中で数値未記載: 二組の円弧から推定した中心間の許容距離[pixel]。
+CENTER_CONSISTENCY_THRESHOLD_PX = 12.0
+
+# T_d相当: 弧点を候補楕円上の適合点と数える距離[pixel]。
+EDGE_DISTANCE_THRESHOLD_PX = 2.5
+
+# T_s相当: 三円弧上の全点に占める適合点の割合の採用閾値。
+MIN_GROUP_FIT_RATIO = 0.55
+
 # 論文の象限番号を0始まりで表す: I, II, III, IV。
 QUADRANT_NAMES = ("I", "II", "III", "IV")
 EXPECTED_CONVEXITY = (1, 1, -1, -1)
@@ -121,7 +138,7 @@ def extract_zhang_arcs(image: np.ndarray, detector: dict, settings: dict) -> dic
         int(detector["canny_high"]),
     )
     contours, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
-    minimum = int(settings["min_arc_points"])
+    minimum = MIN_ARC_POINTS
     arcs = []
     for contour_index, contour in enumerate(contours):
         points = contour[:, 0, :]
@@ -225,12 +242,11 @@ def _radial_distance(points: np.ndarray, ellipse) -> np.ndarray:
     return distance
 
 
-def _paper_fitness(ellipse, group_points: np.ndarray, settings: dict) -> dict | None:
+def _paper_fitness(ellipse, group_points: np.ndarray) -> dict | None:
     """式(12)の、三弧上の全点に対する適合点率を計算する。"""
-    threshold = float(settings["edge_distance_threshold_px"])
     distances = _radial_distance(group_points, ellipse)
-    fit_ratio = float(np.mean(distances < threshold))
-    if fit_ratio <= float(settings["min_group_fit_ratio"]):
+    fit_ratio = float(np.mean(distances < EDGE_DISTANCE_THRESHOLD_PX))
+    if fit_ratio <= MIN_GROUP_FIT_RATIO:
         return None
     return {
         "group_fit_ratio": fit_ratio,
@@ -430,7 +446,7 @@ def _three_arc_geometry(
         centers.append(center)
 
     difference = float(np.linalg.norm(centers[0] - centers[1]))
-    if difference > float(settings["center_consistency_threshold_px"]):
+    if difference > CENTER_CONSISTENCY_THRESHOLD_PX:
         return None
     return {
         "pair_centers": [center.tolist() for center in centers],
@@ -507,7 +523,7 @@ def detect_zhang_arc_candidates(
             continue
         if not _ellipse_geometry_valid(ellipse, image.shape, settings):
             continue
-        metrics = _paper_fitness(ellipse, points, settings)
+        metrics = _paper_fitness(ellipse, points)
         if metrics is None:
             continue
         candidates.append(

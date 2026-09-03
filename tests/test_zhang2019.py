@@ -16,6 +16,7 @@ from paf_ring_detection.methods.zhang2019 import (
 )
 from paf_ring_detection.methods.zhang2019_paf import (
     score_zhang_candidates_for_paf,
+    select_zhang_inner_boundary,
 )
 
 
@@ -126,7 +127,7 @@ def test_zhang2019_radial_distance_uses_center_ray_intersection():
     )
 
 
-def test_paf_specific_candidate_score_is_applied_outside_zhang_core():
+def test_paf_specific_edge_support_is_applied_outside_zhang_core():
     config = read_json(ROOT / "config/experiment.json")["zhang2019"]
     image = np.zeros((300, 400, 3), dtype=np.uint8)
     for start, end in ((10, 95), (135, 225), (265, 345)):
@@ -152,8 +153,44 @@ def test_paf_specific_candidate_score_is_applied_outside_zhang_core():
         config["paf_postprocess"]["candidate_validation"],
     )
     assert scored
-    assert "selection_score" in scored[0]
-    assert "polarity_score" in scored[0]
+    assert scored[0]["selection_score"] == scored[0]["edge_density"]
+    assert "polarity_score" not in scored[0]
+
+
+def test_paf_selector_prefers_contained_inner_candidate():
+    """全周支持率が低くても、内包される候補を内周として選ぶ。"""
+    outer = {
+        "ellipse": ((200.0, 150.0), (220.0, 120.0), 15.0),
+        "edge_density": 0.90,
+    }
+    inner = {
+        "ellipse": ((200.0, 150.0), (170.0, 80.0), 15.0),
+        "edge_density": 0.60,
+    }
+    selected = select_zhang_inner_boundary(
+        [outer, inner],
+        {"max_considered_candidates": 20},
+    )
+    assert selected["ellipse"] == inner["ellipse"]
+    assert selected["selection_mode"] == "contained_inner_boundary"
+
+
+def test_paf_selector_uses_full_perimeter_support_without_containment():
+    """別位置の候補では全周支持率が高い方を選ぶ。"""
+    lower_support = {
+        "ellipse": ((90.0, 150.0), (100.0, 60.0), 0.0),
+        "edge_density": 0.55,
+    }
+    higher_support = {
+        "ellipse": ((310.0, 150.0), (100.0, 60.0), 0.0),
+        "edge_density": 0.82,
+    }
+    selected = select_zhang_inner_boundary(
+        [lower_support, higher_support],
+        {"max_considered_candidates": 20},
+    )
+    assert selected["ellipse"] == higher_support["ellipse"]
+    assert selected["selection_mode"] == "full_perimeter_support"
 
 
 def test_zhang2019_reference_is_not_author_code():

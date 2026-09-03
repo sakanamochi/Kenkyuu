@@ -1,0 +1,82 @@
+{"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"第3回　カメラ班ミーティング","textShapes":2}
+{"kind":"shape","id":"sh/7qp4be9c","slide":1,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/ts7md4r2","slide":1,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/547294r6","slide":1,"textChars":14,"textLines":1}
+{"kind":"textbox","id":"sh/k3yl0zql","slide":1,"textChars":18,"textLines":2}
+{"kind":"slide","id":"sl/hwbqtkby","slide":2,"title":"RGB画像を用いたロケット上段の","textShapes":1}
+{"kind":"shape","id":"sh/b29kza94","slide":2,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/x4r21kru","slide":2,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/q5wjelsz","slide":2,"textChars":58,"textLines":4}
+{"kind":"slide","id":"sl/ofy9wn61","slide":3,"title":"Blenderを用いた初期データセットの作成","textShapes":2}
+{"kind":"shape","id":"sh/298ryl4v","slide":3,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/obq90bml","slide":3,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/pcjqtg36","slide":3,"textChars":22,"textLines":1}
+{"kind":"textbox","id":"sh/m5cra54z","slide":3,"textChars":85,"textLines":10}
+{"kind":"image","id":"im/qpon6hgj","slide":3,"name":"図 2","bbox":[438.69,122.48,749.94,524.55]}
+{"kind":"slide","id":"sl/jyx0ra1s","slide":4,"title":"Blenderを用いた初期データセットの作成","textShapes":13}
+{"kind":"shape","id":"sh/rm1k7yt4","slide":4,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/doj29oba","slide":4,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/sna103ap","slide":4,"textChars":22,"textLines":1}
+{"kind":"textbox","id":"sh/1wbapc7q","slide":4,"textChars":2,"textLines":1}
+{"kind":"textbox","id":"sh/fu9sn2p0","slide":4,"textChars":19,"textLines":1}
+{"kind":"textbox","id":"sh/tsrqlc7u","slide":4,"textChars":5,"textLines":1}
+{"kind":"textbox","id":"sh/ilwf69kv","slide":4,"textChars":3,"textLines":1}
+{"kind":"textbox","id":"sh/knex8j21","slide":4,"textChars":4,"textLines":1}
+{"kind":"textbox","id":"sh/5ony1oj6","slide":4,"textChars":7,"textLines":1}
+{"kind":"textbox","id":"sh/vy5gbe14","slide":4,"textChars":10,"textLines":1}
+{"kind":"textbox","id":"sh/xknyx4ja","slide":4,"textChars":7,"textLines":1}
+{"kind":"textbox","id":"sh/elwba54j","slide":4,"textChars":88,"textLines":3}
+{"kind":"textbox","id":"sh/0netcvm9","slide":4,"textChars":47,"textLines":3}
+{"kind":"textbox","id":"sh/qhcb6l47","slide":4,"textChars":58,"textLines":3}
+{"kind":"textbox","id":"sh/idcb2lob","slide":4,"textChars":22,"textLines":2}
+{"kind":"image","id":"im/7upwnm98","slide":4,"name":"図 16","bbox":[155.99,158.7,206.19,206.19]}
+{"kind":"image","id":"im/6tgfeh8n","slide":4,"name":"図 18","bbox":[967.13,162.11,145.41,145.41]}
+{"kind":"image","id":"im/tw7epwre","slide":4,"name":"図 20","bbox":[787.13,162.18,145.41,145.41]}
+{"kind":"image","id":"im/svyxgrqt","slide":4,"name":"図 22","bbox":[607.14,162.18,145.41,145.41]}
+{"kind":"image","id":"im/fi9wr694","slide":4,"name":"図 46","bbox":[175.76,526.72,194.04,122.53]}
+{"kind":"slide","id":"sl/i107q5of","slide":5,"title":"比較用ベースライン手法実装(仮)","textShapes":5}
+{"kind":"shape","id":"sh/z2tcnm5s","slide":5,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/l4bupwny","slide":5,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/032tgr6d","slide":5,"textChars":16,"textLines":1}
+{"kind":"shape","id":"sh/pkr6tgjy","slide":5,"name":"正方形/長方形 23","bbox":[72.26,238.13,104.26,19.85]}
+{"kind":"textbox","id":"sh/3i94r61s","slide":5,"textChars":13,"textLines":1}
+{"kind":"textbox","id":"sh/5o7mhcju","slide":5,"textChars":20,"textLines":1}
+{"kind":"textbox","id":"sh/atcjidg7","slide":5,"textChars":73,"textLines":2}
+{"kind":"textbox","id":"sh/cf2tcr61","slide":5,"textChars":37,"textLines":1}
+{"kind":"image","id":"im/4f6hgfq1","slide":5,"name":"図 20","bbox":[38.71,219.79,1202.58,254.5]}
+{"kind":"image","id":"im/jex07a9g","slide":5,"name":"図 22","bbox":[107.87,233.56,33.03,25.03]}
+{"kind":"slide","id":"sl/x8f69ofe","slide":6,"title":"学習ベース手法実装","textShapes":4}
+{"kind":"shape","id":"sh/87ipkzal","slide":6,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/ml07i9sv","slide":6,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/7m98ru9g","slide":6,"textChars":9,"textLines":1}
+{"kind":"textbox","id":"sh/w32twb6l","slide":6,"textChars":14,"textLines":1}
+{"kind":"textbox","id":"sh/u1kbu1ov","slide":6,"textChars":52,"textLines":3}
+{"kind":"textbox","id":"sh/47mt0b6x","slide":6,"textChars":59,"textLines":2}
+{"kind":"image","id":"im/kvatojut","slide":6,"name":"図 2","bbox":[292.5,192.13,880,228]}
+{"kind":"image","id":"im/lw3uh4be","slide":6,"name":"図 7","bbox":[107.5,192.13,185,228]}
+{"kind":"slide","id":"sl/gnmp4jqx","slide":7,"title":"比較方法","textShapes":3}
+{"kind":"shape","id":"sh/ydkbm5sv","slide":7,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/kzmdova1","slide":7,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/l0vuh0rm","slide":7,"textChars":4,"textLines":1}
+{"kind":"textbox","id":"sh/zedcfa9g","slide":7,"textChars":36,"textLines":3}
+{"kind":"textbox","id":"sh/xcz2l03q","slide":7,"textChars":42,"textLines":3}
+{"kind":"image","id":"im/byxwryh8","slide":7,"name":"図 15","bbox":[579.51,170.42,674.31,379.17]}
+{"kind":"slide","id":"sl/fu1gfa1s","slide":8,"title":"比較結果","textShapes":6}
+{"kind":"shape","id":"sh/ri9g7uhw","slide":8,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/tkby9kzm","slide":8,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/sjix0zy1","slide":8,"textChars":4,"textLines":1}
+{"kind":"textbox","id":"sh/98rehwve","slide":8,"textChars":3,"textLines":1}
+{"kind":"textbox","id":"sh/0jydkreh","slide":8,"textChars":4,"textLines":1}
+{"kind":"textbox","id":"sh/zipwbmdc","slide":8,"textChars":4,"textLines":1}
+{"kind":"textbox","id":"sh/lgbepgvm","slide":8,"textChars":12,"textLines":1}
+{"kind":"textbox","id":"sh/svydgb65","slide":8,"textChars":88,"textLines":2}
+{"kind":"shape","id":"sh/7u5w765k","slide":8,"name":"正方形/長方形 21","bbox":[941.47,471.3,338.53,61.25]}
+{"kind":"image","id":"im/lszads3i","slide":8,"name":"図 2","bbox":[27.79,215.78,1224.42,325.96]}
+{"kind":"slide","id":"sl/udsvah03","slide":9,"title":"今後の予定","textShapes":3}
+{"kind":"shape","id":"sh/nex4jq5k","slide":9,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/9gzml0nq","slide":9,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/ofq5svm5","slide":9,"textChars":5,"textLines":1}
+{"kind":"shape","id":"sh/76h0zup8","slide":9,"name":"正方形/長方形 21","bbox":[941.47,471.3,338.53,61.25]}
+{"kind":"textbox","id":"sh/0b65obm9","slide":9,"textChars":84,"textLines":5}
+{"kind":"textbox","id":"sh/bih4na5w","slide":9,"textChars":84,"textLines":3}
+{"kind":"notice","message":"Truncated: omitted 0 lines. Increase maxChars or narrow target."}

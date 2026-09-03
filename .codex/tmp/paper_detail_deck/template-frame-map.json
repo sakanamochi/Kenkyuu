@@ -1,0 +1,134 @@
+{
+  "outputSlides": [
+    {
+      "outputSlide": 1,
+      "sourceSlide": 1,
+      "narrativeRole": "表紙",
+      "reuseMode": "duplicate-slide",
+      "editTargets": [
+        {
+          "action": "rewrite",
+          "sourceElementId": "sh/547294r6",
+          "reason": "継承タイトルプレースホルダーを同一内容で確定する"
+        },
+        {
+          "action": "rewrite",
+          "sourceElementId": "sh/k3yl0zql",
+          "reason": "継承字幕プレースホルダーを同一内容で確定する"
+        }
+      ]
+    },
+    {
+      "outputSlide": 2,
+      "sourceSlide": 2,
+      "narrativeRole": "元論文タイトル",
+      "reuseMode": "duplicate-slide",
+      "editTargets": []
+    },
+    {
+      "outputSlide": 3,
+      "sourceSlide": 3,
+      "narrativeRole": "元論文の要約",
+      "reuseMode": "duplicate-slide",
+      "editTargets": []
+    },
+    {
+      "outputSlide": 4,
+      "sourceSlide": 3,
+      "narrativeRole": "勾配方向と凸性による円弧抽出",
+      "reuseMode": "duplicate-slide",
+      "editTargets": [
+        {
+          "action": "rewrite",
+          "sourceElementId": "sh/pcjqtg36",
+          "reason": "詳細説明の第1段階へ書き換える"
+        },
+        {
+          "action": "rewrite",
+          "sourceElementId": "sh/m5cra54z",
+          "reason": "勾配ベクトルと4分類式を含む説明へ書き換える"
+        }
+      ]
+    },
+    {
+      "outputSlide": 5,
+      "sourceSlide": 3,
+      "narrativeRole": "幾何制約による三円弧統合",
+      "reuseMode": "duplicate-slide",
+      "editTargets": [
+        {
+          "action": "rewrite",
+          "sourceElementId": "sh/pcjqtg36",
+          "reason": "詳細説明の第2段階へ書き換える"
+        },
+        {
+          "action": "rewrite",
+          "sourceElementId": "sh/m5cra54z",
+          "reason": "三円弧の組合せ条件と一般二次曲線へ書き換える"
+        }
+      ]
+    },
+    {
+      "outputSlide": 6,
+      "sourceSlide": 3,
+      "narrativeRole": "楕円候補の一致度検証",
+      "reuseMode": "duplicate-slide",
+      "editTargets": [
+        {
+          "action": "rewrite",
+          "sourceElementId": "sh/pcjqtg36",
+          "reason": "詳細説明の第3段階へ書き換える"
+        },
+        {
+          "action": "rewrite",
+          "sourceElementId": "sh/m5cra54z",
+          "reason": "適合点率と閾値判定の簡潔な説明へ書き換える"
+        }
+      ]
+    },
+    {
+      "outputSlide": 7,
+      "sourceSlide": 4,
+      "narrativeRole": "再現実装の中間処理",
+      "reuseMode": "duplicate-slide",
+      "editTargets": []
+    },
+    {
+      "outputSlide": 8,
+      "sourceSlide": 5,
+      "narrativeRole": "再現実装の最終候補選択",
+      "reuseMode": "duplicate-slide",
+      "editTargets": []
+    },
+    {
+      "outputSlide": 9,
+      "sourceSlide": 6,
+      "narrativeRole": "評価条件",
+      "reuseMode": "duplicate-slide",
+      "editTargets": []
+    },
+    {
+      "outputSlide": 10,
+      "sourceSlide": 7,
+      "narrativeRole": "方式比較結果",
+      "reuseMode": "duplicate-slide",
+      "editTargets": []
+    },
+    {
+      "outputSlide": 11,
+      "sourceSlide": 8,
+      "narrativeRole": "劣化別結果",
+      "reuseMode": "duplicate-slide",
+      "editTargets": []
+    },
+    {
+      "outputSlide": 12,
+      "sourceSlide": 9,
+      "narrativeRole": "まとめ",
+      "reuseMode": "duplicate-slide",
+      "editTargets": []
+    }
+  ],
+  "omittedSourceSlides": []
+}
+

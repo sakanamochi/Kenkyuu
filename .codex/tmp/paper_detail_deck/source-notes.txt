@@ -1,0 +1,9 @@
+主要出典:
+- Zhang, Pan, Ma, “Real-Time Docking Ring Detection Based on the Geometrical Shape for an On-Orbit Spacecraft,” Sensors 2019.
+- DOI: https://doi.org/10.3390/s19235243
+- PMC full text: https://pmc.ncbi.nlm.nih.gov/articles/PMC6928708/
+
+ユーザー提供の説明参考画像:
+- C:\Users\siomi\OneDrive\画像\スクリーンショット\スクリーンショット 2026-07-31 043334.png
+- C:\Users\siomi\OneDrive\画像\スクリーンショット\スクリーンショット 2026-07-31 043340.png
+- C:\Users\siomi\OneDrive\画像\スクリーンショット\スクリーンショット 2026-07-31 043420.png

@@ -1,0 +1,691 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/skvhcd",
+    "id": "skvhcd",
+    "slide": 1,
+    "layoutId": "/ppt/slideLayouts/slideLayout1.xml",
+    "layoutName": "タイトル スライド",
+    "layoutType": "title",
+    "masterLayoutId": "/ppt/slideMasters/slideMaster1.xml",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "Office",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "fontScheme": {
+      "name": "Office",
+      "majorFont": {
+        "latinTypeface": "游ゴシック Light"
+      },
+      "minorFont": {
+        "latinTypeface": "游ゴシック"
+      }
+    },
+    "typefaces": [
+      "游ゴシック",
+      "游ゴシック Light",
+      "ＭＳ ゴシック"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "/ppt/slideLayouts/slideLayout1.xml",
+      "name": "タイトル スライド",
+      "type": "title",
+      "parentLayoutId": "/ppt/slideMasters/slideMaster1.xml",
+      "elements": [
+        {
+          "order": 1,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/2",
+          "id": "2",
+          "name": "タイトル 1",
+          "bbox": [
+            160,
+            117.83,
+            960,
+            250.67
+          ],
+          "text": "マスター タイトルの書式設定",
+          "textPreview": "マスター タイトルの書式設定",
+          "resolvedTextStyle": {
+            "anchor": 3,
+            "verticalAlignment": "bottom"
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "マスター タイトルの書式設定",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "マスター タイトルの書式設定"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/3",
+          "id": "3",
+          "name": "字幕 2",
+          "bbox": [
+            160,
+            378.17,
+            960,
+            173.83
+          ],
+          "text": "マスター サブタイトルの書式設定",
+          "textPreview": "マスター サブタイトルの書式設定",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "マスター サブタイトルの書式設定",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "マスター サブタイトルの書式設定"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/4",
+          "id": "4",
+          "name": "日付プレースホルダー 3",
+          "bbox": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "text": "2026/7/17",
+          "textPreview": "2026/7/17",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "2026/7/17",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "2026/7/17"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/5",
+          "id": "5",
+          "name": "フッター プレースホルダー 4",
+          "bbox": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "order": 5,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/6",
+          "id": "6",
+          "name": "スライド番号プレースホルダー 5",
+          "bbox": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "text": "‹#›",
+          "textPreview": "‹#›",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "‹#›",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "‹#›"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scope": "master",
+      "id": "/ppt/slideMasters/slideMaster1.xml",
+      "type": "master",
+      "elements": [
+        {
+          "order": 1,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/2",
+          "id": "2",
+          "name": "タイトル プレースホルダー 1",
+          "bbox": [
+            88,
+            38.33,
+            1104,
+            139.17
+          ],
+          "geometry": "rect",
+          "text": "マスター タイトルの書式設定",
+          "textPreview": "マスター タイトルの書式設定",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "autoFit": "shrinkText",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "マスター タイトルの書式設定",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "マスター タイトルの書式設定"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/3",
+          "id": "3",
+          "name": "テキスト プレースホルダー 2",
+          "bbox": [
+            88,
+            191.67,
+            1104,
+            456.83
+          ],
+          "geometry": "rect",
+          "text": "マスター テキストの書式設定\n第 2 レベル\n第 3 レベル\n第 4 レベル\n第 5 レベル",
+          "textPreview": "マスター テキストの書式設定 | 第 2 レベル | 第 3 レベル | 第 4 レベル | 第 5 レベル",
+          "resolvedTextStyle": {
+            "vertical": 1,
+            "autoFit": "shrinkText",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "マスター テキストの書式設定",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "マスター テキストの書式設定"
+                }
+              ]
+            },
+            {
+              "index": 2,
+              "text": "第 2 レベル",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "第 "
+                },
+                {
+                  "index": 2,
+                  "text": "2 "
+                },
+                {
+                  "index": 3,
+                  "text": "レベル"
+                }
+              ]
+            },
+            {
+              "index": 3,
+              "text": "第 3 レベル",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "第 "
+                },
+                {
+                  "index": 2,
+                  "text": "3 "
+                },
+                {
+                  "index": 3,
+                  "text": "レベル"
+                }
+              ]
+            },
+            {
+              "index": 4,
+              "text": "第 4 レベル",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "第 "
+                },
+                {
+                  "index": 2,
+                  "text": "4 "
+                },
+                {
+                  "index": 3,
+                  "text": "レベル"
+                }
+              ]
+            },
+            {
+              "index": 5,
+              "text": "第 5 レベル",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "第 "
+                },
+                {
+                  "index": 2,
+                  "text": "5 "
+                },
+                {
+                  "index": 3,
+                  "text": "レベル"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/4",
+          "id": "4",
+          "name": "日付プレースホルダー 3",
+          "bbox": [
+            88,
+            667.33,
+            288,
+            38.33
+          ],
+          "geometry": "rect",
+          "text": "2026/7/17",
+          "textPreview": "2026/7/17",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "2026/7/17",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "2026/7/17"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/5",
+          "id": "5",
+          "name": "フッター プレースホルダー 4",
+          "bbox": [
+            424,
+            667.33,
+            432,
+            38.33
+          ],
+          "geometry": "rect",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          }
+        },
+        {
+          "order": 5,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/6",
+          "id": "6",
+          "name": "スライド番号プレースホルダー 5",
+          "bbox": [
+            904,
+            667.33,
+            288,
+            38.33
+          ],
+          "geometry": "rect",
+          "text": "‹#›",
+          "textPreview": "‹#›",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "‹#›",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "‹#›"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/mpkj6l0n",
+      "id": "4",
+      "name": "正方形/長方形 3",
+      "bbox": [
+        0,
+        0,
+        1280,
+        48.48
+      ],
+      "geometry": "rect",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 24,
+        "typeface": "游ゴシック",
+        "color": "lt1",
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": ""
+          }
+        ]
+      },
+      "fillColor": "accent1",
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/8r218vit",
+      "id": "6",
+      "name": "正方形/長方形 5",
+      "bbox": [
+        0,
+        671.52,
+        1280,
+        48.48
+      ],
+      "geometry": "rect",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 24,
+        "typeface": "游ゴシック",
+        "color": "lt1",
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": ""
+          }
+        ]
+      },
+      "fillColor": "accent1",
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/0n214vih",
+      "id": "2",
+      "name": "タイトル 1",
+      "bbox": [
+        112,
+        99.29,
+        1056,
+        246.51
+      ],
+      "text": "第4回　カメラ班ミーティング",
+      "textPreview": "第4回　カメラ班ミーティング",
+      "resolvedFontSize": 80,
+      "resolvedTextStyle": {
+        "anchor": 3,
+        "vertical": 1,
+        "fontSize": 80,
+        "typeface": "游ゴシック Light",
+        "color": "tx1",
+        "alignment": "center",
+        "verticalAlignment": "bottom",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "第4回　カメラ班ミーティング"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "第4回　カメラ班ミーティング",
+          "resolvedTextStyle": {
+            "alignment": "center"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "第4回　カメラ班ミーティング",
+              "fontSize": 72,
+              "typeface": "ＭＳ ゴシック"
+            }
+          ],
+          "bulletCharacter": "",
+          "lineSpacingPercent": 90000
+        }
+      ]
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/lob2xgz2",
+      "id": "3",
+      "name": "字幕 2",
+      "bbox": [
+        153.27,
+        466.43,
+        1056,
+        120
+      ],
+      "text": "2026年7月31日\nB4　伊藤弘道",
+      "textPreview": "2026年7月31日 | B4　伊藤弘道",
+      "resolvedFontSize": 32,
+      "resolvedTextStyle": {
+        "vertical": 1,
+        "fontSize": 32,
+        "typeface": "游ゴシック",
+        "color": "tx1",
+        "alignment": "center",
+        "autoFit": "shrinkText",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "2026年7月31日"
+          },
+          {
+            "index": 2,
+            "text": ""
+          },
+          {
+            "index": 3,
+            "text": "B4　伊藤弘道"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "2026年7月31日",
+          "resolvedTextStyle": {
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "2026年7月31日",
+              "typeface": "ＭＳ ゴシック",
+              "color": "tx1"
+            }
+          ],
+          "bulletCharacter": "",
+          "marginLeft": 0,
+          "indent": 0,
+          "lineSpacingPercent": 90000
+        },
+        {
+          "index": 2,
+          "text": "B4　伊藤弘道",
+          "resolvedTextStyle": {
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "B4　伊藤弘道",
+              "typeface": "ＭＳ ゴシック",
+              "color": "tx1"
+            }
+          ],
+          "bulletCharacter": "",
+          "marginLeft": 0,
+          "indent": 0,
+          "lineSpacingPercent": 90000
+        }
+      ]
+    }
+  ],
+  "composeRuns": []
+}

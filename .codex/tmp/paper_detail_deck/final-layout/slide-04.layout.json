@@ -1,0 +1,922 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/jyx0ra1s",
+    "id": "jyx0ra1s",
+    "slide": 4,
+    "layoutId": "/ppt/slideLayouts/slideLayout1.xml",
+    "layoutName": "タイトル スライド",
+    "layoutType": "title",
+    "masterLayoutId": "/ppt/slideMasters/slideMaster1.xml",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "Office",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "fontScheme": {
+      "name": "Office",
+      "majorFont": {
+        "latinTypeface": "游ゴシック Light"
+      },
+      "minorFont": {
+        "latinTypeface": "游ゴシック"
+      }
+    },
+    "typefaces": [
+      "Yu Gothic",
+      "游ゴシック",
+      "游ゴシック Light"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "/ppt/slideLayouts/slideLayout1.xml",
+      "name": "タイトル スライド",
+      "type": "title",
+      "parentLayoutId": "/ppt/slideMasters/slideMaster1.xml",
+      "elements": [
+        {
+          "order": 1,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/2",
+          "id": "2",
+          "name": "タイトル 1",
+          "bbox": [
+            160,
+            117.83,
+            960,
+            250.67
+          ],
+          "text": "マスター タイトルの書式設定",
+          "textPreview": "マスター タイトルの書式設定",
+          "resolvedTextStyle": {
+            "anchor": 3,
+            "verticalAlignment": "bottom"
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "マスター タイトルの書式設定",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "マスター タイトルの書式設定"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/3",
+          "id": "3",
+          "name": "字幕 2",
+          "bbox": [
+            160,
+            378.17,
+            960,
+            173.83
+          ],
+          "text": "マスター サブタイトルの書式設定",
+          "textPreview": "マスター サブタイトルの書式設定",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "マスター サブタイトルの書式設定",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "マスター サブタイトルの書式設定"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/4",
+          "id": "4",
+          "name": "日付プレースホルダー 3",
+          "bbox": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "text": "2026/7/17",
+          "textPreview": "2026/7/17",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "2026/7/17",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "2026/7/17"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/5",
+          "id": "5",
+          "name": "フッター プレースホルダー 4",
+          "bbox": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "order": 5,
+          "kind": "shape",
+          "scope": "layout",
+          "aid": "template/layout//ppt/slideLayouts/slideLayout1.xml/6",
+          "id": "6",
+          "name": "スライド番号プレースホルダー 5",
+          "bbox": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "text": "‹#›",
+          "textPreview": "‹#›",
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "‹#›",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "‹#›"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scope": "master",
+      "id": "/ppt/slideMasters/slideMaster1.xml",
+      "type": "master",
+      "elements": [
+        {
+          "order": 1,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/2",
+          "id": "2",
+          "name": "タイトル プレースホルダー 1",
+          "bbox": [
+            88,
+            38.33,
+            1104,
+            139.17
+          ],
+          "geometry": "rect",
+          "text": "マスター タイトルの書式設定",
+          "textPreview": "マスター タイトルの書式設定",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "autoFit": "shrinkText",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "マスター タイトルの書式設定",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "マスター タイトルの書式設定"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/3",
+          "id": "3",
+          "name": "テキスト プレースホルダー 2",
+          "bbox": [
+            88,
+            191.67,
+            1104,
+            456.83
+          ],
+          "geometry": "rect",
+          "text": "マスター テキストの書式設定\n第 2 レベル\n第 3 レベル\n第 4 レベル\n第 5 レベル",
+          "textPreview": "マスター テキストの書式設定 | 第 2 レベル | 第 3 レベル | 第 4 レベル | 第 5 レベル",
+          "resolvedTextStyle": {
+            "vertical": 1,
+            "autoFit": "shrinkText",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "マスター テキストの書式設定",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "マスター テキストの書式設定"
+                }
+              ]
+            },
+            {
+              "index": 2,
+              "text": "第 2 レベル",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "第 "
+                },
+                {
+                  "index": 2,
+                  "text": "2 "
+                },
+                {
+                  "index": 3,
+                  "text": "レベル"
+                }
+              ]
+            },
+            {
+              "index": 3,
+              "text": "第 3 レベル",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "第 "
+                },
+                {
+                  "index": 2,
+                  "text": "3 "
+                },
+                {
+                  "index": 3,
+                  "text": "レベル"
+                }
+              ]
+            },
+            {
+              "index": 4,
+              "text": "第 4 レベル",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "第 "
+                },
+                {
+                  "index": 2,
+                  "text": "4 "
+                },
+                {
+                  "index": 3,
+                  "text": "レベル"
+                }
+              ]
+            },
+            {
+              "index": 5,
+              "text": "第 5 レベル",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "第 "
+                },
+                {
+                  "index": 2,
+                  "text": "5 "
+                },
+                {
+                  "index": 3,
+                  "text": "レベル"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/4",
+          "id": "4",
+          "name": "日付プレースホルダー 3",
+          "bbox": [
+            88,
+            667.33,
+            288,
+            38.33
+          ],
+          "geometry": "rect",
+          "text": "2026/7/17",
+          "textPreview": "2026/7/17",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "2026/7/17",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "2026/7/17"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/5",
+          "id": "5",
+          "name": "フッター プレースホルダー 4",
+          "bbox": [
+            424,
+            667.33,
+            432,
+            38.33
+          ],
+          "geometry": "rect",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          }
+        },
+        {
+          "order": 5,
+          "kind": "shape",
+          "scope": "master",
+          "aid": "template/master//ppt/slideMasters/slideMaster1.xml/6",
+          "id": "6",
+          "name": "スライド番号プレースホルダー 5",
+          "bbox": [
+            904,
+            667.33,
+            288,
+            38.33
+          ],
+          "geometry": "rect",
+          "text": "‹#›",
+          "textPreview": "‹#›",
+          "resolvedTextStyle": {
+            "anchor": 2,
+            "vertical": 1,
+            "verticalAlignment": "middle",
+            "insets": {
+              "top": 4.8,
+              "right": 9.6,
+              "bottom": 4.8,
+              "left": 9.6
+            }
+          },
+          "paragraphs": [
+            {
+              "index": 1,
+              "text": "‹#›",
+              "runs": [
+                {
+                  "index": 1,
+                  "text": "‹#›"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/rm1k7yt4",
+      "id": "4",
+      "name": "正方形/長方形 3",
+      "bbox": [
+        0,
+        0,
+        1280,
+        48.48
+      ],
+      "geometry": "rect",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 24,
+        "typeface": "游ゴシック",
+        "color": "lt1",
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": ""
+          }
+        ]
+      },
+      "fillColor": "accent1",
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/doj29oba",
+      "id": "6",
+      "name": "正方形/長方形 5",
+      "bbox": [
+        0,
+        671.52,
+        1280,
+        48.48
+      ],
+      "geometry": "rect",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 2,
+        "fontSize": 24,
+        "typeface": "游ゴシック",
+        "color": "lt1",
+        "alignment": "left",
+        "verticalAlignment": "middle",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": ""
+          }
+        ]
+      },
+      "fillColor": "accent1",
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/sna103ap",
+      "id": "7",
+      "name": "テキスト ボックス 6",
+      "bbox": [
+        26.18,
+        61.09,
+        1180,
+        61.39
+      ],
+      "geometry": "rect",
+      "text": "① 勾配方向と凸性で楕円らしい円弧だけを残す",
+      "textPreview": "① 勾配方向と凸性で楕円らしい円弧だけを残す",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "fontSize": 24,
+        "typeface": "游ゴシック",
+        "color": "tx1",
+        "alignment": "left",
+        "wrap": "none",
+        "autoFit": "resizeShapeToFitText",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "① 勾配方向と凸性で楕円らしい円弧だけを残す"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "① 勾配方向と凸性で楕円らしい円弧だけを残す",
+          "runs": [
+            {
+              "index": 1,
+              "text": "① 勾配方向と凸性で楕円らしい円弧だけを残す",
+              "fontSize": 42.67
+            }
+          ],
+          "bulletCharacter": "",
+          "marginLeft": 0
+        }
+      ]
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/3ihk3et8",
+      "id": "8",
+      "name": "テキスト ボックス 1",
+      "bbox": [
+        70,
+        172,
+        1110,
+        420
+      ],
+      "geometry": "rect",
+      "text": "まずCanny法でエッジ点を抽出する。\n各点 eᵢ のSobel勾配を (dₓ, dᵧ) とし、符号で4方向に分類する。\n\nD(eᵢ) = {\n　Ⅰ　dₓ > 0,  dᵧ > 0\n　Ⅱ　dₓ < 0,  dᵧ > 0\n　Ⅲ　dₓ < 0,  dᵧ < 0\n　Ⅳ　dₓ > 0,  dᵧ < 0\n\n同じ分類の8近傍点を連結して円弧にし、短すぎるものを除外する。\nさらに弦に対する膨らみ方から凸・凹を判定し、\n楕円境界の上下左右と矛盾する円弧を除く。",
+      "textPreview": "まずCanny法でエッジ点を抽出する。 | 各点 eᵢ のSobel勾配を (dₓ, dᵧ) とし、符号で4方向に分類する。 |  | D(eᵢ) = { | 　Ⅰ　dₓ > 0,  dᵧ > 0 | 　Ⅱ　dₓ < 0,  dᵧ > 0 | 　Ⅲ　dₓ < 0,  dᵧ ...",
+      "resolvedFontSize": 26.67,
+      "resolvedTextStyle": {
+        "fontSize": 26.67,
+        "typeface": "Yu Gothic",
+        "color": "tx1",
+        "alignment": "left",
+        "wrap": "none",
+        "autoFit": "resizeShapeToFitText",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 12,
+        "lines": [
+          {
+            "index": 1,
+            "text": "まずCanny法でエッジ点を抽出する。"
+          },
+          {
+            "index": 2,
+            "text": "各点 eᵢ のSobel勾配を (dₓ, dᵧ) とし、符号で4方向に分類する。"
+          },
+          {
+            "index": 3,
+            "text": ""
+          },
+          {
+            "index": 4,
+            "text": "D(eᵢ) = {"
+          },
+          {
+            "index": 5,
+            "text": "　Ⅰ　dₓ > 0,  dᵧ > 0"
+          },
+          {
+            "index": 6,
+            "text": "　Ⅱ　dₓ < 0,  dᵧ > 0"
+          },
+          {
+            "index": 7,
+            "text": "　Ⅲ　dₓ < 0,  dᵧ < 0"
+          },
+          {
+            "index": 8,
+            "text": "　Ⅳ　dₓ > 0,  dᵧ < 0"
+          },
+          {
+            "index": 9,
+            "text": ""
+          },
+          {
+            "index": 10,
+            "text": "同じ分類の8近傍点を連結して円弧にし、短すぎるものを除外する。"
+          },
+          {
+            "index": 11,
+            "text": "さらに弦に対する膨らみ方から凸・凹を判定し、"
+          },
+          {
+            "index": 12,
+            "text": "楕円境界の上下左右と矛盾する円弧を除く。"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "まずCanny法でエッジ点を抽出する。",
+          "resolvedTextStyle": {
+            "fontSize": 26.67,
+            "typeface": "Yu Gothic",
+            "color": "tx1",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "まずCanny法でエッジ点を抽出する。",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic",
+              "color": "tx1",
+              "alignment": "left"
+            }
+          ],
+          "bulletCharacter": "",
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "各点 eᵢ のSobel勾配を (dₓ, dᵧ) とし、符号で4方向に分類する。",
+          "resolvedTextStyle": {
+            "fontSize": 26.67,
+            "typeface": "Yu Gothic",
+            "color": "tx1",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "各点 eᵢ のSobel勾配を ",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic",
+              "color": "tx1",
+              "alignment": "left"
+            },
+            {
+              "index": 2,
+              "text": "(dₓ, dᵧ)",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic",
+              "color": "tx1",
+              "bold": true,
+              "alignment": "left"
+            },
+            {
+              "index": 3,
+              "text": " とし、符号で4方向に分類する。",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic",
+              "color": "tx1",
+              "alignment": "left"
+            }
+          ],
+          "bulletCharacter": "",
+          "marginLeft": 0
+        },
+        {
+          "index": 4,
+          "text": "D(eᵢ) = {",
+          "resolvedTextStyle": {
+            "fontSize": 26.67,
+            "typeface": "Yu Gothic",
+            "color": "tx1",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "D(eᵢ) = {",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic",
+              "color": "tx1",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "bulletCharacter": "",
+          "marginLeft": 0
+        },
+        {
+          "index": 5,
+          "text": "　Ⅰ　dₓ > 0,  dᵧ > 0",
+          "resolvedTextStyle": {
+            "fontSize": 26.67,
+            "typeface": "Yu Gothic",
+            "color": "tx1",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "　Ⅰ　dₓ > 0,  dᵧ > 0",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic",
+              "color": "tx1",
+              "alignment": "left"
+            }
+          ],
+          "bulletCharacter": "",
+          "marginLeft": 0
+        },
+        {
+          "index": 6,
+          "text": "　Ⅱ　dₓ < 0,  dᵧ > 0",
+          "resolvedTextStyle": {
+            "fontSize": 26.67,
+            "typeface": "Yu Gothic",
+            "color": "tx1",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "　Ⅱ　dₓ < 0,  dᵧ > 0",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic",
+              "color": "tx1",
+              "alignment": "left"
+            }
+          ],
+          "bulletCharacter": "",
+          "marginLeft": 0
+        },
+        {
+          "index": 7,
+          "text": "　Ⅲ　dₓ < 0,  dᵧ < 0",
+          "resolvedTextStyle": {
+            "fontSize": 26.67,
+            "typeface": "Yu Gothic",
+            "color": "tx1",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "　Ⅲ　dₓ < 0,  dᵧ < 0",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic",
+              "color": "tx1",
+              "alignment": "left"
+            }
+          ],
+          "bulletCharacter": "",
+          "marginLeft": 0
+        },
+        {
+          "index": 8,
+          "text": "　Ⅳ　dₓ > 0,  dᵧ < 0",
+          "resolvedTextStyle": {
+            "fontSize": 26.67,
+            "typeface": "Yu Gothic",
+            "color": "tx1",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "　Ⅳ　dₓ > 0,  dᵧ < 0",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic",
+              "color": "tx1",
+              "alignment": "left"
+            }
+          ],
+          "bulletCharacter": "",
+          "marginLeft": 0
+        },
+        {
+          "index": 10,
+          "text": "同じ分類の8近傍点を連結して円弧にし、短すぎるものを除外する。",
+          "resolvedTextStyle": {
+            "fontSize": 26.67,
+            "typeface": "Yu Gothic",
+            "color": "tx1",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "同じ分類の8近傍点を連結して円弧にし、短すぎるものを除外する。",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic",
+              "color": "tx1",
+              "alignment": "left"
+            }
+          ],
+          "bulletCharacter": "",
+          "marginLeft": 0
+        },
+        {
+          "index": 11,
+          "text": "さらに弦に対する膨らみ方から凸・凹を判定し、",
+          "resolvedTextStyle": {
+            "fontSize": 26.67,
+            "typeface": "Yu Gothic",
+            "color": "tx1",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "さらに弦に対する膨らみ方から凸・凹を判定し、",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic",
+              "color": "tx1",
+              "alignment": "left"
+            }
+          ],
+          "bulletCharacter": "",
+          "marginLeft": 0
+        },
+        {
+          "index": 12,
+          "text": "楕円境界の上下左右と矛盾する円弧を除く。",
+          "resolvedTextStyle": {
+            "fontSize": 26.67,
+            "typeface": "Yu Gothic",
+            "color": "tx1",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "楕円境界の上下左右と矛盾する円弧を除く。",
+              "fontSize": 26.67,
+              "typeface": "Yu Gothic",
+              "color": "tx1",
+              "alignment": "left"
+            }
+          ],
+          "bulletCharacter": "",
+          "marginLeft": 0
+        }
+      ]
+    }
+  ],
+  "composeRuns": []
+}

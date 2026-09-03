@@ -1,0 +1,103 @@
+{"kind":"deck","id":"pr/5l17yx","name":"Deck"}
+{"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"","type":"master","placeholders":[{"name":"title","type":"title","textPreview":"マスター タイトルの書式設定"},{"name":"body","type":"body","textPreview":"マスター テキストの書式設定 | 第 2 レベル | 第 3 レベル | 第 4 レベル | 第 5 レベル"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/17"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"タイトル スライド","type":"title","placeholders":[{"name":"title","type":"title","textPreview":"マスター タイトルの書式設定"},{"name":"subtitle","type":"subtitle","textPreview":"マスター サブタイトルの書式設定"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/17"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout2.xml","name":"タイトルとコンテンツ","type":"obj","placeholders":[{"name":"title","type":"title","textPreview":"マスター タイトルの書式設定"},{"name":"2","textPreview":"マスター テキストの書式設定 | 第 2 レベル | 第 3 レベル | 第 4 レベル | 第 5 レベル"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/17"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout3.xml","name":"セクション見出し","type":"secHead","placeholders":[{"name":"title","type":"title","textPreview":"マスター タイトルの書式設定"},{"name":"body","type":"body","textPreview":"マスター テキストの書式設定"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/17"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout4.xml","name":"2 つのコンテンツ","type":"twoObj","placeholders":[{"name":"title","type":"title","textPreview":"マスター タイトルの書式設定"},{"name":"2","textPreview":"マスター テキストの書式設定 | 第 2 レベル | 第 3 レベル | 第 4 レベル | 第 5 レベル"},{"name":"3","textPreview":"マスター テキストの書式設定 | 第 2 レベル | 第 3 レベル | 第 4 レベル | 第 5 レベル"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/17"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout5.xml","name":"比較","type":"twoTxTwoObj","placeholders":[{"name":"title","type":"title","textPreview":"マスター タイトルの書式設定"},{"name":"body","type":"body","textPreview":"マスター テキストの書式設定"},{"name":"3","textPreview":"マスター テキストの書式設定 | 第 2 レベル | 第 3 レベル | 第 4 レベル | 第 5 レベル"},{"name":"body","type":"body","textPreview":"マスター テキストの書式設定"},{"name":"5","textPreview":"マスター テキストの書式設定 | 第 2 レベル | 第 3 レベル | 第 4 レベル | 第 5 レベル"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/17"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout6.xml","name":"タイトルのみ","type":"titleOnly","placeholders":[{"name":"title","type":"title","textPreview":"マスター タイトルの書式設定"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/17"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout7.xml","name":"白紙","type":"blank","placeholders":[{"name":"dateTime","type":"dateTime","textPreview":"2026/7/17"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout8.xml","name":"タイトル付きのコンテンツ","type":"objTx","placeholders":[{"name":"title","type":"title","textPreview":"マスター タイトルの書式設定"},{"name":"2","textPreview":"マスター テキストの書式設定 | 第 2 レベル | 第 3 レベル | 第 4 レベル | 第 5 レベル"},{"name":"body","type":"body","textPreview":"マスター テキストの書式設定"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/17"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout9.xml","name":"タイトル付きの図","type":"picTx","placeholders":[{"name":"title","type":"title","textPreview":"マスター タイトルの書式設定"},{"name":"picture","type":"picture"},{"name":"body","type":"body","textPreview":"マスター テキストの書式設定"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/17"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout10.xml","name":"タイトルと縦書きテキスト","type":"vertTx","placeholders":[{"name":"title","type":"title","textPreview":"マスター タイトルの書式設定"},{"name":"body","type":"body","textPreview":"マスター テキストの書式設定 | 第 2 レベル | 第 3 レベル | 第 4 レベル | 第 5 レベル"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/17"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout11.xml","name":"縦書きタイトルと\n縦書きテキスト","type":"vertTitleAndTx","placeholders":[{"name":"title","type":"title","textPreview":"マスター タイトルの書式設定"},{"name":"body","type":"body","textPreview":"マスター テキストの書式設定 | 第 2 レベル | 第 3 レベル | 第 4 レベル | 第 5 レベル"},{"name":"dateTime","type":"dateTime","textPreview":"2026/7/17"},{"name":"footer","type":"footer"},{"name":"slideNumber","type":"slideNumber","textPreview":"‹#›"}]}
+{"kind":"slide","id":"sl/0cf18v","slide":1,"title":"第3回　カメラ班ミーティング","textShapes":2}
+{"kind":"shape","id":"sh/l8butwfa","slide":1,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/z69crmx4","slide":1,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/b29cn2xs","slide":1,"name":"タイトル 1","placeholder":"title","text":"第3回　カメラ班ミーティング","textPreview":"第3回　カメラ班ミーティング","textChars":14,"textLines":1,"bbox":[112,99.29,1056,246.51]}
+{"kind":"textbox","id":"sh/q10bexg7","slide":1,"name":"字幕 2","placeholder":"subtitle","text":"2026年7月17日\nB4　伊藤弘道","textPreview":"2026年7月17日 | B4　伊藤弘道","textChars":18,"textLines":2,"bbox":[153.27,466.43,1056,120]}
+{"kind":"notes","id":"nt/0cf18v","slide":1,"text":""}
+{"kind":"slide","id":"sl/xb1qvq","slide":2,"title":"RGB画像を用いたロケット上段の","textShapes":1}
+{"kind":"shape","id":"sh/gne9wz6p","slide":2,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/elcrupoz","slide":2,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/xsjqd076","slide":2,"name":"テキスト ボックス 8","text":"RGB画像を用いたロケット上段の\nPAF内周エッジ検出のロバスト性評価\n\n幾何ベース手法と学習ベース手法の実装と比較","textPreview":"RGB画像を用いたロケット上段の | PAF内周エッジ検出のロバスト性評価 |  | 幾何ベース手法と学習ベース手法の実装と比較","textChars":58,"textLines":4,"bbox":[112,238.83,1056,242.34]}
+{"kind":"notes","id":"nt/xb1qvq","slide":2,"text":""}
+{"kind":"slide","id":"sl/oo2b0a","slide":3,"title":"Blenderを用いた初期データセットの作成","textShapes":2}
+{"kind":"shape","id":"sh/g325gby1","slide":3,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/e1knel0v","slide":3,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/f2to76hg","slide":3,"name":"テキスト ボックス 6","text":"Blenderを用いた初期データセットの作成","textPreview":"Blenderを用いた初期データセットの作成","textChars":22,"textLines":1,"bbox":[26.18,61.09,819.96,61.39]}
+{"kind":"textbox","id":"sh/w7y54rih","slide":3,"name":"テキスト ボックス 1","text":"【パラメータ】\nカメラ傾斜：5パターン\nカメラ方位：4パターン\nカメラ距離：2パターン\n注視点：3パターン\n照明傾斜：3パターン\n照明方位：3パターン\n\n合計714条件\n","textPreview":"【パラメータ】 | カメラ傾斜：5パターン | カメラ方位：4パターン | カメラ距離：2パターン | 注視点：3パターン | 照明傾斜：3パターン | 照明方位：3パターン |  | 合計714条件 |","textChars":85,"textLines":10,"bbox":[80.62,228.76,303.64,332.82]}
+{"kind":"image","id":"im/gv6l4n25","slide":3,"name":"図 2","bbox":[438.69,122.48,749.94,524.55]}
+{"kind":"notes","id":"nt/oo2b0a","slide":3,"text":"カメラ傾斜0、20、40、60、75°\nカメラ方位0、90、180、270°\n\nカメラ方位は90°ずつ動く　照明方位は120°ずつ動く"}
+{"kind":"slide","id":"sl/qwgzig","slide":4,"title":"比較用ベースライン手法実装(仮)","textShapes":5}
+{"kind":"shape","id":"sh/0ryhknyd","slide":4,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/epwzidg7","slide":4,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/fq50bihs","slide":4,"name":"テキスト ボックス 6","text":"比較用ベースライン手法実装(仮)","textPreview":"比較用ベースライン手法実装(仮)","textChars":16,"textLines":1,"bbox":[26.18,82.27,655.88,61.39]}
+{"kind":"shape","id":"sh/0zah8rqx","slide":4,"name":"正方形/長方形 23","bbox":[72.26,238.13,104.26,19.85]}
+{"kind":"textbox","id":"sh/ex8z6h8r","slide":4,"name":"テキスト ボックス 25","text":"輪郭ごとにRANSAC適用","textPreview":"輪郭ごとにRANSAC適用","textChars":13,"textLines":1,"bbox":[856.82,213.44,182.63,27.47]}
+{"kind":"textbox","id":"sh/ona1crqt","slide":4,"name":"テキスト ボックス 27","text":"Cannyエッジ検出+輪郭別RANSAC","textPreview":"Cannyエッジ検出+輪郭別RANSAC","textChars":20,"textLines":1,"bbox":[377.53,164.68,524.94,48.47]}
+{"kind":"textbox","id":"sh/zilkbqtg","slide":4,"name":"テキスト ボックス 1","text":"・Cannyエッジを直接RANSACに渡すとPAF内周以外のエッジが偽楕円を形成\n　→連続成分ごとの輪郭に分割し、各輪郭へ独立にRANSACを適用","textPreview":"・Cannyエッジを直接RANSACに渡すとPAF内周以外のエッジが偽楕円を形成 | 　→連続成分ごとの輪郭に分割し、各輪郭へ独立にRANSACを適用","textChars":73,"textLines":2,"bbox":[38.71,506.02,957.46,74.32]}
+{"kind":"textbox","id":"sh/rm507ihw","slide":4,"name":"テキスト ボックス 1","text":"・テストではRANSACをOpenCV標準の楕円推定に置き換えたものも検証","textPreview":"・テストではRANSACをOpenCV標準の楕円推定に置き換えたものも検証","textChars":37,"textLines":1,"bbox":[38.71,590.38,902.76,42.01]}
+{"kind":"image","id":"im/pwjapofa","slide":4,"name":"図 20","bbox":[38.71,219.79,1202.58,254.5]}
+{"kind":"image","id":"im/298betgz","slide":4,"name":"図 22","bbox":[107.87,233.56,33.03,25.03]}
+{"kind":"notes","id":"nt/qwgzig","slide":4,"text":""}
+{"kind":"slide","id":"sl/g3es3j","slide":5,"title":"学習ベース手法実装","textShapes":4}
+{"kind":"shape","id":"sh/al8rel4r","slide":5,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/wnq9gbmh","slide":5,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/xozqpg32","slide":5,"name":"テキスト ボックス 6","text":"学習ベース手法実装","textPreview":"学習ベース手法実装","textChars":9,"textLines":1,"bbox":[26.18,82.27,407.14,61.39]}
+{"kind":"textbox","id":"sh/apkjatsz","slide":5,"name":"テキスト ボックス 10","text":"CNN+重み付きRANSAC","textPreview":"CNN+重み付きRANSAC","textChars":14,"textLines":1,"bbox":[453.6,143.66,372.81,48.47]}
+{"kind":"textbox","id":"sh/wrm1c3a5","slide":5,"name":"テキスト ボックス 1","text":"【CNNの構成】\n・約48万パラメータの小型U-Net\n・BCE Loss + Dice Lossで学習","textPreview":"【CNNの構成】 | ・約48万パラメータの小型U-Net | ・BCE Loss + Dice Lossで学習","textChars":52,"textLines":3,"bbox":[58.01,453.8,421.78,106.63]}
+{"kind":"textbox","id":"sh/yt4jedsb","slide":5,"name":"テキスト ボックス 1","text":"BCE Loss：各画素の分類が正しいと小さくなる\nDice Loss：推定楕円領域が正解楕円領域と重なると小さくなる","textPreview":"BCE Loss：各画素の分類が正しいと小さくなる | Dice Loss：推定楕円領域が正解楕円領域と重なると小さくなる","textChars":59,"textLines":2,"bbox":[58.01,576.34,634.17,61.39]}
+{"kind":"image","id":"im/q5wz2hsf","slide":5,"name":"図 2","bbox":[292.5,192.13,880,228]}
+{"kind":"image","id":"im/r650vmt0","slide":5,"name":"図 7","bbox":[107.5,192.13,185,228]}
+{"kind":"notes","id":"nt/g3es3j","slide":5,"text":"重み付きBCE Loss：内周画素の誤分類は12倍損失を大きくしている"}
+{"kind":"slide","id":"sl/t02mdt","slide":6,"title":"Blenderを用いた初期データセットの作成","textShapes":13}
+{"kind":"shape","id":"sh/ov6l4nm9","slide":6,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/2to32d43","slide":6,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/nux4bilo","slide":6,"name":"テキスト ボックス 6","text":"Blenderを用いた初期データセットの作成","textPreview":"Blenderを用いた初期データセットの作成","textChars":22,"textLines":1,"bbox":[26.18,61.09,819.96,61.39]}
+{"kind":"textbox","id":"sh/8jmxgvql","slide":6,"name":"テキスト ボックス 23","text":"遮蔽","textPreview":"遮蔽","textChars":2,"textLines":1,"bbox":[645.91,123.33,67.86,38.78]}
+{"kind":"textbox","id":"sh/mh4fe58f","slide":6,"name":"テキスト ボックス 25","text":"102カメラ条件×7照明条件=714枚","textPreview":"102カメラ条件×7照明条件=714枚","textChars":19,"textLines":1,"bbox":[123.42,372.62,271.32,29.08]}
+{"kind":"textbox","id":"sh/on2x4bqh","slide":6,"name":"テキスト ボックス 27","text":"基礎データ","textPreview":"基礎データ","textChars":5,"textLines":1,"bbox":[188.81,125.65,140.56,38.78]}
+{"kind":"textbox","id":"sh/r2h0jetk","slide":6,"name":"テキスト ボックス 29","text":"白飛び","textPreview":"白飛び","textChars":3,"textLines":1,"bbox":[813.79,122.48,92.09,38.78]}
+{"kind":"textbox","id":"sh/t4zilora","slide":6,"name":"テキスト ボックス 31","text":"黒つぶれ","textPreview":"黒つぶれ","textChars":4,"textLines":1,"bbox":[981.67,122.48,116.33,38.78]}
+{"kind":"textbox","id":"sh/s3qhcja5","slide":6,"name":"四角形: 角を丸くする 32","text":"学習 497枚","textPreview":"学習 497枚","textChars":7,"textLines":1,"bbox":[420.35,180.23,133.61,48.07]}
+{"kind":"textbox","id":"sh/id8z6psn","slide":6,"name":"四角形: 角を丸くする 34","text":"学習時検証 105枚","textPreview":"学習時検証 105枚","textChars":10,"textLines":1,"bbox":[420.35,242.48,133.61,48.48]}
+{"kind":"textbox","id":"sh/kzqh8zat","slide":6,"name":"四角形: 角を丸くする 36","text":"テスト112枚","textPreview":"テスト112枚","textChars":7,"textLines":1,"bbox":[420.35,305.15,133.61,48.48]}
+{"kind":"textbox","id":"sh/bih4fipw","slide":6,"name":"テキスト ボックス 40","text":"・学習：497枚×(元画像+3劣化) = 1988枚\n・検証：105枚×(元画像+3劣化×2強度) = 735枚\n・テスト：112枚×(元画像+3劣化×4強度) = 1456枚","textPreview":"・学習：497枚×(元画像+3劣化) = 1988枚 | ・検証：105枚×(元画像+3劣化×2強度) = 735枚 | ・テスト：112枚×(元画像+3劣化×4強度) = 1456枚","textChars":88,"textLines":3,"bbox":[662.4,319.3,403.27,67.86]}
+{"kind":"textbox","id":"sh/xkjmhs72","slide":6,"name":"テキスト ボックス 1","text":"【基礎データ】\n・102カメラ条件 × 7照明条件 = 714枚\n・正解データ：PAF内周輪郭","textPreview":"【基礎データ】 | ・102カメラ条件 × 7照明条件 = 714枚 | ・正解データ：PAF内周輪郭","textChars":47,"textLines":3,"bbox":[85.77,402.71,497.85,106.63]}
+{"kind":"textbox","id":"sh/neh4bip0","slide":6,"name":"テキスト ボックス 2","text":"【データ分割と劣化効果の付与】\n・学習・テストで異なるカメラ条件を使用\n・OpenCVで遮蔽／白飛び／黒つぶれを付与","textPreview":"【データ分割と劣化効果の付与】 | ・学習・テストで異なるカメラ条件を使用 | ・OpenCVで遮蔽／白飛び／黒つぶれを付与","textChars":58,"textLines":3,"bbox":[662.4,401.7,552.04,106.63]}
+{"kind":"textbox","id":"sh/fqxk7ypo","slide":6,"name":"テキスト ボックス 1","text":"サイズ：256×256\n正解楕円幅：3 px","textPreview":"サイズ：256×256 | 正解楕円幅：3 px","textChars":22,"textLines":2,"bbox":[379.03,550.83,243.89,74.32]}
+{"kind":"image","id":"im/qpcbuhsv","slide":6,"name":"図 16","bbox":[155.99,158.7,206.19,206.19]}
+{"kind":"image","id":"im/rqlsnm9g","slide":6,"name":"図 18","bbox":[967.13,162.11,145.41,145.41]}
+{"kind":"image","id":"im/srutwra1","slide":6,"name":"図 20","bbox":[787.13,162.18,145.41,145.41]}
+{"kind":"image","id":"im/ds3upcrm","slide":6,"name":"図 22","bbox":[607.14,162.18,145.41,145.41]}
+{"kind":"image","id":"im/etcbyhs7","slide":6,"name":"図 46","bbox":[175.76,526.72,194.04,122.53]}
+{"kind":"notes","id":"nt/t02mdt","slide":6,"text":"70% 71×7\n15% 15×7\n15% 16×7"}
+{"kind":"slide","id":"sl/hfgy3c","slide":7,"title":"比較方法","textShapes":3}
+{"kind":"shape","id":"sh/7qtcbmh8","slide":7,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/tcvudwzy","slide":7,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/sbmdkryt","slide":7,"name":"テキスト ボックス 6","text":"比較方法","textPreview":"比較方法","textChars":4,"textLines":1,"bbox":[26.18,82.27,191.72,61.39]}
+{"kind":"textbox","id":"sh/6pkbihgn","slide":7,"name":"テキスト ボックス 1","text":"【評価条件】\n・Clean、25、50、75、100%\n・各条件112枚","textPreview":"【評価条件】 | ・Clean、25、50、75、100% | ・各条件112枚","textChars":36,"textLines":3,"bbox":[12.71,214.25,454.09,126.02]}
+{"kind":"textbox","id":"sh/q90fypkz","slide":7,"name":"テキスト ボックス 2","text":"【成功条件】\n・推定楕円と正解楕円のIoU ≥ 0.80\n・同一元画像で3方式を比較","textPreview":"【成功条件】 | ・推定楕円と正解楕円のIoU ≥ 0.80 | ・同一元画像で3方式を比較","textChars":42,"textLines":3,"bbox":[12.71,380.01,530.67,126.02]}
+{"kind":"image","id":"im/8zaxwr2t","slide":7,"name":"図 15","bbox":[579.51,170.42,674.31,379.17]}
+{"kind":"notes","id":"nt/hfgy3c","slide":7,"text":"IoU:Intersection over Union 2つの領域全体の内重なっている領域の割合"}
+{"kind":"slide","id":"sl/ajcjrg","slide":8,"title":"比較結果","textShapes":6}
+{"kind":"shape","id":"sh/4nqxw7ip","slide":8,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/il8fux0j","slide":8,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/jmhwn2h4","slide":8,"name":"テキスト ボックス 6","text":"比較結果","textPreview":"比較結果","textChars":4,"textLines":1,"bbox":[26.18,82.27,191.72,61.39]}
+{"kind":"textbox","id":"sh/832xwvml","slide":8,"name":"テキスト ボックス 10","text":"白飛び","textPreview":"白飛び","textChars":3,"textLines":1,"bbox":[608.36,164.26,92.09,38.78]}
+{"kind":"textbox","id":"sh/lgbe1g3a","slide":8,"name":"テキスト ボックス 13","text":"単純矩形","textPreview":"単純矩形","textChars":4,"textLines":1,"bbox":[192.88,164.26,116.33,38.78]}
+{"kind":"textbox","id":"sh/yd0fql4j","slide":8,"name":"テキスト ボックス 16","text":"黒つぶれ","textPreview":"黒つぶれ","textChars":4,"textLines":1,"bbox":[1010.04,164.26,116.33,38.78]}
+{"kind":"textbox","id":"sh/cbixobmd","slide":8,"name":"テキスト ボックス 18","text":"劣化強度と楕円検出成功率","textPreview":"劣化強度と楕円検出成功率","textChars":12,"textLines":1,"bbox":[499.3,495.16,310.2,38.78]}
+{"kind":"textbox","id":"sh/pwvydgbu","slide":8,"name":"テキスト ボックス 20","text":"・3方式全てが成功した491枚における中心誤差\n　fitEllipse：2.38±0.12 px、Canny：0.98 ± 0.04 px、CNN：0.80 ± 0.03 px","textPreview":"・3方式全てが成功した491枚における中心誤差 | 　fitEllipse：2.38±0.12 px、Canny：0.98 ± 0.04 px、CNN：0.80 ± 0.03 px","textChars":88,"textLines":2,"bbox":[26.18,576.34,863.72,67.86]}
+{"kind":"shape","id":"sh/2t4filcj","slide":8,"name":"正方形/長方形 21","bbox":[941.47,471.3,338.53,61.25]}
+{"kind":"image","id":"im/oj214rq1","slide":8,"name":"図 2","bbox":[27.79,215.78,1224.42,325.96]}
+{"kind":"notes","id":"nt/ajcjrg","slide":8,"text":""}
+{"kind":"slide","id":"sl/64ewhq","slide":9,"title":"今後の予定","textShapes":3}
+{"kind":"shape","id":"sh/cv29kfmx","slide":9,"name":"正方形/長方形 3","bbox":[0,0,1280,48.48]}
+{"kind":"shape","id":"sh/qtkri547","slide":9,"name":"正方形/長方形 5","bbox":[0,671.52,1280,48.48]}
+{"kind":"textbox","id":"sh/but8ra5c","slide":9,"name":"テキスト ボックス 6","text":"今後の予定","textPreview":"今後の予定","textChars":5,"textLines":1,"bbox":[26.18,82.27,234.8,61.39]}
+{"kind":"shape","id":"sh/ahkzupc7","slide":9,"name":"正方形/長方形 21","bbox":[941.47,471.3,338.53,61.25]}
+{"kind":"textbox","id":"sh/zidsvu5o","slide":9,"name":"テキスト ボックス 1","text":"・比較用ベースライン手法の追加\n　・Zhang(2019)：\n　　エッジを短い楕円弧に分割し、同じ楕円に属する可能性が\n　　高い弧を再結合した後に最小二乗楕円を適用。\n","textPreview":"・比較用ベースライン手法の追加 | 　・Zhang(2019)： | 　　エッジを短い楕円弧に分割し、同じ楕円に属する可能性が | 　　高い弧を再結合した後に最小二乗楕円を適用。 |","textChars":84,"textLines":5,"bbox":[69.48,180.85,953.42,203.57]}
+{"kind":"textbox","id":"sh/wr69wjmh","slide":9,"name":"テキスト ボックス 1","text":"・宇宙機CADに依存しないCNNベースPAF検出の検討\n　・PAF内周の実直径とカメラ内部パラメータを既知とする\n　・CNNによりPAF内周らしい領域を抽出し楕円を検出","textPreview":"・宇宙機CADに依存しないCNNベースPAF検出の検討 | 　・PAF内周の実直径とカメラ内部パラメータを既知とする | 　・CNNによりPAF内周らしい領域を抽出し楕円を検出","textChars":84,"textLines":3,"bbox":[69.48,393.97,889.3,126.02]}
+{"kind":"notes","id":"nt/64ewhq","slide":9,"text":""}

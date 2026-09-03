@@ -163,7 +163,10 @@ def reset_scene() -> None:
 
 
 def import_and_center_model(
-    model_path: Path, *, normalize_model_axes: bool
+    model_path: Path,
+    *,
+    normalize_model_axes: bool,
+    model_center: list[float] | None = None,
 ) -> list[bpy.types.Object]:
     bpy.ops.wm.obj_import(
         filepath=str(model_path),
@@ -180,10 +183,30 @@ def import_and_center_model(
             obj.rotation_euler = (0.0, 0.0, 0.0)
         bpy.context.view_layer.update()
 
-    corners = [obj.matrix_world @ Vector(corner) for obj in objects for corner in obj.bound_box]
-    minimum = Vector((min(point.x for point in corners), min(point.y for point in corners), min(point.z for point in corners)))
-    maximum = Vector((max(point.x for point in corners), max(point.y for point in corners), max(point.z for point in corners)))
-    center = (minimum + maximum) / 2
+    if model_center is None:
+        corners = [
+            obj.matrix_world @ Vector(corner)
+            for obj in objects
+            for corner in obj.bound_box
+        ]
+        minimum = Vector(
+            (
+                min(point.x for point in corners),
+                min(point.y for point in corners),
+                min(point.z for point in corners),
+            )
+        )
+        maximum = Vector(
+            (
+                max(point.x for point in corners),
+                max(point.y for point in corners),
+                max(point.z for point in corners),
+            )
+        )
+        center = (minimum + maximum) / 2
+    else:
+        # 比較モデルの付加物で外接境界が変わっても、基準モデルと同じ座標変換を使う。
+        center = Vector(model_center)
     for obj in objects:
         obj.location -= center
     return objects
@@ -352,6 +375,7 @@ def main() -> None:
     model_objects = import_and_center_model(
         resolve_project_path(config["model_path"]),
         normalize_model_axes=bool(config.get("normalize_model_axes", False)),
+        model_center=config.get("model_center"),
     )
     target_object, target_indices = assign_target_ring(
         model_objects, config["target_ring"]
