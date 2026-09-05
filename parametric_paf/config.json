@@ -1,0 +1,18 @@
+{
+  "defaults": {
+    "top_outer_diameter": 1.2,
+    "bottom_outer_diameter": 1.6,
+    "taper_height": 0.35,
+    "wall_thickness": 0.06,
+    "color": [0.55, 0.58, 0.62],
+    "rib_count": 0
+  },
+  "models": [
+    {"name": "baseline"},
+    {"name": "wide_base", "bottom_outer_diameter": 1.95},
+    {"name": "low_taper", "taper_height": 0.18},
+    {"name": "thick_wall", "wall_thickness": 0.12},
+    {"name": "ribbed", "rib_count": 12},
+    {"name": "dark", "color": [0.10, 0.11, 0.12]}
+  ]
+}
