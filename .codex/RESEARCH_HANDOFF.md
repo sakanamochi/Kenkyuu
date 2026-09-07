@@ -187,6 +187,8 @@
 - 現行重みSHA256：`d9238666ab08572aeb26005b5bbc3bc83d87ae574442c8e89fb7eb4b878fc4f6`。対応する設定は比較結果のprovenanceを参照。
 - ブランチ確認値：`codex/minimal-research-environment`。将来の担当者は実行時の状態を再確認する。
 - `output/`はGit管理外。Gitに文書があっても別環境でデータ・重みが存在するとは限らない。
+- `parametric_paf/output/`もGit管理外。再現用データ・現行重み・比較結果と、`output/legacy/`の過去の実験結果はローカルで保存する。
+- `.codex/tmp/`は一時作業専用でGit管理外。Python・pytestのキャッシュ、`node_modules/`、Blender自動バックアップも追跡対象外とする。研究の根拠となる成果物は一時作業フォルダに置かない。
 
 再実行コマンド（リポジトリ直下、既存出力を上書きするので必要性と保存先を確認）：
 

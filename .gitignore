@@ -1,5 +1,16 @@
-研究関連書類/
+# 研究資料・再現用データ・学習重みはローカルで保存する
+/研究関連書類/
 output/
-__pycache__/
-*.pyc
+
+# 一時作業・外部依存パッケージ
+/.codex/tmp/
+node_modules/
 .venv/
+
+# Pythonの実行・テストキャッシュ
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Blenderの自動バックアップ
+*.blend[0-9]*
