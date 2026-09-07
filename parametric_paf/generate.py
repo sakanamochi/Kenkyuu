@@ -69,9 +69,8 @@ def build_model(p):
     bsdf.inputs["Metallic"].default_value = 0.25
     bsdf.inputs["Roughness"].default_value = 0.40
 
-    # 半径・高さの断面。内外壁の半径差を一定にし、上下の開口に蓋はしない。
-    profile = [(top, 0), (bottom, -height), (bottom, -height-base_height),
-               (bottom-wall, -height-base_height), (bottom-wall, -height), (top-wall, 0)]
+    # テーパ部だけの中空断面。下端には別メッシュの蓋付き円筒を接続する。
+    profile = [(top, 0), (bottom, -height), (bottom-wall, -height), (top-wall, 0)]
     vertices = [(r*math.cos(2*math.pi*i/SEGMENTS), r*math.sin(2*math.pi*i/SEGMENTS), z)
                 for r, z in profile for i in range(SEGMENTS)]
     faces = []
@@ -81,10 +80,22 @@ def build_model(p):
             faces.append((j*SEGMENTS+i, nj*SEGMENTS+i, nj*SEGMENTS+ni, j*SEGMENTS+ni))
     body = mesh_object("PAF_body", vertices, faces, material)
     for poly in body.data.polygons:
-        poly.use_smooth = poly.index // SEGMENTS not in (2, 5)
+        poly.use_smooth = poly.index // SEGMENTS not in (1, 3)
     group = body.vertex_groups.new(name="target_inner_rim")
-    group.add(list(range(5*SEGMENTS, 6*SEGMENTS)), 1.0, "REPLACE")
+    group.add(list(range(3*SEGMENTS, 4*SEGMENTS)), 1.0, "REPLACE")
     objects = [body]
+
+    # 円筒上面をテーパ下端に一致させ、上端の穴から見える底面にする。
+    base_vertices = [(bottom*math.cos(2*math.pi*i/SEGMENTS),
+                      bottom*math.sin(2*math.pi*i/SEGMENTS), z)
+                     for z in (-height, -height-base_height) for i in range(SEGMENTS)]
+    base_faces = [(i, (i+1) % SEGMENTS, (i+1) % SEGMENTS+SEGMENTS, i+SEGMENTS)
+                  for i in range(SEGMENTS)]
+    base_faces.extend([tuple(range(SEGMENTS)), tuple(range(SEGMENTS, 2*SEGMENTS))])
+    base = mesh_object("base_cylinder", base_vertices, base_faces, material)
+    for poly in base.data.polygons:
+        poly.use_smooth = poly.index < SEGMENTS
+    objects.append(base)
 
     # リブは外壁に沿う補強板。幅・突出量は上端外径に対する固定比率。
     width = 0.025 * p["top_outer_diameter"]
@@ -100,7 +111,7 @@ def build_model(p):
         rib_faces = [(0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4),
                      (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)]
         objects.append(mesh_object(f"rib_{i:02d}", rib_vertices, rib_faces, material))
-    return objects, vertices[5*SEGMENTS:6*SEGMENTS], base_height
+    return objects, vertices[3*SEGMENTS:4*SEGMENTS], base_height
 
 
 def setup_preview():

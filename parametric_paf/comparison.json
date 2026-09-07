@@ -1,0 +1,11 @@
+{
+  "camera_tilts": [10, 30, 50, 70],
+  "camera_azimuths": [0, 90],
+  "light_tilts": [20, 60, 85],
+  "light_azimuths": [0, 180],
+  "lens_mm": 55,
+  "distance_per_inner_diameter": 3.6,
+  "resolution": 480,
+  "sun_energy": 3.0,
+  "sun_angle_deg": 0.53
+}

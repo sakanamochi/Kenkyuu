@@ -43,7 +43,6 @@ def _result_row(sample: dict, method: str) -> dict:
         "lighting_id": conditions["lighting_id"],
         "degradation": conditions.get("degradation", "clean"),
         "severity": conditions.get("severity", 0.0),
-        "background": conditions.get("background", {}).get("type", "space"),
         "camera_tilt_deg": conditions["camera"].get("tilt_deg"),
         "detected": False,
         "success": False,

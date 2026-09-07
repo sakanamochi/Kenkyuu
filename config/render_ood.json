@@ -52,10 +52,5 @@
     {"id": "light_t085_a060_e05.0", "tilt_deg": 85.0, "azimuth_deg": 60.0, "angle_deg": 0.53, "energy": 5.0},
     {"id": "light_t085_a180_e03.0", "tilt_deg": 85.0, "azimuth_deg": 180.0, "angle_deg": 0.53, "energy": 3.0},
     {"id": "light_t085_a300_e01.5", "tilt_deg": 85.0, "azimuth_deg": 300.0, "angle_deg": 0.53, "energy": 1.5}
-  ],
-  "backgrounds": [
-    {"id": "space", "type": "space"},
-    {"id": "earth", "type": "earth", "depth": 46.0, "radius": 22.0, "offset": [5.0, -2.0]},
-    {"id": "moon", "type": "moon", "depth": 52.0, "radius": 17.0, "offset": [-15.0, 6.0]}
   ]
 }

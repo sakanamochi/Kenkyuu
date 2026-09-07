@@ -1,81 +1,27 @@
-# PAF内周リング検出研究: Codex引き継ぎコンテキスト（旧構成の記録）
+# PAF内周検出：実装仕様と出典
 
-更新日: 2026-07-17
+研究方針・実験計画・作業状態は [RESEARCH_HANDOFF.md](RESEARCH_HANDOFF.md) を参照する。
+実行方法はルートおよび `parametric_paf/` のREADMEを参照する。
 
-## 2026-07-30 最小構成ブランチ
+## 構成
 
-`codex/minimal-research-environment`では、下記本文に記録された旧構成を整理した。
-研究上の判断と結果の履歴は本文に残すが、現在の実行構成はREADMEを正とする。
+- 標準実験の入口：`run.py`、設定：`config/experiment.json`
+- パラメトリックPAFの生成・形状比較：`parametric_paf/`
+- CNN：Tiny U-Netの内周確率マップ＋重み付きRANSAC
+- Zhang 2019型（再現実装）：弧抽出・三弧統合・楕円推定＋PAF固有の候補評価と内周選択
+- Canny統制：標準Canny＋輪郭分離＋共通RANSAC＋同心候補対の内周選択
+- 共通評価：`paf_ring_detection/geometry.py`、標準集計：`paf_ring_detection/evaluate.py`
+- 標準出力：`output/results/`、形状比較出力：`parametric_paf/output/comparison/`
+- 評価背景：黒背景
 
-- 実行入口: `run.py`
-- 設定: `config/experiment.json`
-- Pythonパッケージ: `paf_ring_detection/`
-- Zhang型論文コア: `paf_ring_detection/methods/zhang2019.py`
-- Zhang型PAF固有後処理: `paf_ring_detection/methods/zhang2019_paf.py`
-- CNN: `paf_ring_detection/methods/cnn.py`
-- weighted RANSAC: `paf_ring_detection/methods/ransac.py`
-- 標準Canny + 輪郭分離:
-  `paf_ring_detection/methods/canny_contour_ransac.py`
-- 共通評価: `paf_ring_detection/evaluate.py`
-- 通常出力: `output/results/`
+## 評価・学習仕様
 
-旧`analysis/`、旧`paflab/`、GUI、アブレーション、発表専用生成コードは
-このブランチから外し、mainブランチのGit履歴へ残している。
-
-## 進捗報告の時系列
-
-研究環境の現在の主比較はZhang型とCNNだが、第1回進捗報告では開発時系列を優先する。
-
-### 第1回で示す内容
-
-- CG評価環境、714枚の内訳、学習・評価データの構成
-- Canny + 輪郭別RANSAC（内周priorを含む）とCNN方式
-- RANSACとCNN学習の要点
-- 単純黒矩形、白飛びproxy、黒つぶれproxyの初期結果
-- Canny方式では遮蔽で分断された左右の弧を統合できないこと
-- 次回までにZhang et al. (2019)型をベースラインとして導入する予定
-
-第1回では地球・月背景、未知角度別の詳細結果、Zhang型の実験結果は扱わない。
-未知条件については「学習用とテスト用で異なるカメラ条件を使用した」と簡潔に示す。
-発表用生成コード `paflab/reporting/build_first_progress_figures.py` もこの時系列に合わせる。
-
-### 第2回で示す内容
-
-- Zhang 2019型（再現実装）へのベースライン切替
-- 未知姿勢・未知照明・背景変更を含むOOD評価
-- CNN規模比較、RANSAC候補選択監査、追加診断
-
-## 現在の主比較
-
-主古典ベースラインは `zhang2019_arc_reproduction`、統制比較は標準Cannyと輪郭分離、
-学習方式はCNNリング尤度とweighted RANSACの組合せである。
-
-```text
-Zhang 2019型（再現実装）
-入力 → Canny → 勾配象限・凸性による弧抽出
-     → 隣接弧の位置・接線制約 → 三弧の中心整合
-     → 最小二乗楕円 → 弧上点の中心光線距離による適合度検証
-     → PAF固有の全周支持・内包内周選択
-
-CNN方式
-入力 → Tiny U-Netリング尤度 → 閾値点群 → weighted RANSAC → 内周楕円
-
-Canny方式
-入力 → Gaussian平滑化 → 標準Canny → 連結輪郭の分離
-     → CNN方式と共通のRANSAC実装 → 同心候補対から内周選択
-
-このCanny方式は先行研究の再現ではなく、CNNによるエッジ抽出の寄与を見る
-単純な統制比較として扱う。
-```
-
-主比較に使う結果:
-
-| 評価 | Zhang型 | CNN |
-|---|---|---|
-| OOD | `zhang2019_arc_ood` | `cnn_ransac_support_ood` |
-| 撮像診断 | `zhang2019_arc_diagnostic` | `cnn_ransac_support_diagnostic` |
-
-成功条件は推定楕円とCG正解内周楕円のIoUが0.80以上。
+- 正解はPAF上端内周の投影楕円。
+- 成功条件は塗りつぶした楕円領域のIoUが0.80以上。
+- CNN教師マスクは不可視部分を含む完全な内周リング。
+- RANSAC仮説スコアは総支持量を使用（`perimeter_power=0.0`）。
+- 形状比較では全方式256×256入力。標準評価ではZhang型が元画像解像度、CNNとCannyが設定の入力解像度を使用する。異なる入力解像度の結果を直接比較しない。
+- Canny方式はCNN抽出の寄与を調べる統制であり、先行研究の再現実装ではない。
 
 ## Zhang型の正規出典
 
@@ -103,51 +49,3 @@ Python再現実装であり、
 
 したがって論文そのものの性能として結果を引用してはならない。
 
-## 補足・アブレーションへ移した方式
-
-- `kojima2021_fornaciari_reproduction`: Kojima et al. (2021) がPAFの内外周楕円検出に
-  採用したFornaciari et al. (2014)の再現実装。勾配方向2群と凸性から4種類の弧を作り、
-  3弧を統合して楕円方程式への適合率で検証する。原論文の分解1次元Hough投票は
-  `fitEllipseDirect` に置換した。複数候補からPAF内周を選ぶ同心・相似ペアpriorは
-  本評価用の追加処理であり、Kojima論文に記載された自動選択処理ではない。
-- `canny_global_ransac`: Canny全エッジ点を単一RANSACへ入力。
-  遮蔽で分断された弧は同時に扱えるが、外周・溝・付属部品も同時に入り、診断1,904枚で4.0%。
-- `canny_ransac_inner_pair`: Canny輪郭ごとにRANSACを適用し、PAF同心二重輪郭の
-  内周priorで候補を選ぶ。表示名は「Canny + 輪郭別RANSAC」に統一する。
-- `contour_fit`: 輪郭ごとのOpenCV楕円フィット。最小統制。
-
-これらの集計結果は研究判断の記録として残す。専用コードは現行判断の再検証に必要なものだけを
-`paflab/experiments/` に残す。現在の研究成果物ではZhang型とCNNを主比較とするが、
-第1回進捗報告だけは上記の時系列に従いCanny方式とCNNを表示する。
-
-Kojima採用法の同一条件での初回評価は、OOD 480枚で71/480（14.8%）、撮像診断
-1,456枚で126/1,456（8.7%）。同じIoU 0.80基準のZhang 2019型（再現実装）は
-それぞれ250/480（52.1%）、556/1,456（38.2%）だった。これは再現実装間の比較であり、
-原論文が報告した性能同士の比較ではない。
-
-## 重要な過去判断
-
-- CNNのRANSAC仮説スコアは、周長で割ると小楕円を優遇するため
-  `perimeter_power=0.0`（総支持量）を採用。
-- CNN教師マスクは遮蔽部分を含む完全なPAF内周リング。
-- 推論尤度が遮蔽部で弧になることは矛盾ではない。画素損失と局所証拠により、
-  不可視部分の確率が可視部分より低くなるため。
-- CG正解はPAF内周輪郭。CAD頂点投影の詳細は発表本文では省略可能。
-- 714枚は102カメラ条件×7照明条件。
-
-## 再生成入口
-
-```powershell
-# Zhang型とCNNの文献ベースライン主比較
-.venv\Scripts\python.exe run_literature_comparison.py
-
-# 旧方式を含む監査図も必要な場合
-.venv\Scripts\python.exe run_literature_comparison.py --include-ablations
-
-# 第2段階集計と発表用画像
-.venv\Scripts\python.exe -m paflab.reporting.summarize_second_stage
-.venv\Scripts\python.exe -m paflab.reporting.build_summary_figures
-
-# 第1回進捗報告用の図版（Canny + 輪郭別RANSACとCNN）
-.venv\Scripts\python.exe -m paflab.reporting.build_first_progress_figures
-```
