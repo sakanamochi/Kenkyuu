@@ -1,5 +1,7 @@
 # 簡易PAFのパラメトリック生成
 
+形状・外観多様化の2×2学習実験は [study/README.md](study/README.md)、学習前の診断結果と研究根拠は [study/PRETRAINING_REPORT.md](study/PRETRAINING_REPORT.md) を参照してください。以下は既存モデル生成と初期比較の実行方法です。
+
 モデル生成と形状別の検出比較を行う独立した構成です。
 実在するPAFの忠実な再現ではありません。寸法単位はmです。
 

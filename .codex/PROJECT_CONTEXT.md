@@ -13,11 +13,13 @@
 - 共通評価：`paf_ring_detection/geometry.py`、標準集計：`paf_ring_detection/evaluate.py`
 - 標準出力：`output/results/`、形状比較出力：`parametric_paf/output/comparison/`
 - 評価背景：黒背景
+- 形状・外観2×2実験：`parametric_paf/study.py`。固定計画・実行方法は `parametric_paf/study/README.md`、診断根拠は同フォルダの `PRETRAINING_REPORT.md`。
 
 ## 評価・学習仕様
 
 - 正解はPAF上端内周の投影楕円。
 - 成功条件は塗りつぶした楕円領域のIoUが0.80以上。
+- `paf_shape_appearance_v1`の主成功条件は上記IoUに加えて双方向輪郭距離p95が2px以内（256入力）。既存標準実験の互換指標は変更せず、両者を区別する。
 - CNN教師マスクは不可視部分を含む完全な内周リング。
 - RANSAC仮説スコアは総支持量を使用（`perimeter_power=0.0`）。
 - 形状比較では全方式256×256入力。標準評価ではZhang型が元画像解像度、CNNとCannyが設定の入力解像度を使用する。異なる入力解像度の結果を直接比較しない。

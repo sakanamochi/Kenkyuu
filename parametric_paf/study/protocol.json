@@ -1,0 +1,110 @@
+{
+  "experiment_id": "paf_shape_appearance_v1",
+  "scope": "黒背景CGにおける定義済み合成PAF形状族の上端内周2D楕円検出",
+  "shape_seed": 2026090701,
+  "render_seed": 2026090702,
+  "test_seed": 2026090703,
+  "training_seeds": [20260907, 20260908, 20260909],
+  "train_images_per_arm": 1024,
+  "train_shape_count": 16,
+  "validation_shape_count": 8,
+  "validation_views_per_shape": 24,
+  "test_interpolation_shape_count": 12,
+  "test_extrapolation_shape_count": 12,
+  "test_structure_shapes_per_family": 3,
+  "test_views_per_shape": 48,
+  "shape_ranges": {
+    "bottom_diameter_ratio": [1.35, 1.9],
+    "height_ratio": [0.15, 0.45],
+    "wall_ratio": [0.04, 0.12]
+  },
+  "single_shape_ratios": {
+    "bottom_diameter_ratio": 1.4814814814814814,
+    "height_ratio": 0.32407407407407407,
+    "wall_ratio": 0.05555555555555555
+  },
+  "geometry": {
+    "inner_diameter": 1.0,
+    "rib_count": 0,
+    "base_height_to_top_outer_diameter": 0.1,
+    "segments": 192,
+    "training_family": "tapered",
+    "test_structure_families": ["cylindrical_flange", "stepped"]
+  },
+  "camera": {
+    "tilt_deg": [5, 70],
+    "azimuth_deg": [0, 360],
+    "distance_per_inner_diameter": [3.2, 4.2],
+    "lens_mm": 55,
+    "resolution": 480,
+    "input_size": 256,
+    "target": [0, 0, 0]
+  },
+  "appearance_basic": {
+    "color": [0.55, 0.58, 0.62],
+    "metallic": 0.25,
+    "roughness": 0.4,
+    "light_tilt_deg": [15, 80],
+    "light_azimuth_deg": [0, 360],
+    "sun_energy": [3, 3],
+    "sun_angle_deg": [0.53, 0.53],
+    "exposure": [0, 0]
+  },
+  "appearance_expanded": {
+    "color_brightness": [0.1, 0.75],
+    "color_channel_multiplier": [0.85, 1.05],
+    "metallic": [0, 0.85],
+    "roughness": [0.2, 0.65],
+    "light_tilt_deg": [5, 85],
+    "light_azimuth_deg": [0, 360],
+    "sun_energy": [1.5, 5],
+    "sun_angle_deg": [0.1, 1.0],
+    "exposure": [-0.5, 0.5]
+  },
+  "arms": {
+    "A": {"shape": "single", "appearance": "basic"},
+    "B": {"shape": "single", "appearance": "expanded"},
+    "C": {"shape": "diverse", "appearance": "basic"},
+    "D": {"shape": "diverse", "appearance": "expanded"}
+  },
+  "training": {
+    "epochs": 12,
+    "batch_size": 16,
+    "base_channels": 16,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "positive_weight": 12.0,
+    "dice_weight": 1.0,
+    "optimizer": "AdamW",
+    "checkpoint_selection": "共通の未学習validation形状192画像の最小loss",
+    "updates_per_arm_seed": 768
+  },
+  "evaluation": {
+    "primary": "IoU >= 0.80 AND symmetric contour distance p95 <= 2.0px",
+    "success_iou": 0.8,
+    "contour_p95_px": 2.0,
+    "contour_samples": 720,
+    "secondary": ["IoU成功率", "輪郭平均距離とp95", "未検出率", "誤楕円出力率", "完全内周の確率支持被覆", "形状別・視点別成功率"],
+    "main_contrast": "D - B",
+    "supporting_contrast": "C - A",
+    "aggregation": "各形状内で条件を対応させ、形状成功率の平均差をseed別に報告",
+    "minimum_effect_percentage_points": 10,
+    "maximum_known_shape_drop_percentage_points": 5,
+    "maximum_wrong_output_increase_percentage_points": 5,
+    "seed_rule": "3学習seed全てでD-Bが正、平均差が10ポイント以上。独立テスト前の小規模継続基準であり安全基準ではない。",
+    "stop_rule": "DとBの差が基準未満なら大量学習に拡大せず、外観拡張・抽出・後処理の診断へ戻る。"
+  },
+  "geometry_validation_candidates": [
+    {"canny_low": 30, "canny_high": 90},
+    {"canny_low": 50, "canny_high": 140},
+    {"canny_low": 80, "canny_high": 200}
+  ],
+  "test_supplements": {
+    "camera_tilt_deg": [75, 80],
+    "exposure": [-1, 1],
+    "image_shift_fraction": [-0.1, 0.1],
+    "background": "black",
+    "known_shape_monitor": "学習形状16個の未使用条件。未知形状テストと別集計し、学習やcheckpoint選択には使用しない。",
+    "absent_target": "黒画像と穴のない円盤を計64枚。対象存在条件の主評価と別に誤検出を報告する。"
+  }
+}

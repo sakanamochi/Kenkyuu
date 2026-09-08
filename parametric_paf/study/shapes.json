@@ -1,0 +1,1244 @@
+[
+  {
+    "shape_id": "train_00",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.4814814814814814,
+      "height_ratio": 0.32407407407407407,
+      "wall_ratio": 0.05555555555555555
+    },
+    "parameters": {
+      "name": "train_00",
+      "top_outer_diameter": 1.1111111111111112,
+      "bottom_outer_diameter": 1.4814814814814814,
+      "taper_height": 0.32407407407407407,
+      "wall_thickness": 0.05555555555555555,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_01",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.617683,
+      "height_ratio": 0.44324,
+      "wall_ratio": 0.041427
+    },
+    "parameters": {
+      "name": "train_01",
+      "top_outer_diameter": 1.082854,
+      "bottom_outer_diameter": 1.617683,
+      "taper_height": 0.44324,
+      "wall_thickness": 0.041427,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_02",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.579206,
+      "height_ratio": 0.272015,
+      "wall_ratio": 0.118157
+    },
+    "parameters": {
+      "name": "train_02",
+      "top_outer_diameter": 1.236314,
+      "bottom_outer_diameter": 1.579206,
+      "taper_height": 0.272015,
+      "wall_thickness": 0.118157,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_03",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.772555,
+      "height_ratio": 0.287394,
+      "wall_ratio": 0.081232
+    },
+    "parameters": {
+      "name": "train_03",
+      "top_outer_diameter": 1.162464,
+      "bottom_outer_diameter": 1.772555,
+      "taper_height": 0.287394,
+      "wall_thickness": 0.081232,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_04",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.772285,
+      "height_ratio": 0.185094,
+      "wall_ratio": 0.067269
+    },
+    "parameters": {
+      "name": "train_04",
+      "top_outer_diameter": 1.134538,
+      "bottom_outer_diameter": 1.772285,
+      "taper_height": 0.185094,
+      "wall_thickness": 0.067269,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_05",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.44999,
+      "height_ratio": 0.440077,
+      "wall_ratio": 0.074146
+    },
+    "parameters": {
+      "name": "train_05",
+      "top_outer_diameter": 1.148292,
+      "bottom_outer_diameter": 1.44999,
+      "taper_height": 0.440077,
+      "wall_thickness": 0.074146,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_06",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.479505,
+      "height_ratio": 0.269718,
+      "wall_ratio": 0.064834
+    },
+    "parameters": {
+      "name": "train_06",
+      "top_outer_diameter": 1.1296680000000001,
+      "bottom_outer_diameter": 1.479505,
+      "taper_height": 0.269718,
+      "wall_thickness": 0.064834,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_07",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.422286,
+      "height_ratio": 0.284477,
+      "wall_ratio": 0.079627
+    },
+    "parameters": {
+      "name": "train_07",
+      "top_outer_diameter": 1.159254,
+      "bottom_outer_diameter": 1.422286,
+      "taper_height": 0.284477,
+      "wall_thickness": 0.079627,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_08",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.885907,
+      "height_ratio": 0.315436,
+      "wall_ratio": 0.079101
+    },
+    "parameters": {
+      "name": "train_08",
+      "top_outer_diameter": 1.158202,
+      "bottom_outer_diameter": 1.885907,
+      "taper_height": 0.315436,
+      "wall_thickness": 0.079101,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_09",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.802677,
+      "height_ratio": 0.242517,
+      "wall_ratio": 0.081461
+    },
+    "parameters": {
+      "name": "train_09",
+      "top_outer_diameter": 1.162922,
+      "bottom_outer_diameter": 1.802677,
+      "taper_height": 0.242517,
+      "wall_thickness": 0.081461,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_10",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.488035,
+      "height_ratio": 0.381216,
+      "wall_ratio": 0.075167
+    },
+    "parameters": {
+      "name": "train_10",
+      "top_outer_diameter": 1.150334,
+      "bottom_outer_diameter": 1.488035,
+      "taper_height": 0.381216,
+      "wall_thickness": 0.075167,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_11",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.73227,
+      "height_ratio": 0.269754,
+      "wall_ratio": 0.100678
+    },
+    "parameters": {
+      "name": "train_11",
+      "top_outer_diameter": 1.201356,
+      "bottom_outer_diameter": 1.73227,
+      "taper_height": 0.269754,
+      "wall_thickness": 0.100678,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_12",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.844555,
+      "height_ratio": 0.272082,
+      "wall_ratio": 0.044778
+    },
+    "parameters": {
+      "name": "train_12",
+      "top_outer_diameter": 1.089556,
+      "bottom_outer_diameter": 1.844555,
+      "taper_height": 0.272082,
+      "wall_thickness": 0.044778,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_13",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.849984,
+      "height_ratio": 0.297007,
+      "wall_ratio": 0.079651
+    },
+    "parameters": {
+      "name": "train_13",
+      "top_outer_diameter": 1.159302,
+      "bottom_outer_diameter": 1.849984,
+      "taper_height": 0.297007,
+      "wall_thickness": 0.079651,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_14",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.823554,
+      "height_ratio": 0.37643,
+      "wall_ratio": 0.070972
+    },
+    "parameters": {
+      "name": "train_14",
+      "top_outer_diameter": 1.141944,
+      "bottom_outer_diameter": 1.823554,
+      "taper_height": 0.37643,
+      "wall_thickness": 0.070972,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "train_15",
+    "split": "train",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.803665,
+      "height_ratio": 0.376948,
+      "wall_ratio": 0.105236
+    },
+    "parameters": {
+      "name": "train_15",
+      "top_outer_diameter": 1.210472,
+      "bottom_outer_diameter": 1.803665,
+      "taper_height": 0.376948,
+      "wall_thickness": 0.105236,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "validation_00",
+    "split": "validation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.829627,
+      "height_ratio": 0.448264,
+      "wall_ratio": 0.057825
+    },
+    "parameters": {
+      "name": "validation_00",
+      "top_outer_diameter": 1.11565,
+      "bottom_outer_diameter": 1.829627,
+      "taper_height": 0.448264,
+      "wall_thickness": 0.057825,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "validation_01",
+    "split": "validation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.857998,
+      "height_ratio": 0.304956,
+      "wall_ratio": 0.100083
+    },
+    "parameters": {
+      "name": "validation_01",
+      "top_outer_diameter": 1.200166,
+      "bottom_outer_diameter": 1.857998,
+      "taper_height": 0.304956,
+      "wall_thickness": 0.100083,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "validation_02",
+    "split": "validation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.504087,
+      "height_ratio": 0.285667,
+      "wall_ratio": 0.090394
+    },
+    "parameters": {
+      "name": "validation_02",
+      "top_outer_diameter": 1.180788,
+      "bottom_outer_diameter": 1.504087,
+      "taper_height": 0.285667,
+      "wall_thickness": 0.090394,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "validation_03",
+    "split": "validation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.557887,
+      "height_ratio": 0.34267,
+      "wall_ratio": 0.104025
+    },
+    "parameters": {
+      "name": "validation_03",
+      "top_outer_diameter": 1.20805,
+      "bottom_outer_diameter": 1.557887,
+      "taper_height": 0.34267,
+      "wall_thickness": 0.104025,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "validation_04",
+    "split": "validation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.381159,
+      "height_ratio": 0.288052,
+      "wall_ratio": 0.040684
+    },
+    "parameters": {
+      "name": "validation_04",
+      "top_outer_diameter": 1.0813679999999999,
+      "bottom_outer_diameter": 1.381159,
+      "taper_height": 0.288052,
+      "wall_thickness": 0.040684,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "validation_05",
+    "split": "validation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.48428,
+      "height_ratio": 0.228149,
+      "wall_ratio": 0.085219
+    },
+    "parameters": {
+      "name": "validation_05",
+      "top_outer_diameter": 1.170438,
+      "bottom_outer_diameter": 1.48428,
+      "taper_height": 0.228149,
+      "wall_thickness": 0.085219,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "validation_06",
+    "split": "validation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.481052,
+      "height_ratio": 0.207362,
+      "wall_ratio": 0.065549
+    },
+    "parameters": {
+      "name": "validation_06",
+      "top_outer_diameter": 1.131098,
+      "bottom_outer_diameter": 1.481052,
+      "taper_height": 0.207362,
+      "wall_thickness": 0.065549,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "validation_07",
+    "split": "validation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.56018,
+      "height_ratio": 0.26847,
+      "wall_ratio": 0.089845
+    },
+    "parameters": {
+      "name": "validation_07",
+      "top_outer_diameter": 1.17969,
+      "bottom_outer_diameter": 1.56018,
+      "taper_height": 0.26847,
+      "wall_thickness": 0.089845,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_interpolation_00",
+    "split": "test_interpolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.762375,
+      "height_ratio": 0.262345,
+      "wall_ratio": 0.111225
+    },
+    "parameters": {
+      "name": "test_interpolation_00",
+      "top_outer_diameter": 1.22245,
+      "bottom_outer_diameter": 1.762375,
+      "taper_height": 0.262345,
+      "wall_thickness": 0.111225,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_interpolation_01",
+    "split": "test_interpolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.656548,
+      "height_ratio": 0.436775,
+      "wall_ratio": 0.048103
+    },
+    "parameters": {
+      "name": "test_interpolation_01",
+      "top_outer_diameter": 1.096206,
+      "bottom_outer_diameter": 1.656548,
+      "taper_height": 0.436775,
+      "wall_thickness": 0.048103,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_interpolation_02",
+    "split": "test_interpolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.642542,
+      "height_ratio": 0.410874,
+      "wall_ratio": 0.045874
+    },
+    "parameters": {
+      "name": "test_interpolation_02",
+      "top_outer_diameter": 1.091748,
+      "bottom_outer_diameter": 1.642542,
+      "taper_height": 0.410874,
+      "wall_thickness": 0.045874,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_interpolation_03",
+    "split": "test_interpolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.664374,
+      "height_ratio": 0.255899,
+      "wall_ratio": 0.063932
+    },
+    "parameters": {
+      "name": "test_interpolation_03",
+      "top_outer_diameter": 1.127864,
+      "bottom_outer_diameter": 1.664374,
+      "taper_height": 0.255899,
+      "wall_thickness": 0.063932,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_interpolation_04",
+    "split": "test_interpolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.529079,
+      "height_ratio": 0.155687,
+      "wall_ratio": 0.069879
+    },
+    "parameters": {
+      "name": "test_interpolation_04",
+      "top_outer_diameter": 1.139758,
+      "bottom_outer_diameter": 1.529079,
+      "taper_height": 0.155687,
+      "wall_thickness": 0.069879,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_interpolation_05",
+    "split": "test_interpolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.879205,
+      "height_ratio": 0.357413,
+      "wall_ratio": 0.086808
+    },
+    "parameters": {
+      "name": "test_interpolation_05",
+      "top_outer_diameter": 1.173616,
+      "bottom_outer_diameter": 1.879205,
+      "taper_height": 0.357413,
+      "wall_thickness": 0.086808,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_interpolation_06",
+    "split": "test_interpolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.876213,
+      "height_ratio": 0.309242,
+      "wall_ratio": 0.103349
+    },
+    "parameters": {
+      "name": "test_interpolation_06",
+      "top_outer_diameter": 1.206698,
+      "bottom_outer_diameter": 1.876213,
+      "taper_height": 0.309242,
+      "wall_thickness": 0.103349,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_interpolation_07",
+    "split": "test_interpolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.414893,
+      "height_ratio": 0.359227,
+      "wall_ratio": 0.092118
+    },
+    "parameters": {
+      "name": "test_interpolation_07",
+      "top_outer_diameter": 1.184236,
+      "bottom_outer_diameter": 1.414893,
+      "taper_height": 0.359227,
+      "wall_thickness": 0.092118,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_interpolation_08",
+    "split": "test_interpolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.473292,
+      "height_ratio": 0.254189,
+      "wall_ratio": 0.118988
+    },
+    "parameters": {
+      "name": "test_interpolation_08",
+      "top_outer_diameter": 1.237976,
+      "bottom_outer_diameter": 1.473292,
+      "taper_height": 0.254189,
+      "wall_thickness": 0.118988,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_interpolation_09",
+    "split": "test_interpolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.690036,
+      "height_ratio": 0.363762,
+      "wall_ratio": 0.090396
+    },
+    "parameters": {
+      "name": "test_interpolation_09",
+      "top_outer_diameter": 1.180792,
+      "bottom_outer_diameter": 1.690036,
+      "taper_height": 0.363762,
+      "wall_thickness": 0.090396,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_interpolation_10",
+    "split": "test_interpolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.482284,
+      "height_ratio": 0.385349,
+      "wall_ratio": 0.071296
+    },
+    "parameters": {
+      "name": "test_interpolation_10",
+      "top_outer_diameter": 1.142592,
+      "bottom_outer_diameter": 1.482284,
+      "taper_height": 0.385349,
+      "wall_thickness": 0.071296,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_interpolation_11",
+    "split": "test_interpolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.755287,
+      "height_ratio": 0.342785,
+      "wall_ratio": 0.092716
+    },
+    "parameters": {
+      "name": "test_interpolation_11",
+      "top_outer_diameter": 1.185432,
+      "bottom_outer_diameter": 1.755287,
+      "taper_height": 0.342785,
+      "wall_thickness": 0.092716,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_extrapolation_00",
+    "split": "test_extrapolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.28,
+      "height_ratio": 0.437515,
+      "wall_ratio": 0.079021
+    },
+    "parameters": {
+      "name": "test_extrapolation_00",
+      "top_outer_diameter": 1.158042,
+      "bottom_outer_diameter": 1.28,
+      "taper_height": 0.437515,
+      "wall_thickness": 0.079021,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_extrapolation_01",
+    "split": "test_extrapolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.28,
+      "height_ratio": 0.155136,
+      "wall_ratio": 0.053146
+    },
+    "parameters": {
+      "name": "test_extrapolation_01",
+      "top_outer_diameter": 1.106292,
+      "bottom_outer_diameter": 1.28,
+      "taper_height": 0.155136,
+      "wall_thickness": 0.053146,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_extrapolation_02",
+    "split": "test_extrapolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 2.05,
+      "height_ratio": 0.150456,
+      "wall_ratio": 0.077724
+    },
+    "parameters": {
+      "name": "test_extrapolation_02",
+      "top_outer_diameter": 1.155448,
+      "bottom_outer_diameter": 2.05,
+      "taper_height": 0.150456,
+      "wall_thickness": 0.077724,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_extrapolation_03",
+    "split": "test_extrapolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 2.05,
+      "height_ratio": 0.179945,
+      "wall_ratio": 0.086626
+    },
+    "parameters": {
+      "name": "test_extrapolation_03",
+      "top_outer_diameter": 1.173252,
+      "bottom_outer_diameter": 2.05,
+      "taper_height": 0.179945,
+      "wall_thickness": 0.086626,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_extrapolation_04",
+    "split": "test_extrapolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.428065,
+      "height_ratio": 0.1,
+      "wall_ratio": 0.068271
+    },
+    "parameters": {
+      "name": "test_extrapolation_04",
+      "top_outer_diameter": 1.136542,
+      "bottom_outer_diameter": 1.428065,
+      "taper_height": 0.1,
+      "wall_thickness": 0.068271,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_extrapolation_05",
+    "split": "test_extrapolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.59862,
+      "height_ratio": 0.1,
+      "wall_ratio": 0.087291
+    },
+    "parameters": {
+      "name": "test_extrapolation_05",
+      "top_outer_diameter": 1.174582,
+      "bottom_outer_diameter": 1.59862,
+      "taper_height": 0.1,
+      "wall_thickness": 0.087291,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_extrapolation_06",
+    "split": "test_extrapolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.750091,
+      "height_ratio": 0.52,
+      "wall_ratio": 0.078691
+    },
+    "parameters": {
+      "name": "test_extrapolation_06",
+      "top_outer_diameter": 1.157382,
+      "bottom_outer_diameter": 1.750091,
+      "taper_height": 0.52,
+      "wall_thickness": 0.078691,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_extrapolation_07",
+    "split": "test_extrapolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.641922,
+      "height_ratio": 0.52,
+      "wall_ratio": 0.073896
+    },
+    "parameters": {
+      "name": "test_extrapolation_07",
+      "top_outer_diameter": 1.147792,
+      "bottom_outer_diameter": 1.641922,
+      "taper_height": 0.52,
+      "wall_thickness": 0.073896,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_extrapolation_08",
+    "split": "test_extrapolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.828187,
+      "height_ratio": 0.167536,
+      "wall_ratio": 0.025
+    },
+    "parameters": {
+      "name": "test_extrapolation_08",
+      "top_outer_diameter": 1.05,
+      "bottom_outer_diameter": 1.828187,
+      "taper_height": 0.167536,
+      "wall_thickness": 0.025,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_extrapolation_09",
+    "split": "test_extrapolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.37594,
+      "height_ratio": 0.370625,
+      "wall_ratio": 0.025
+    },
+    "parameters": {
+      "name": "test_extrapolation_09",
+      "top_outer_diameter": 1.05,
+      "bottom_outer_diameter": 1.37594,
+      "taper_height": 0.370625,
+      "wall_thickness": 0.025,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_extrapolation_10",
+    "split": "test_extrapolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.79915,
+      "height_ratio": 0.32287,
+      "wall_ratio": 0.15
+    },
+    "parameters": {
+      "name": "test_extrapolation_10",
+      "top_outer_diameter": 1.3,
+      "bottom_outer_diameter": 1.79915,
+      "taper_height": 0.32287,
+      "wall_thickness": 0.15,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_extrapolation_11",
+    "split": "test_extrapolation",
+    "family": "tapered",
+    "ratios": {
+      "bottom_diameter_ratio": 1.642623,
+      "height_ratio": 0.446955,
+      "wall_ratio": 0.15
+    },
+    "parameters": {
+      "name": "test_extrapolation_11",
+      "top_outer_diameter": 1.3,
+      "bottom_outer_diameter": 1.642623,
+      "taper_height": 0.446955,
+      "wall_thickness": 0.15,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_structure_cylindrical_flange_00",
+    "split": "test_structure",
+    "family": "cylindrical_flange",
+    "ratios": {
+      "bottom_diameter_ratio": 1.355208,
+      "height_ratio": 0.29162,
+      "wall_ratio": 0.079338
+    },
+    "parameters": {
+      "name": "test_structure_cylindrical_flange_00",
+      "top_outer_diameter": 1.158676,
+      "bottom_outer_diameter": 1.355208,
+      "taper_height": 0.29162,
+      "wall_thickness": 0.079338,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_structure_cylindrical_flange_01",
+    "split": "test_structure",
+    "family": "cylindrical_flange",
+    "ratios": {
+      "bottom_diameter_ratio": 1.739593,
+      "height_ratio": 0.258772,
+      "wall_ratio": 0.091741
+    },
+    "parameters": {
+      "name": "test_structure_cylindrical_flange_01",
+      "top_outer_diameter": 1.183482,
+      "bottom_outer_diameter": 1.739593,
+      "taper_height": 0.258772,
+      "wall_thickness": 0.091741,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_structure_cylindrical_flange_02",
+    "split": "test_structure",
+    "family": "cylindrical_flange",
+    "ratios": {
+      "bottom_diameter_ratio": 1.446556,
+      "height_ratio": 0.301338,
+      "wall_ratio": 0.101696
+    },
+    "parameters": {
+      "name": "test_structure_cylindrical_flange_02",
+      "top_outer_diameter": 1.203392,
+      "bottom_outer_diameter": 1.446556,
+      "taper_height": 0.301338,
+      "wall_thickness": 0.101696,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_structure_stepped_00",
+    "split": "test_structure",
+    "family": "stepped",
+    "ratios": {
+      "bottom_diameter_ratio": 1.366677,
+      "height_ratio": 0.431113,
+      "wall_ratio": 0.088271
+    },
+    "parameters": {
+      "name": "test_structure_stepped_00",
+      "top_outer_diameter": 1.176542,
+      "bottom_outer_diameter": 1.366677,
+      "taper_height": 0.431113,
+      "wall_thickness": 0.088271,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_structure_stepped_01",
+    "split": "test_structure",
+    "family": "stepped",
+    "ratios": {
+      "bottom_diameter_ratio": 1.817812,
+      "height_ratio": 0.301164,
+      "wall_ratio": 0.088371
+    },
+    "parameters": {
+      "name": "test_structure_stepped_01",
+      "top_outer_diameter": 1.176742,
+      "bottom_outer_diameter": 1.817812,
+      "taper_height": 0.301164,
+      "wall_thickness": 0.088371,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  },
+  {
+    "shape_id": "test_structure_stepped_02",
+    "split": "test_structure",
+    "family": "stepped",
+    "ratios": {
+      "bottom_diameter_ratio": 1.70654,
+      "height_ratio": 0.239176,
+      "wall_ratio": 0.101647
+    },
+    "parameters": {
+      "name": "test_structure_stepped_02",
+      "top_outer_diameter": 1.203294,
+      "bottom_outer_diameter": 1.70654,
+      "taper_height": 0.239176,
+      "wall_thickness": 0.101647,
+      "rib_count": 0,
+      "color": [
+        0.55,
+        0.58,
+        0.62
+      ]
+    }
+  }
+]
