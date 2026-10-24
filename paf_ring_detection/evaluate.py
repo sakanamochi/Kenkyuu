@@ -16,7 +16,7 @@ from paf_ring_detection.methods.zhang2019 import detect_zhang_arc_candidates
 from paf_ring_detection.methods.zhang2019_paf import score_zhang_candidates_for_paf, select_zhang_inner_boundary
 from paf_ring_detection.prepare import digest
 
-METHODS = ('cnn_m1194m', 'cnn_diversified', 'canny', 'zhang2019')
+METHODS = ('cnn_1194m', 'cnn_diversified', 'canny', 'zhang2019')
 
 
 def checkpoint_path(config, source, seed):
@@ -73,8 +73,20 @@ def evaluate(config, methods=None, seeds=None, limit=None):
                     samples = samples[:limit]
                 if not samples:
                     raise ValueError(f'test画像がありません: {folder}')
+                destination = result_path(config, limit) / dataset_name / f'{method}_{seed if seed is not None else "fixed"}.json'
+                if destination.exists():
+                    # 長い比較を分けて実行しても、同じ条件の完了済み集合を再計算しない。
+                    saved = read_json(destination)
+                    if (saved['config'] != config or saved['manifest_sha256'] != digest(folder / 'manifest.json')
+                            or saved['checkpoint_sha256'] != (digest(checkpoint) if checkpoint else None)
+                            or saved['evaluator_sha256'] != digest(Path(__file__))
+                            or [r['sample_id'] for r in saved['rows']] != [s['sample_id'] for s in samples]):
+                        raise ValueError(f'保存済み評価の条件が異なります: {destination}')
+                    print(f'照合済み評価を使用: {dataset_name} {method} seed={seed}', flush=True)
+                    continue
                 rows = []
-                for sample in samples:
+                print(f'評価開始: {dataset_name} {method} seed={seed} n={len(samples)}', flush=True)
+                for index, sample in enumerate(samples, start=1):
                     image = cv2.resize(sample_image(folder, sample), (config['input_size'], config['input_size']),
                                        interpolation=cv2.INTER_AREA)
                     label = read_json(folder / sample['label'])
@@ -95,7 +107,8 @@ def evaluate(config, methods=None, seeds=None, limit=None):
                         'degradation': sample['conditions']['degradation'], 'severity': sample['conditions']['severity'],
                         'ellipse': ellipse, 'truth_ellipse': truth, 'detected': ellipse is not None,
                         'iou_success': iou_success, 'strict_success': success, **metrics, **distances})
-                destination = result_path(config, limit) / dataset_name / f'{method}_{seed if seed is not None else "fixed"}.json'
+                    if index % 100 == 0:
+                        print(f'{dataset_name} {method} seed={seed}: {index}/{len(samples)}', flush=True)
                 write_json(destination, {'method': method, 'seed': seed, 'dataset': dataset_name,
                     'split': 'test', 'limited': limit is not None, 'input_size': config['input_size'],
                     'manifest_sha256': digest(folder / 'manifest.json'), 'config': config,

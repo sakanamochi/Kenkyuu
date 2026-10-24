@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import random
+import math
+import time
 from pathlib import Path
 
 import numpy as np
@@ -45,8 +47,8 @@ def train(config: dict, epochs: int | None = None) -> Path:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     settings = config["cnn"]
     dataset_dir = Path(config["paths"]["training_dataset"])
-    train_data = RingDataset(dataset_dir, "train", config["input_size"])
-    validation_data = RingDataset(dataset_dir, "validation", config["input_size"])
+    train_data = RingDataset(dataset_dir, "train", config["input_size"], cache=True)
+    validation_data = RingDataset(dataset_dir, "validation", config["input_size"], cache=True)
     if not len(train_data) or not len(validation_data):
         raise ValueError("学習・validationの両方に画像が必要です")
     loader_options = {
@@ -72,8 +74,10 @@ def train(config: dict, epochs: int | None = None) -> Path:
     checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
     best_loss = float("inf")
     history = []
+    print(f"学習開始: {config['training_source']} seed={seed} device={device}", flush=True)
 
     for epoch in range(1, int(epochs or settings["epochs"]) + 1):
+        started = time.monotonic()
         model.train()
         running_loss = 0.0
         for images, masks, _ in train_loader:
@@ -99,8 +103,11 @@ def train(config: dict, epochs: int | None = None) -> Path:
                 device,
             ),
         }
+        if not all(math.isfinite(row[key]) for key in ('train_loss', 'validation_loss')):
+            raise ValueError('損失が非有限値になりました')
+        row['elapsed_seconds'] = time.monotonic() - started
         history.append(row)
-        print(row)
+        print(row, flush=True)
 
         if row["validation_loss"] < best_loss:
             best_loss = row["validation_loss"]
@@ -118,6 +125,8 @@ def train(config: dict, epochs: int | None = None) -> Path:
                 },
                 checkpoint_path,
             )
+        # 全epochの履歴を逐次保存し、実行状態と最良重みを照合可能にする。
+        write_json(checkpoint_path.parent / "training_history.json", history)
 
     write_json(checkpoint_path.parent / "training_history.json", history)
     return checkpoint_path

@@ -17,9 +17,9 @@ ROOT = Path(__file__).resolve().parent
 
 
 def render(config, sources):
-    """M1194Mと指定範囲の多様形状を既存の生成器で描画する。"""
+    """1194Mと指定範囲の多様形状を既存の生成器で描画する。"""
     for source in sources:
-        if source == 'm1194m':
+        if source == '1194m':
             script, arguments = 'blender/generate_dataset.py', ['--config', 'config/render_base.json']
         else:
             script, arguments = 'parametric_paf/random_dataset.py', ['render']
@@ -33,7 +33,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('stage', choices=['render', 'prepare', 'train', 'evaluate', 'report'])
     parser.add_argument('--config', default='config/experiment.json')
-    parser.add_argument('--source', nargs='+', choices=['m1194m', 'diversified'])
+    parser.add_argument('--source', nargs='+', choices=['1194m', 'diversified'])
     parser.add_argument('--seeds', nargs='+', type=int)
     parser.add_argument('--methods', nargs='+', choices=METHODS)
     parser.add_argument('--limit', type=int, help='evaluate/reportの動作確認用画像数。正式結果と分離する')

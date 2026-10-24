@@ -83,15 +83,19 @@ def load_samples(dataset_dir: Path, split: str) -> list[dict]:
 class RingDataset(Dataset):
     """CNN学習・推論で共通に使う穴領域データセット。"""
 
-    def __init__(self, dataset_dir: Path, split: str, input_size: int) -> None:
+    def __init__(self, dataset_dir: Path, split: str, input_size: int, cache: bool = False) -> None:
         self.root = Path(dataset_dir)
         self.samples = load_samples(self.root, split)
         self.input_size = int(input_size)
+        # 固定劣化の学習入力はRAMに保持し、epochごとの同じ変換を省く。
+        self.cache = {} if cache else None
 
     def __len__(self) -> int:
         return len(self.samples)
 
     def __getitem__(self, index: int):
+        if self.cache is not None and index in self.cache:
+            return self.cache[index]
         sample = self.samples[index]
         image = sample_image(self.root, sample)
         label = read_json(self.root / sample["label"])
@@ -109,4 +113,7 @@ class RingDataset(Dataset):
 
         mask = region_mask(self.input_size, scaled_ellipse(ellipse, scale))
         mask_tensor = torch.from_numpy(mask[None]).float()
-        return image_tensor, mask_tensor, index
+        result = image_tensor, mask_tensor, index
+        if self.cache is not None:
+            self.cache[index] = result
+        return result

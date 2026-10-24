@@ -12,7 +12,7 @@ import torch
 from paf_ring_detection.data import RingDataset, read_json, sample_image, write_image, write_json
 from paf_ring_detection.evaluate import METHODS, checkpoint_path, evaluate
 from paf_ring_detection.prepare import digest, prepare_training_data, verify_prepared
-from paf_ring_detection.report import build_report
+from paf_ring_detection.report import aggregate_scores, build_report
 from paf_ring_detection.train import train
 
 
@@ -24,7 +24,7 @@ def test_fixed_splits_and_full_region_pipeline():
         config.update(output=str(root / 'experiment'), input_size=64, training_seeds=[20260907])
         config['cnn'].update(epochs=1, base_channels=2, batch_size=8)
         config['sources'] = {name: {'path': str(root / name), 'split_seed': 7}
-                             for name in ('m1194m', 'diversified')}
+                             for name in ('1194m', 'diversified')}
         for name, source in config['sources'].items():
             folder = Path(source['path'])
             samples = []
@@ -45,7 +45,7 @@ def test_fixed_splits_and_full_region_pipeline():
         verify_prepared(config)
         manifests = {name: read_json(Path(config['output']) / 'datasets' / name / 'manifest.json')
                      for name in config['sources']}
-        assert manifests['m1194m']['base_counts']['train'] == manifests['diversified']['base_counts']['train']
+        assert manifests['1194m']['base_counts']['train'] == manifests['diversified']['base_counts']['train']
         for name, manifest in manifests.items():
             groups = {}
             for sample in manifest['samples']:
@@ -77,10 +77,28 @@ def test_fixed_splits_and_full_region_pipeline():
             assert len({r['rows'][0]['sample_id'] for r in records}) == 1
             assert all(r['input_size'] == 64 for r in records)
         # 準備済み原画像の書換えを黙って使わないことを確認する。
-        source = Path(config['output']) / 'datasets/m1194m'
-        sample = manifests['m1194m']['samples'][0]
+        source = Path(config['output']) / 'datasets/1194m'
+        sample = manifests['1194m']['samples'][0]
         image_path = (source / sample['image']).resolve()
         assert sample_image(source, sample).shape == (64, 64, 3)
         image_path.write_bytes(b'changed')
         with pytest.raises(ValueError, match='入力が変わって'):
             verify_prepared(config)
+
+
+def test_seed_average_does_not_duplicate_geometry_or_pool_unequal_counts():
+    # 幾何の一回評価とCNNのseed反復を区別し、平均率の分母を守る。
+    base = {'dataset': '1194m', 'degradation': 'all', 'severity': None,
+            'sample_count': 10, 'iou_success_rate': 0.9, 'missed_count': 1}
+    rows = [{**base, 'method': 'CNN', 'seed': i, 'strict_success_rate': rate}
+            for i, rate in enumerate((0.2, 0.5, 0.8))]
+    rows.append({**base, 'method': 'Canny', 'seed': None, 'strict_success_rate': 0.7})
+    aggregate = aggregate_scores(rows)
+    assert aggregate[0]['strict_success_rate'] == pytest.approx(0.5)
+    assert aggregate[0]['seed_count'] == 3
+    assert aggregate[0]['sample_count_per_model'] == 10
+    assert aggregate[1]['seed_count'] == 0
+    assert aggregate[1]['strict_success_rate'] == 0.7
+    rows[1]['sample_count'] = 20
+    with pytest.raises(ValueError, match='評価枚数'):
+        aggregate_scores(rows)

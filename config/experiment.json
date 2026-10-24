@@ -14,7 +14,7 @@
   "augmentation_seed": 2026102405,
   "evaluation_seed": 2026102404,
   "sources": {
-    "m1194m": {
+    "1194m": {
       "path": "output/datasets/base_cg",
       "split_seed": 20260716
     },

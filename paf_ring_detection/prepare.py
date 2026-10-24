@@ -42,7 +42,7 @@ def prepare_training_data(config):
         folder = Path(source['path'])
         manifest = read_json(folder / 'manifest.json')
         samples = manifest['samples']
-        groups = [s['conditions']['camera_id'] if name == 'm1194m' else s['shape_id'] for s in samples]
+        groups = [s['conditions']['camera_id'] if name == '1194m' else s['shape_id'] for s in samples]
         assignments = _split_groups(groups, config['split'], source['split_seed'])
         # データ破損と寸法重複は派生manifestを保存する前に検出する。
         if name == 'diversified':
