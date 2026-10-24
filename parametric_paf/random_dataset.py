@@ -40,24 +40,6 @@ def parameters(config, ratios):
             'wall_thickness': diameter * config['wall_thickness_ratio']}
 
 
-def training_framing(samples, config, experiment):
-    """寸法分割のtestを固定し、独立乱数でtrain/validationの穴サイズだけを指定する。"""
-    bounds = config['camera'].get('training_hole_long_axis_fraction')
-    if bounds is None:
-        return
-    if not 0 < bounds[0] <= bounds[1] < 1:
-        raise ValueError('穴の画面内長径比は0より大きく1未満で指定してください')
-    groups = sorted(s['sample_id'] for s in samples)
-    random.Random(experiment['sources']['diversified']['split_seed']).shuffle(groups)
-    end = int(len(groups) * experiment['split']['train_fraction'])
-    end += round(len(groups) * experiment['split']['validation_fraction'])
-    eligible = set(groups[:end])
-    for sample in samples:
-        if sample['sample_id'] in eligible:
-            rng = random.Random(f"{config['camera']['framing_seed']}:{sample['sample_id']}")
-            sample['conditions']['hole_long_axis_fraction'] = rng.uniform(*bounds)
-
-
 def plan():
     """画像ごとに寸法を独立一様抽選し、重複しない固定データを作る。"""
     config = read(CONFIG)
@@ -81,17 +63,10 @@ def plan():
                       'exposure': rng.uniform(*appearance['exposure'])}
         samples.append({'sample_id': f'paf_{len(samples):04d}', 'ratios': ratios,
                         'parameters': parameters(config, ratios), 'conditions': conditions})
-    training_framing(samples, config, read(ROOT / 'config/experiment.json'))
     value = {'config_sha256': digest(CONFIG), 'samples': samples}
     destination = OUTPUT / 'plan.json'
-    if destination.exists():
-        previous = read(destination)['samples']
-        # 撮影サイズ以外の寸法・外観・視点は、保存済みの計画と同一に保つ。
-        def identity(sample):
-            return {**sample, 'conditions': {k: v for k, v in sample['conditions'].items()
-                                            if k != 'hole_long_axis_fraction'}}
-        if [identity(s) for s in previous] != [identity(s) for s in samples]:
-            raise ValueError('既存の寸法・撮影計画と異なります')
+    if destination.exists() and read(destination) != value:
+        raise ValueError('既存の寸法計画と異なります。別の保存先を使用してください')
     write(destination, value)
     return value
 
@@ -109,7 +84,7 @@ def build(parameters_value, config):
 
 
 def render():
-    """testの全体構図を保ち、学習側は穴サイズを指定してPNGと正解を描画する。"""
+    """全体が画像内に入るようカメラ距離を合わせ、実際にPNGと正解を保存する。"""
     import bpy
     from bpy_extras.object_utils import world_to_camera_view
     from mathutils import Vector
@@ -127,11 +102,11 @@ def render():
         sid = sample['sample_id']
         image = OUTPUT / f'images/{sid}.png'
         label_path = OUTPUT / f'labels/{sid}.json'
-        cached = image.exists() and label_path.exists()
-        if cached:
+        if image.exists() and label_path.exists():
             label = read(label_path)
-            cached = label['parameters'] == sample['parameters'] and label['conditions'] == sample['conditions']
-        if not cached:
+            if label['parameters'] != sample['parameters'] or label['conditions'] != sample['conditions']:
+                raise ValueError('保存済み画像の寸法・撮影条件が異なります')
+        else:
             bpy.ops.wm.read_factory_settings(use_empty=True)
             scene = bpy.context.scene
             obj, rim_indices, profile = build(sample['parameters'], config)
@@ -170,32 +145,6 @@ def render():
                 distance *= 1.12
             else:
                 raise ValueError('モデル全体を画像内に配置できません')
-            requested = conditions.get('hole_long_axis_fraction')
-            if requested is not None:
-                base_distance = distance
-                rotation = camera.rotation_euler.copy()
-                # 開口への方向とカメラ姿勢を固定し、距離だけで投影サイズを調節する。
-                for _ in range(16):
-                    points = project_target_points(scene, camera, obj, rim_indices)
-                    span = max(max(p[axis] for p in points) - min(p[axis] for p in points)
-                               for axis in (0, 1)) / config['resolution']
-                    if abs(span / requested - 1) < 1e-5:
-                        break
-                    distance *= span / requested
-                    camera.location = direction * distance
-                    camera.rotation_euler = rotation
-                # 穴の全周は画面内へ残し、外側の本体だけは画面外を許容する。
-                for _ in range(40):
-                    points = project_target_points(scene, camera, obj, rim_indices)
-                    margin_px = margin * config['resolution']
-                    if all(margin_px <= coordinate <= config['resolution'] - margin_px
-                           for point in points for coordinate in point):
-                        break
-                    distance *= 1.02
-                    camera.location = direction * distance
-                else:
-                    raise ValueError('穴の全周を画像内に配置できません')
-                center *= distance / base_distance
             bpy.ops.object.light_add(type='SUN')
             configure_sun(bpy.context.object, {'tilt_deg': conditions['light_tilt'],
                           'azimuth_deg': conditions['light_azimuth'], 'energy': conditions['energy'],
@@ -219,7 +168,6 @@ def render():
             print(f'Dataset {index + 1}/{len(planned["samples"])}', flush=True)
     write(OUTPUT / 'manifest.json', {'dataset_id': config['dataset_id'], 'samples': records})
     write(OUTPUT / 'provenance.json', {'config_sha256': digest(CONFIG), 'plan_sha256': digest(OUTPUT / 'plan.json'),
-          'experiment_sha256': digest(ROOT / 'config/experiment.json'),
           'generator_sha256': digest(Path(__file__)), 'model_sha256': digest(ROOT / 'parametric_paf/paf_model.py'),
           'blender': bpy.app.version_string, 'boundary_mesh_checks': 8, 'sample_count': len(records)})
 
@@ -234,10 +182,9 @@ def verify():
     manifest = read(OUTPUT / 'manifest.json')
     if len(manifest['samples']) != config['image_count']:
         raise ValueError('生成枚数が不一致')
-    identities, sizes = set(), {'train_validation': [], 'test': []}
+    identities = set()
     for sample, expected in zip(manifest['samples'], planned['samples']):
-        if (sample['sample_id'] != expected['sample_id'] or sample['parameters'] != expected['parameters']
-                or sample['conditions'] != expected['conditions']):
+        if sample['sample_id'] != expected['sample_id'] or sample['parameters'] != expected['parameters']:
             raise ValueError('寸法計画と生成データが不一致')
         ratios = sample['ratios']
         identity = tuple(ratios[key] for key in ('bottom_outer_diameter_ratio', 'height_ratio', 'hole_diameter_ratio'))
@@ -249,8 +196,6 @@ def verify():
             if digest(OUTPUT / sample[key]) != sample[key + '_sha256']:
                 raise ValueError('画像または正解のhash不一致')
         label = read(OUTPUT / sample['label'])
-        if label['conditions'] != expected['conditions']:
-            raise ValueError('ラベルの撮影条件が計画と不一致')
         points = np.asarray(label['image_points'])
         if not np.isfinite(points).all() or points.min() < 0 or points.max() >= config['resolution']:
             raise ValueError('正解輪郭が画面外')
@@ -261,10 +206,6 @@ def verify():
         if values != label['parameters'] or values != sample['parameters']:
             raise ValueError('ラベル寸法が不一致')
         make_geometry(values, config['segments'])
-        # 実際の投影正解から、学習側と固定testのサイズ分布を分けて記録する。
-        group = 'train_validation' if 'hole_long_axis_fraction' in sample['conditions'] else 'test'
-        ellipse = cv2.fitEllipse(points.astype(np.float32).reshape(-1, 1, 2))
-        sizes[group].append(max(ellipse[1]) * 256 / config['resolution'])
     if len(identities) != config['image_count']:
         raise ValueError('寸法の組合せが重複')
     # 保存済みデータの先頭16枚を成否や明るさで選ばず、そのまま提示する。
@@ -281,12 +222,8 @@ def verify():
     canvas.save(OUTPUT / 'dataset_preview.png')
     write(OUTPUT / 'verification.json', {'status': 'passed', 'sample_count': len(manifest['samples']),
           'unique_dimensions': len(identities), 'manifest_sha256': digest(OUTPUT / 'manifest.json'),
-          'projected_long_axis_px_at_256': {key: {'count': len(values),
-              'min_median_max': np.quantile(values, [0, 0.5, 1]).tolist()}
-              for key, values in sizes.items() if values},
           'checks': ['all_image_decodes', 'all_image_label_hashes', 'all_parameter_ranges',
-                     'independent_hole_diameter', 'fixed_wall_thickness', 'all_labels_in_frame',
-                     'all_planned_camera_conditions']})
+                     'independent_hole_diameter', 'fixed_wall_thickness', 'all_labels_in_frame']})
     print(json.dumps(read(OUTPUT / 'verification.json'), ensure_ascii=False), flush=True)
 
 

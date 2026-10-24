@@ -7,7 +7,6 @@ import math
 import pytest
 
 from parametric_paf.paf_model import make_geometry
-from parametric_paf.random_dataset import training_framing
 
 
 @pytest.mark.parametrize('bottom,height,hole', list(itertools.product((1.0, 3.0), (0.5, 3.0), (0.4, 0.95))))
@@ -50,30 +49,3 @@ def test_hole_diameter_does_not_change_outer_dimensions_or_wall_thickness():
     assert a[1:7] == b[1:7]
     assert a[0][0] == 0.2 and b[0][0] == 0.475
     assert a[7][1] == b[7][1] == -0.02
-
-
-def test_training_framing_preserves_test_and_non_size_conditions():
-    """撮影サイズの変更は固定分割の学習側だけに適用し、他の条件を保つ。"""
-    import copy
-    import random
-    samples = [{'sample_id': f'paf_{i:04d}', 'parameters': {'height': i + 1},
-                'conditions': {'brightness': 0.3, 'camera_tilt': 40.0}} for i in range(20)]
-    original = copy.deepcopy(samples)
-    config = {'camera': {'training_hole_long_axis_fraction': [0.06, 0.65], 'framing_seed': 19}}
-    experiment = {'sources': {'diversified': {'split_seed': 7}},
-                  'split': {'train_fraction': 0.7, 'validation_fraction': 0.15}}
-    training_framing(samples, config, experiment)
-    groups = [s['sample_id'] for s in original]
-    random.Random(7).shuffle(groups)
-    test = set(groups[17:])
-    for sample, before in zip(samples, original):
-        if sample['sample_id'] in test:
-            assert sample == before
-        else:
-            conditions = sample['conditions'].copy()
-            assert 0.06 <= conditions.pop('hole_long_axis_fraction') <= 0.65
-            assert conditions == before['conditions']
-            assert sample['parameters'] == before['parameters']
-    again = copy.deepcopy(original)
-    training_framing(again, config, experiment)
-    assert samples == again
