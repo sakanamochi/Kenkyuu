@@ -8,7 +8,8 @@
   "hole_diameter_ratio": [0.4, 0.95],
   "wall_thickness_ratio": 0.02,
   "segments": 192,
-  "camera": {"tilt_deg": [5, 70], "azimuth_deg": [0, 360], "lens_mm": 55, "margin": 0.08},
+  "camera": {"tilt_deg": [5, 70], "azimuth_deg": [0, 360], "lens_mm": 55, "margin": 0.08,
+             "training_hole_long_axis_fraction": [0.06, 0.65], "framing_seed": 2026102406},
   "appearance": {"brightness": [0.1, 0.75], "metallic": [0, 0.85], "roughness": [0.2, 0.65], "light_tilt_deg": [5, 85], "energy": [1.5, 5], "exposure": [-0.5, 0.5]},
   "resolution": 480,
   "background": "black"

@@ -63,6 +63,8 @@ output/                      データ参照・重み・結果（ローカル保
 
 1194Mの原画像は714枚、多様形状は1,024枚。1194Mはカメラ、多様形状は寸法単位で分割してから劣化を適用する。学習・validationの枚数と劣化強度を両学習元で揃える。
 
+多様形状のtrain/validationでは、穴の投影長径が画像幅の0.06〜0.65となるよう撮影距離を抽選する。カメラ姿勢・形状・外観の抽選は保ち、穴の全周を画面内に残して本体の画面外を許容する。比較用の両test集合は固定する。
+
 |学習元|学習の原画像／劣化込み|validationの原画像／劣化込み|testの原画像／劣化込み|
 |---|---:|---:|---:|
 |1194M|497／1,988|105／735|112／1,456|
@@ -78,7 +80,7 @@ CNNは両方ともTiny U-Net16、60epoch、batch16、同じAdamWとBCE＋Dice、
 
 ## 現在の状態
 
-両CNN各3seed・60epochの学習と、1194M・多様形状の二つのtest集合に対する4方式評価が完了。全27,664推定の再計算照合と31件の回帰テストが合格している。成績は下記の比較結果を参照する。
+多様形状の投影サイズ拡張後の3seed・60epoch学習、二つの固定test集合での4方式比較、全27,664推定の照合が完了。全8,904入力のモノクロ照合と32件の回帰テストが合格。多様形状CNNの成功率は1194M上15.00%、多様形状上45.99%で、同じtestでの拡張前21.38%/71.36%から低下した。詳細・条件別成績・変更前後の根拠は`results/REPORT.md`と`size_ablation.json`を参照する。
 
 ## 保存先
 
@@ -90,6 +92,7 @@ CNNは両方ともTiny U-Net16、60epoch、batch16、同じAdamWとBCE＋Dice、
 - `results/{評価集合}/{方式}_{seedまたはfixed}.json`：全画像の推定楕円・正解・指標。
 - `results/REPORT.md`・`summary.json`・`scores.csv`：二つの比較、条件・強度・seed別の成績。
 - `results/audit.json`：全epoch・最小validation重み・全推定の再計算照合。
+- `results/size_ablation.json`：同じtestに対する撮影サイズ拡張前後の集計と入力同一性の根拠。
 
 [比較結果](output/hole_region_comparison_v1/results/REPORT.md)と[現在の状態・次の手順](.codex/RESEARCH_HANDOFF.md)を参照する。原素材と研究関連書類はローカルに保持する。Git管理外の画像・重み・結果は別端末へ別途コピーする。
 
