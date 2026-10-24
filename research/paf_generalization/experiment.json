@@ -1,0 +1,25 @@
+{
+  "experiment_id": "paf_generalization_v1",
+  "baseline": "output/hole_region_comparison_v1",
+  "output": "output/paf_generalization_v1",
+  "source": "diversified",
+  "seeds": [20260907, 20260908, 20260909],
+  "epochs": 60,
+  "batch_size": 16,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "positive_weight": 12.0,
+  "geometry_weight": 1.0,
+  "spatial_probability": 0.5,
+  "scale_range": [0.75, 4.0],
+  "center_range": [0.3, 0.7],
+  "variants": {
+    "spatial": {"spatial": true, "geometry": false},
+    "geometry": {"spatial": false, "geometry": true},
+    "spatial_geometry": {"spatial": true, "geometry": true}
+  },
+  "selection": "minimum_source_validation_total_loss",
+  "success_iou": 0.8,
+  "region_threshold": 0.5,
+  "status": "exploratory_existing_test_already_inspected"
+}

@@ -1,0 +1,14 @@
+{
+  "dataset_id": "paf_family_holdout_v1",
+  "seed": 2026102601,
+  "shapes_per_family": 32,
+  "families": ["square_shell", "open_support", "ribbed_shell"],
+  "camera_tilt_degrees": [5.0, 70.0],
+  "major_axis_256px": [40.0, 140.0],
+  "center_fraction": [0.35, 0.65],
+  "effects": {"clean": 0.0, "black_rectangle": 0.5, "sensor_whiteout": 0.5, "sensor_black_crush": 0.5},
+  "candidate_models": {"surface_context_spatial": [20260907, 20260908, 20260909], "boundary_spatial": [20260907]},
+  "controls": ["cnn_diversified", "canny", "zhang2019"],
+  "selection_policy": "学習に使わない新規形状と対応する元形状を全件評価する。この集合でモデル・閾値・重みを調整しない。",
+  "scope": "黒背景・単一の上端開口・既存の材質照明範囲。未学習の周辺構造の効果を同一投影の対で測る。実画像・負例・任意のカメラrollは評価対象外。"
+}

@@ -1,0 +1,43 @@
+{
+  "experiment_id": "paf_projection_aperture_occlusion_v2",
+  "source": "diversified",
+  "seeds": [
+    20260907
+  ],
+  "epochs": 60,
+  "batch_size": 16,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "positive_weight": 12.0,
+  "surface_intervention_probability": 0.5,
+  "variants": {
+    "boundary_projection_relative": {
+      "spatial": false,
+      "geometry": false,
+      "new_view": "projection_coverage"
+    }
+  },
+  "ransac": {
+    "iterations": 450,
+    "distance_threshold_px": 2.0,
+    "min_inliers": 12,
+    "min_axis_px": 6.0,
+    "min_axis_ratio": 0.1,
+    "max_axis_diagonal_ratio": 2.0,
+    "angular_bins": 72,
+    "refine_iterations": 3,
+    "perimeter_power": 0.0,
+    "random_seed": 20260716
+  },
+  "selection": "minimum_original_source_validation_loss",
+  "success_iou": 0.8,
+  "status": "exploratory_existing_test_already_inspected",
+  "view_probabilities": {
+    "original_plain": 0.25,
+    "original_surface": 0.25,
+    "new_plain": 0.25,
+    "new_surface": 0.25
+  },
+  "occlusion_sampling": "aperture_relative_online_on_black_rectangle_examples_only",
+  "source_selection": "minimum original source validation boundary loss; no target checkpoint selection"
+}

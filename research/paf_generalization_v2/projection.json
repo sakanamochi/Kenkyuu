@@ -1,0 +1,48 @@
+{
+  "experiment_id": "paf_image_projection_coverage_mix_v2",
+  "source": "diversified",
+  "seeds": [
+    20260907,
+    20260908,
+    20260909
+  ],
+  "epochs": 60,
+  "batch_size": 16,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "positive_weight": 12.0,
+  "surface_intervention_probability": 0.5,
+  "variants": {
+    "boundary_native_mix": {
+      "spatial": false,
+      "geometry": false,
+      "new_view": "native_framing"
+    },
+    "boundary_projection_mix": {
+      "spatial": false,
+      "geometry": false,
+      "new_view": "projection_coverage"
+    }
+  },
+  "ransac": {
+    "iterations": 450,
+    "distance_threshold_px": 2.0,
+    "min_inliers": 12,
+    "min_axis_px": 6.0,
+    "min_axis_ratio": 0.1,
+    "max_axis_diagonal_ratio": 2.0,
+    "angular_bins": 72,
+    "refine_iterations": 3,
+    "perimeter_power": 0.0,
+    "random_seed": 20260716
+  },
+  "selection": "minimum_original_source_validation_loss",
+  "success_iou": 0.8,
+  "status": "exploratory_existing_test_already_inspected",
+  "view_probabilities": {
+    "original_plain": 0.25,
+    "original_surface": 0.25,
+    "new_plain": 0.25,
+    "new_surface": 0.25
+  }
+}

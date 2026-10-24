@@ -1,0 +1,22 @@
+{
+  "experiment_id": "paf_direct_ellipse_v2",
+  "source": "diversified",
+  "seeds": [20260907, 20260908, 20260909],
+  "epochs": 60,
+  "batch_size": 16,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "positive_weight": 12.0,
+  "spatial_probability": 0.5,
+  "scale_range": [0.75, 4.0],
+  "center_range": [0.3, 0.7],
+  "surface_intervention_probability": 0.5,
+  "variants": {"direct_surface": {"spatial": true, "geometry": false}},
+  "architecture": "TinyUNet_encoder16_pool4x4_linear64_linear5",
+  "representation": "center_and_Cholesky_area_covariance",
+  "loss": "log1p_squared_Gaussian_Wasserstein_over_target_covariance_trace",
+  "selection": "minimum_original_source_validation_loss",
+  "inference": "single_CNN_no_pixel_decoder_no_RANSAC_no_ensemble",
+  "references": ["https://arxiv.org/abs/1902.09658", "https://arxiv.org/abs/2011.04844"],
+  "status": "exploratory_existing_test_already_inspected"
+}
