@@ -76,6 +76,10 @@ CNNは両方ともTiny U-Net16、60epoch、batch16、同じAdamWとBCE＋Dice、
 
 全方式の成功条件はIoU≥0.8。CNNは全3seedと平均、幾何は各画像一回の成績を報告する。幾何のCanny閾値30/90と既存RANSACは固定する。
 
+## 現在の状態
+
+両CNN各3seed・60epochの学習と、1194M・多様形状の二つのtest集合に対する4方式評価が完了。全27,664推定の再計算照合と31件の回帰テストが合格している。成績は下記の比較結果を参照する。
+
 ## 保存先
 
 `output/hole_region_comparison_v1/`内の同じファイルを更新する。
