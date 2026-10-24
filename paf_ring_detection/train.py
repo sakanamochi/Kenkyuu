@@ -1,4 +1,4 @@
-"""リング尤度CNNを学習する。"""
+"""完全な穴領域を教師としてTiny U-Netを学習する。"""
 
 from __future__ import annotations
 
@@ -47,6 +47,8 @@ def train(config: dict, epochs: int | None = None) -> Path:
     dataset_dir = Path(config["paths"]["training_dataset"])
     train_data = RingDataset(dataset_dir, "train", config["input_size"])
     validation_data = RingDataset(dataset_dir, "validation", config["input_size"])
+    if not len(train_data) or not len(validation_data):
+        raise ValueError("学習・validationの両方に画像が必要です")
     loader_options = {
         "batch_size": settings["batch_size"],
         "num_workers": 0,
@@ -109,6 +111,10 @@ def train(config: dict, epochs: int | None = None) -> Path:
                     "input_size": config["input_size"],
                     "epoch": epoch,
                     "validation_loss": best_loss,
+                    "target": "hole_region",
+                    "training_source": config["training_source"],
+                    "seed": seed,
+                    "config": config,
                 },
                 checkpoint_path,
             )

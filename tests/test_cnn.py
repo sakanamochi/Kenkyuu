@@ -2,8 +2,10 @@ import cv2
 import numpy as np
 import torch
 
+from paf_ring_detection.data import region_mask
+from paf_ring_detection.geometry import evaluate_ellipses
 from paf_ring_detection.methods.cnn import TinyUNet
-from paf_ring_detection.methods.cnn_ransac import detect_from_probability
+from paf_ring_detection.methods.cnn_region import region_ellipse
 
 
 def test_cnn_outputs_one_probability_map():
@@ -12,27 +14,13 @@ def test_cnn_outputs_one_probability_map():
     assert output.shape == (1, 1, 64, 64)
 
 
-def test_probability_map_is_converted_to_ellipse():
-    probability = np.zeros((160, 160), dtype=np.float32)
-    cv2.ellipse(
-        probability,
-        ((80, 80), (100, 50), 20),
-        1.0,
-        2,
-        cv2.LINE_AA,
-    )
-    settings = {
-        "probability_threshold": 0.35,
-        "max_points": 6000,
-        "iterations": 300,
-        "distance_threshold_px": 2.5,
-        "min_inliers": 40,
-        "min_axis_px": 6.0,
-        "min_axis_ratio": 0.1,
-        "max_axis_diagonal_ratio": 2.0,
-        "angular_bins": 72,
-        "refine_iterations": 3,
-        "perimeter_power": 0.0,
-        "random_seed": 1,
-    }
-    assert detect_from_probability(probability, settings, random_seed=1) is not None
+def test_region_ellipse_follows_largest_region_and_includes_hole_center():
+    # 穴内部を塗り、離れた小領域や閾値未満の雑音で楕円が切り替わらないことを確認する。
+    truth = ((80.0, 80.0), (100.0, 50.0), 20.0)
+    probability = region_mask(160, truth)
+    assert probability[80, 80] == 1.0
+    cv2.circle(probability, (12, 12), 5, 1.0, -1)
+    probability[140:150, 140:150] = 0.49
+    ellipse = region_ellipse(probability)
+    assert evaluate_ellipses(ellipse, truth, probability.shape)['ellipse_iou'] > 0.97
+    assert region_ellipse(np.zeros((32, 32), np.float32)) is None

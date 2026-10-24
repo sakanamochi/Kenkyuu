@@ -1,4 +1,4 @@
-"""リング尤度を出力する小型CNN。"""
+"""穴領域の確率を出力する小型CNN。"""
 
 from __future__ import annotations
 

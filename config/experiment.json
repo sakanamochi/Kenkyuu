@@ -1,93 +1,98 @@
 {
-  "experiment_id": "paf_second_stage_v1",
-  "seed": 20260716,
-  "input_size": 256,
-  "success_iou": 0.80,
-
+  "experiment_id": "hole_region_comparison_v1",
+  "output": "output/hole_region_comparison_v1",
   "blender": "C:/Program Files/Blender Foundation/Blender 5.2/blender.exe",
-  "render_configs": [
-    "config/render_base.json",
-    "config/render_ood.json"
+  "input_size": 256,
+  "success_iou": 0.8,
+  "contour_p95_px": 2.0,
+  "region_probability_threshold": 0.5,
+  "training_seeds": [
+    20260907,
+    20260908,
+    20260909
   ],
-
-  "paths": {
-    "base_dataset": "output/datasets/base_cg",
-    "training_dataset": "output/datasets/cnn_training",
-    "ood_dataset": "output/datasets/ood_evaluation",
-    "diagnostic_dataset": "output/datasets/diagnostic_evaluation",
-    "checkpoint": "output/models/cnn_best.pt",
-    "results": "output/results"
+  "augmentation_seed": 2026102405,
+  "evaluation_seed": 2026102404,
+  "sources": {
+    "m1194m": {
+      "path": "output/datasets/base_cg",
+      "split_seed": 20260716
+    },
+    "diversified": {
+      "path": "parametric_paf/output/paf_random_outer_d_v2",
+      "split_seed": 2026102403
+    }
   },
-
   "split": {
-    "train_fraction": 0.70,
+    "train_fraction": 0.7,
     "validation_fraction": 0.15
   },
-
   "training_data": {
-    "effects": ["occlusion", "whiteout", "black_crush"],
-    "variants_per_image": 3,
-    "severity_min": 0.10,
-    "severity_max": 0.80,
-    "validation_severities": [0.30, 0.60],
-    "test_severities": [0.20, 0.40, 0.60, 0.80, 0.90, 1.00]
+    "effects": [
+      "occlusion",
+      "whiteout",
+      "black_crush"
+    ],
+    "severity_min": 0.1,
+    "severity_max": 0.8,
+    "validation_severities": [
+      0.3,
+      0.6
+    ],
+    "test_severities": [
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      0.9,
+      1.0
+    ]
   },
-
-  "diagnostic_data": {
-    "effects": ["black_rectangle", "sensor_whiteout", "sensor_black_crush"],
-    "severities": [0.25, 0.50, 0.75, 1.00]
-  },
-
   "cnn": {
     "base_channels": 16,
-    "epochs": 12,
+    "epochs": 60,
     "batch_size": 16,
     "learning_rate": 0.001,
     "weight_decay": 0.0001,
     "positive_weight": 12.0,
     "dice_weight": 1.0
   },
-
   "ransac": {
-    "probability_threshold": 0.35,
-    "max_points": 6000,
     "iterations": 450,
     "distance_threshold_px": 2.0,
     "min_inliers": 45,
     "min_axis_px": 6.0,
-    "min_axis_ratio": 0.10,
+    "min_axis_ratio": 0.1,
     "max_axis_diagonal_ratio": 2.0,
     "angular_bins": 72,
     "refine_iterations": 3,
     "perimeter_power": 0.0,
     "random_seed": 20260716
   },
-
   "canny_contour_ransac": {
     "preprocess": {
       "blur_kernel_size": 5,
       "blur_sigma": 1.2,
-      "canny_low": 50,
-      "canny_high": 140,
+      "canny_low": 30,
+      "canny_high": 90,
       "min_contour_points": 24,
       "max_contours": 30
     },
     "selector": {
-      "area_ratio_min": 1.20,
+      "area_ratio_min": 1.2,
       "area_ratio_max": 4.0,
       "center_distance_major_ratio": 0.12,
-      "axis_ratio_difference": 0.10,
-      "min_quality_ratio": 0.10,
+      "axis_ratio_difference": 0.1,
+      "min_quality_ratio": 0.1,
       "max_candidates": 12
     }
   },
-
   "zhang2019": {
     "preprocess": {
       "blur_kernel_size": 5,
       "blur_sigma": 1.2,
-      "canny_low": 50,
-      "canny_high": 140
+      "canny_low": 30,
+      "canny_high": 90
     },
     "detector": {
       "max_arcs": 40,
@@ -95,7 +100,7 @@
       "center_chord_samples": 12,
       "max_fit_points": 500,
       "min_axis_px": 8.0,
-      "min_axis_ratio": 0.10,
+      "min_axis_ratio": 0.1,
       "max_axis_diagonal_ratio": 1.0,
       "center_margin_ratio": 0.0,
       "duplicate_center_ratio": 0.04,
@@ -113,17 +118,6 @@
       "selector": {
         "max_considered_candidates": 20
       }
-    }
-  },
-
-  "evaluation_datasets": {
-    "ood": {
-      "path": "output/datasets/ood_evaluation",
-      "split": "ood_test"
-    },
-    "diagnostic": {
-      "path": "output/datasets/diagnostic_evaluation",
-      "split": "diagnostic_test"
     }
   }
 }

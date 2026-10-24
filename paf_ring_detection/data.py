@@ -53,13 +53,26 @@ def scaled_ellipse(ellipse: Ellipse, scale: float) -> Ellipse:
     )
 
 
-def ring_mask(size: int, ellipse: Ellipse) -> np.ndarray:
-    """遮蔽部分も含む完全な内周リングをCNN教師マスクにする。"""
+def region_mask(size: int, ellipse: Ellipse) -> np.ndarray:
+    """不可視部分も含む完全な穴内部をCNN教師にする。"""
     mask = np.zeros((size, size), dtype=np.uint8)
-    thickness = max(2, round(size / 96))
-    cv2.ellipse(mask, ellipse, 255, thickness, cv2.LINE_AA)
-    mask = cv2.GaussianBlur(mask.astype(np.float32) / 255.0, (0, 0), 0.8)
-    return mask / max(float(mask.max()), 1e-6)
+    cv2.ellipse(mask, ellipse, 255, -1, cv2.LINE_AA)
+    return mask.astype(np.float32) / 255.0
+
+
+def sample_image(dataset_dir: Path, sample: dict) -> np.ndarray:
+    """固定seedの撮像効果を原画像に適用し、全方式へ同じ画像を渡す。"""
+    from paf_ring_detection.effects import training_effect
+
+    image = read_image(dataset_dir / sample["image"])
+    if image is None:
+        raise ValueError(f"画像を読めません: {sample['image']}")
+    effect = sample.get("augmentation")
+    if effect:
+        label = read_json(dataset_dir / sample["label"])
+        image = training_effect(image, effect["name"], effect["severity"],
+                                label_ellipse(label), np.random.default_rng(effect["seed"]))
+    return image
 
 
 def load_samples(dataset_dir: Path, split: str) -> list[dict]:
@@ -68,7 +81,7 @@ def load_samples(dataset_dir: Path, split: str) -> list[dict]:
 
 
 class RingDataset(Dataset):
-    """CNN学習・推論で共通に使うPAFリングデータセット。"""
+    """CNN学習・推論で共通に使う穴領域データセット。"""
 
     def __init__(self, dataset_dir: Path, split: str, input_size: int) -> None:
         self.root = Path(dataset_dir)
@@ -80,7 +93,7 @@ class RingDataset(Dataset):
 
     def __getitem__(self, index: int):
         sample = self.samples[index]
-        image = read_image(self.root / sample["image"])
+        image = sample_image(self.root, sample)
         label = read_json(self.root / sample["label"])
         ellipse = label_ellipse(label)
         scale = self.input_size / float(label["image_width"])
@@ -94,6 +107,6 @@ class RingDataset(Dataset):
         image = image.transpose(2, 0, 1).copy()
         image_tensor = torch.from_numpy(image).float() / 127.5 - 1.0
 
-        mask = ring_mask(self.input_size, scaled_ellipse(ellipse, scale))
+        mask = region_mask(self.input_size, scaled_ellipse(ellipse, scale))
         mask_tensor = torch.from_numpy(mask[None]).float()
         return image_tensor, mask_tensor, index

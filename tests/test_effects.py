@@ -1,9 +1,6 @@
 import numpy as np
 
 from paf_ring_detection.effects import (
-    black_rectangle,
-    sensor_black_crush,
-    sensor_whiteout,
     training_effect,
 )
 
@@ -26,17 +23,3 @@ def test_full_occlusion_is_black():
         image, "occlusion", 1.0, ELLIPSE, np.random.default_rng(1)
     )
     assert np.all(result == 0)
-
-
-def test_black_rectangle_width_matches_severity():
-    image = np.full((100, 100, 3), 100, dtype=np.uint8)
-    result = black_rectangle(image, 0.25, np.random.default_rng(1))
-    assert np.count_nonzero(np.all(result == 0, axis=2)) == 2500
-
-
-def test_sensor_effects_change_brightness_in_expected_direction():
-    image = np.full((64, 64, 3), 140, dtype=np.uint8)
-    white = sensor_whiteout(image, 0.5, np.random.default_rng(1))
-    black = sensor_black_crush(image, 0.5, np.random.default_rng(1))
-    assert white.mean() > image.mean()
-    assert black.mean() < image.mean()
