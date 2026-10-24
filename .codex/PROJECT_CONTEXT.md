@@ -37,6 +37,23 @@ Cannyは標準Canny＋輪郭分離＋共通RANSAC＋同心候補対の内周選�
 
 正本は`parametric_paf/output/paf_convergence_v1/report/REPORT.md`、`summary.json`、`audit.json`、`report_verification.json`と推定原記録。監査は全2,618推定を元ラベルから再計算して合格。過去結果の再現用コードはブランチ`codex/minimal-research-environment`、commit`1fdfbca`。新しい比較の設定・分割と区別する。
 
+## 劣化込み学習と二つの比較：確認済み結果
+
+両学習元×3seedの計6モデルをランダム初期化から60epoch学習済み。入力256、主成功はIoU≥0.8かつ双方向輪郭距離p95≤2px。下表は通常・遮蔽・白飛び・黒つぶれを全て含み、CNNは3seed平均、幾何は一回の評価。
+
+|方式|1194M test（2,128枚）|多様形状 test（2,926枚）|
+|---|---:|---:|
+|穴領域CNN（1194M学習）|34.26%|0.09%|
+|穴領域CNN（汎化形状学習）|1.75%|56.38%|
+|Canny＋輪郭別RANSAC|16.73%|25.32%|
+|Zhang 2019型（再現実装）|14.99%|26.49%|
+
+通常画像だけの主成功率は、1194M学習CNNが1194M上97.32%・多様形状上0.43%、多様形状学習CNNが1194M上8.63%・多様形状上96.10%。各CNNは自分の学習元に対応するtestでは幾何を上回るが、学習元をまたぐ適用では成績が大きく低下する。今回の条件で、多様形状学習による1194Mへの十分な汎化が確認できたとは言えない。
+
+正本は`output/hole_region_comparison_v1/results/REPORT.md`、`summary.json`、`scores.csv`、各推定JSON、`audit.json`。全16設定・40,432推定を元ラベルから再計算して一致。全6学習の60epoch履歴・最小validation checkpoint・重みの有限性・固定した入力と実装のhashを照合済み。回帰テスト30件が合格し、検証用の画像・重み・結果は全て削除済み。
+
+採用epochは1194M学習のseed20260907/20260908/20260909が58/60/59、多様形状学習が55/57/43。60epochまで実行したことだけで、十分な収束を断定しない。GPU演算による完全な学習軌跡の再現性は別途保証していない。
+
 ## Zhang型の正規出典
 
 Limin Zhang, Wang Pan, Xianghua Ma,

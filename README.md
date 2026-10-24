@@ -95,7 +95,7 @@ output/                      データ・重み・結果（ローカル保存）
 - `results/summary.json`・`scores.csv`・`REPORT.md`：二つの比較、CNNのseed平均、劣化種類・強度別の成績。不足結果も明記する。
 - `results/audit.json`：全epoch・最小validation checkpoint・全推定の再計算照合。
 
-現在の実施対象は、CNN二系統×3seedの60epoch学習と、1194M・多様形状の二つのtest集合における4方式比較。進行と完了状態はlogs/と学習履歴・評価原記録を照合する。既存の通常条件の穴領域CNN重みは、劣化込みの学習済みモデルの代わりには扱わない。
+CNN二系統×3seedの60epoch学習と、1194M・多様形状の二つのtest集合における4方式比較が完了。全40,432推定の再計算照合は合格。結果は[二つの比較表と条件別成績](output/hole_region_comparison_v1/results/REPORT.md)、原記録は同フォルダのJSON・CSVを参照する。学習元をまたぐ適用の成績は低く、形状多様化による未知機体への汎化の実証とは区別する。既存の通常条件の穴領域CNN重みは、劣化込みの学習済みモデルの代わりには扱わない。
 
 研究資料・既存データ・重み・結果は`研究関連書類/`、`output/`、`parametric_paf/output/`に保持する。これらはGit管理外なので別端末へは別途コピーが必要。通常条件での穴領域CNNの根拠は[保存済み報告](parametric_paf/output/paf_convergence_v1/report/REPORT.md)、現在の方針と次の作業は[引継ぎ資料](.codex/RESEARCH_HANDOFF.md)を参照する。過去結果の再現用コードは`codex/minimal-research-environment`の`1fdfbca`に保存されている。
 
