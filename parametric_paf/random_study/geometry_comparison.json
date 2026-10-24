@@ -1,0 +1,46 @@
+{
+  "experiment_id": "paf_random_geometry_v1",
+  "input_size": 256,
+  "methods": {
+    "canny": "Canny＋輪郭別RANSAC",
+    "zhang": "Zhang 2019型（再現実装）"
+  },
+  "dataset_counts": {
+    "validation": 192,
+    "test": 1968,
+    "absent": 64
+  },
+  "runtime_versions": {
+    "python": "3.10.11",
+    "opencv": "4.13.0",
+    "numpy": "2.2.6",
+    "torch": "2.13.0+cu130"
+  },
+  "threshold_selection": "既存の共通validationで選択済みの30/90。追加調整なし。",
+  "geometry_repetitions": "学習seedなし。画像単位のNumPy・OpenCV乱数を固定した1推定。",
+  "sha256": {
+    "paf_ring_detection/data.py": "716185348576217cdcbf6ee88e0eb288cb1580d114b0fa00cdebd2b2aea99442",
+    "paf_ring_detection/geometry.py": "0fded8cb5370261538664587d85cf3e30453ecf7d4311f6af79b6257c72287f8",
+    "paf_ring_detection/methods/__init__.py": "a1e850a336f619a2bb4937142d3d9f13eb3b8d7682cc58e5179c47c4a6161218",
+    "paf_ring_detection/methods/canny_contour_ransac.py": "f73b2ec048ba4f87b7cbf9ff0f4e16052040fa822d5c385d9dc9306338645f46",
+    "paf_ring_detection/methods/cnn.py": "9a268762ac8a5d3404c1e7260a5b8b444fbf5c24aeb75ad970ba57abe1d4d132",
+    "paf_ring_detection/methods/cnn_ransac.py": "45d5c8a8939a0398c9234620f857beca51c868c27f08133463436ba1e8c667f4",
+    "paf_ring_detection/methods/ransac.py": "65ae1a8b07346a98c7334766751ac3648f4ea4d6fdc333cbb7efd727b76860a0",
+    "paf_ring_detection/methods/zhang2019.py": "93e93f652fafdd74e7e22015142952b9d3cfe09153b80c7ddbd75aaf0bea3002",
+    "paf_ring_detection/methods/zhang2019_paf.py": "dee44704a84be73406cedce437d8df9632cf789ec9fe03fee0bdb51e1bf20b72",
+    "parametric_paf/compare_geometry_random.py": "14a2c54f9cc69101f9fd06b7798cfe116956c1caeb85faee95c31ba46fe67112",
+    "parametric_paf/diagnosis_metrics.py": "e6346099e12be3521a9c0700fc573c6870538a14cf71c57610952947d7f390f7",
+    "parametric_paf/evaluate_study.py": "2697877efe0a19bf000c961ba0c67d1d64be5b3ad44ecba353ed64e590702970",
+    "parametric_paf/output/paf_random_dimensions_v1/absent/manifest.json": "02862fb410010866967660927ab636abb9ffb4516cad237a02b55ff2522f5077",
+    "parametric_paf/output/paf_random_dimensions_v1/report/audit.json": "7e3a7682e002e63866ea52150b7b2285db3f7fc7e42a45aba29f517ddd81cb0d",
+    "parametric_paf/output/paf_random_dimensions_v1/report/summary.json": "c7267723755f606dfe3842507709005a4dfe9599233feaf65d53ef6a2a2b632c",
+    "parametric_paf/output/paf_random_dimensions_v1/test/manifest.json": "0e0fb2f372a51fa7a15265013120b5f6de8991db1af8a4f1fce282cdc3877103",
+    "parametric_paf/output/paf_random_dimensions_v1/validation/manifest.json": "01d4ff2676be3a65e186e9e98227de6023319e5fa68b9c023c2d54c3cd52c400",
+    "parametric_paf/output/paf_shape_appearance_v1/geometry_validation/selected_config.json": "d7a8ea375b63d27cfa327d7a435ec5cc039b97c721958a6b1c41737f01de43d5",
+    "parametric_paf/output/paf_shape_appearance_v1/geometry_validation/selection.json": "0795fe02783c682217dab949f59947871a613146480a66e0b2be84d709d63f16",
+    "parametric_paf/random_study/freeze.json": "5c2842aa83951f030a2a638e5ee5d1cb005b25b0bc45af7d4c83c31e8c38f0d8",
+    "parametric_paf/random_study/protocol.json": "8979e1d3aea087876edc3c7b44d76d45a149280ca876f08a3c8a7de927f32893",
+    "parametric_paf/tune_geometry.py": "98a668675ef15c47b945abc101356b9aaeceaa59ee4b877d8f6aa2c4e7768e1b"
+  },
+  "status": "reference_only"
+}

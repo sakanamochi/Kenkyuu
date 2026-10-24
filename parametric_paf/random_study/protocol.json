@@ -1,0 +1,134 @@
+{
+  "shape_ranges": {
+    "bottom_diameter_ratio": [
+      1.35,
+      1.9
+    ],
+    "height_ratio": [
+      0.15,
+      0.45
+    ],
+    "wall_ratio": [
+      0.04,
+      0.12
+    ]
+  },
+  "training": {
+    "epochs": 12,
+    "batch_size": 16,
+    "base_channels": 16,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "positive_weight": 12.0,
+    "dice_weight": 1.0,
+    "optimizer": "AdamW",
+    "checkpoint_selection": "共通の未学習validation形状192画像の最小loss",
+    "updates_per_arm_seed": 768
+  },
+  "camera": {
+    "tilt_deg": [
+      5,
+      70
+    ],
+    "azimuth_deg": [
+      0,
+      360
+    ],
+    "distance_per_inner_diameter": [
+      3.2,
+      4.2
+    ],
+    "lens_mm": 55,
+    "resolution": 480,
+    "input_size": 256,
+    "target": [
+      0,
+      0,
+      0
+    ]
+  },
+  "appearance_expanded": {
+    "color_brightness": [
+      0.1,
+      0.75
+    ],
+    "color_channel_multiplier": [
+      0.85,
+      1.05
+    ],
+    "metallic": [
+      0,
+      0.85
+    ],
+    "roughness": [
+      0.2,
+      0.65
+    ],
+    "light_tilt_deg": [
+      5,
+      85
+    ],
+    "light_azimuth_deg": [
+      0,
+      360
+    ],
+    "sun_energy": [
+      1.5,
+      5
+    ],
+    "sun_angle_deg": [
+      0.1,
+      1.0
+    ],
+    "exposure": [
+      -0.5,
+      0.5
+    ]
+  },
+  "training_seeds": [
+    20260907,
+    20260908,
+    20260909
+  ],
+  "test_seed": 2026090703,
+  "geometry": {
+    "inner_diameter": 1.0,
+    "rib_count": 0,
+    "base_height_to_top_outer_diameter": 0.1,
+    "segments": 192,
+    "training_family": "tapered"
+  },
+  "experiment_id": "paf_random_dimensions_v1",
+  "shape_seed": 2026102401,
+  "train_images_per_arm": 1024,
+  "arms": [
+    "single",
+    "random"
+  ],
+  "evaluation": {
+    "primary": "IoU >= 0.80 AND symmetric contour distance p95 <= 2.0px",
+    "success_iou": 0.8,
+    "contour_p95_px": 2.0,
+    "contour_samples": 720,
+    "secondary": [
+      "IoU成功率",
+      "輪郭平均距離とp95",
+      "未検出率",
+      "誤楕円出力率",
+      "完全内周の確率支持被覆",
+      "形状別・視点別成功率"
+    ],
+    "main_contrast": "random - single",
+    "supporting_contrast": null,
+    "aggregation": "各形状内で条件を対応させ、形状成功率の平均差をseed別に報告",
+    "minimum_effect_percentage_points": 10,
+    "maximum_known_shape_drop_percentage_points": 5,
+    "maximum_wrong_output_increase_percentage_points": 5,
+    "seed_rule": "主テストの3学習seed全てでrandom-singleが正、平均差10ポイント以上を支持の基準とする。",
+    "stop_rule": "結果に応じて効果の有無と適用範囲を報告する。テストによる再調整や自動規模拡大は行わない。"
+  },
+  "primary_split": "test_interpolation",
+  "validation_source": "paf_shape_appearance_v1/validation",
+  "inference_rng": "各画像の正解作成前と推定前にOpenCV乱数をリセットし、NumPyのRANSAC seedも固定する",
+  "scope": "黒背景・対象が画像内にある合成PAFの上端内周2D楕円。実機・実画像への一般化は未検証"
+}

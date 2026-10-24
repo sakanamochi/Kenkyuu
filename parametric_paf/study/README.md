@@ -1,6 +1,14 @@
+現行の生成仕様は [上端外径D基準のランダムPAF](../random_paf/README.md) を参照する。このフォルダーは保存済みデータの参照用であり、現行仕様の実行入口ではない。
+
 # 形状・外観多様化の2×2実験
 
+この実験は予備実験として保存する。現在の主実験は、単一寸法対画像ごとのランダム寸法に絞った [paf_random_dimensions_v1](../random_study/README.md)。以下は`paf_shape_appearance_v1`固有の仕様である。
+
 実験ID：`paf_shape_appearance_v1`。研究上の根拠は [PRETRAINING_REPORT.md](PRETRAINING_REPORT.md)。学習開始前の検査を終えてから、各arm・seedを明示して学習する。
+
+1194Mを学習に使わない方針、ランダム形状の定義、初期形状数の採用理由は [DIVERSIFICATION_SPEC.md](DIVERSIFICATION_SPEC.md) を参照する。一段階目は保存済み合成データの入力検査、4条件×3 seedの学習、共通validationによる継続判断までとする。
+
+一段階目は完了。[学習結果](../output/paf_shape_appearance_v1/training_summary/REPORT.md)ではD−Bが平均+34.90ポイントで継続基準を満たす。独立テストは未生成・未評価。Cannyの同一条件1画像に実行間の判定差があり、独立評価前に推論再現性を確認する。
 
 ## 比較条件
 
@@ -31,7 +39,6 @@
 |---|---:|---|---|
 |test_interpolation|12|形状ごと共通48条件|同じ形状族・定義範囲内の新しい寸法組合せ|
 |test_extrapolation|12|同上|下端径・高さ・肉厚のいずれかが訓練範囲外|
-|test_structure|6|同上|円筒＋フランジ3、段付き断面3。訓練とは異なる合成断面|
 |各区分の_capture|同じ30形状|別の16条件|傾斜75/80°、露光±1、横方向の画像位置ずれ±0.1を含む複合ストレス|
 |known_shape_monitor|学習16形状|未使用の共通48条件|既知形状の性能低下を調べる補助。未知形状テストとは別集計|
 |absent_test|黒背景1種・穴なし円盤1形状|黒画像1枚＋円盤63条件|対象なしの誤検出を別評価。64個の独立形状とは扱わない|
@@ -53,9 +60,9 @@
 ## ファイル構成
 
 - `study.py`：計画・設定の生成、学習前検査、凍結、明示指定したarm/seedの学習。
-- `render_study.py`：計画を読み、既存生成器を再利用してCG・正解・manifestを生成。別断面は同ファイルの小さな形状生成関数に限定。
 - `tune_geometry.py`：validationだけでCanny閾値を選択。
 - `evaluate_study.py`：既存CNN・幾何実装を呼び出し、固定した指標で評価。
+- `summarize_training.py`：12本の学習履歴・採用重み・全validation評価の対応を検証し、seed別・形状別の成績と継続判断を集計する。CNN・学習・後処理の設定は変更しない。
 - `render_absent_study.py`：対象なし補足の描画。
 - `diagnose.py` / `diagnosis_metrics.py` / `render_diagnostics.py` / `summarize_diagnosis.py`：既存CGの再現用診断。oracleは学習評価に混ぜない。
 - `study/protocol.json` / `shapes.json` / `conditions.json` / `configs/` / `freeze.json`：Git管理する実験定義とhash。画像・重み・結果は `parametric_paf/output/` にローカル保存。
@@ -70,13 +77,21 @@
 & .venv/Scripts/python.exe -X utf8 parametric_paf/study.py check
 ```
 
-次に開始する学習1本（このコマンドは学習する）：
+学習1本の実行形式（このコマンドは学習する。保存済みcheckpointは上書きを拒否する）：
 
 ```powershell
 & .venv/Scripts/python.exe -X utf8 parametric_paf/study.py train --arm A --seed 20260907
 ```
 
 他のarmとseedも同じ形式で実行し、計12本を比較する。既存checkpointがある場合は上書きを拒否する。途中失敗時の自動再開は実装していないため、途中の重みを完成結果に混ぜず、入力・設定を保持して新しい実験出力先で扱う。
+
+全12本の学習と共通validation評価後の完了検証・集計：
+
+```powershell
+& .venv/Scripts/python.exe -X utf8 parametric_paf/summarize_training.py
+```
+
+学習標準出力はUTF-8で `parametric_paf/output/paf_shape_appearance_v1/training_logs/<arm>_<seed>.log` に保存する。集計はこのログと `models/<arm>/<seed>/training_history.json` の12epochの一致を確認する。validation評価の保存先は `evaluation/<arm>/<seed>/validation/`。集計結果は `training_summary/REPORT.md`、`summary.json`、`runs.csv`、`shape_results.csv` に保存する。`summary.json`には入力・設定の凍結記録と各重み・評価・ログのhashを含める。
 
 再現描画と検証用調整（未生成の保存先で実行。選択済み設定を上書きしない）：
 

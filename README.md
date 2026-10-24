@@ -1,5 +1,9 @@
 # PAF内周リング検出
 
+現在のランダムPAFの仕様と生成方法は、[上端外径D基準のデータセット](parametric_paf/random_paf/README.md)を参照してください。以下は既存の標準実験の実行仕様です。
+
+現行データでの学習回数・穴領域教師の比較と実行方法は、[収束検証](parametric_paf/random_paf/CONVERGENCE.md)を参照してください。
+
 PAFのCG画像から内周楕円を検出し、次の3方式を比較する個人研究用コードです。
 
 - 標準Canny + 輪郭分離 + 共通RANSAC

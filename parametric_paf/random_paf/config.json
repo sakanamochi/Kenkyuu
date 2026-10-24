@@ -1,0 +1,15 @@
+{
+  "dataset_id": "paf_random_outer_d_v2",
+  "seed": 2026102402,
+  "image_count": 1024,
+  "top_outer_diameter": 1.0,
+  "bottom_outer_diameter_ratio": [1.0, 3.0],
+  "height_ratio": [0.5, 3.0],
+  "hole_diameter_ratio": [0.4, 0.95],
+  "wall_thickness_ratio": 0.02,
+  "segments": 192,
+  "camera": {"tilt_deg": [5, 70], "azimuth_deg": [0, 360], "lens_mm": 55, "margin": 0.08},
+  "appearance": {"brightness": [0.1, 0.75], "metallic": [0, 0.85], "roughness": [0.2, 0.65], "light_tilt_deg": [5, 85], "energy": [1.5, 5], "exposure": [-0.5, 0.5]},
+  "resolution": 480,
+  "background": "black"
+}

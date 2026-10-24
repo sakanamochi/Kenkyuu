@@ -11,35 +11,17 @@ from mathutils import Vector
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from parametric_paf.generate import build_model, mesh_object, SEGMENTS
+from parametric_paf.generate import build_model
 from parametric_paf.study import PLAN, OUTPUT, read, write, sha, shape_parameters
 from blender.generate_dataset import spherical_direction, look_at, configure_sun, project_target_points
 
 
 def build_shape(shape):
-    """テーパを学習族とし、円筒・段付き断面は構造変化の補足族に限定する。"""
-    p=shape['parameters']
-    objects,ring,_=build_model(p)
-    if shape['family']=='tapered': return objects,ring
-    body=objects[0]; material=body.data.materials[0]
-    bpy.data.objects.remove(body,do_unlink=True)
-    top=p['top_outer_diameter']/2; bottom=p['bottom_outer_diameter']/2
-    h=p['taper_height']; w=p['wall_thickness']
-    if shape['family']=='cylindrical_flange':
-        profile=[(top,0),(top,-h),(top-w,-h),(top-w,0)]
-    elif shape['family']=='stepped':
-        profile=[(top,0),(top,-h*.35),(bottom,-h*.35),(bottom,-h),
-                 (bottom-w,-h),(bottom-w,-h*.35),(top-w,-h*.35),(top-w,0)]
-    else: raise ValueError('未知の断面族')
-    vertices=[(r*math.cos(2*math.pi*i/SEGMENTS),r*math.sin(2*math.pi*i/SEGMENTS),z)
-              for r,z in profile for i in range(SEGMENTS)]
-    faces=[(j*SEGMENTS+i,((j+1)%len(profile))*SEGMENTS+i,
-            ((j+1)%len(profile))*SEGMENTS+(i+1)%SEGMENTS,j*SEGMENTS+(i+1)%SEGMENTS)
-           for j in range(len(profile)) for i in range(SEGMENTS)]
-    body=mesh_object('PAF_body',vertices,faces,material)
-    group=body.vertex_groups.new(name='target_inner_rim')
-    group.add(list(range((len(profile)-1)*SEGMENTS,len(profile)*SEGMENTS)),1,'REPLACE')
-    return [body]+objects[1:],vertices[-SEGMENTS:]
+    """定義済みのPAF本体だけを生成する。"""
+    if shape['family']!='tapered':
+        raise ValueError('未対応の形状定義です')
+    objects,ring,_=build_model(shape['parameters'])
+    return objects,ring
 
 
 def setup(shape,protocol):
@@ -102,7 +84,7 @@ def render_group(folder,shape,conditions,appearance,split,protocol):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--stage',choices=['data','qa','test'],default='data')
+    parser.add_argument('--stage',choices=['data','test'],default='data')
     args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
     protocol=read(PLAN/'protocol.json'); shapes=read(PLAN/'shapes.json'); conditions=read(PLAN/'conditions.json')
     provenance={'plan_hashes':{p.name:sha(p) for p in [PLAN/'protocol.json',PLAN/'shapes.json',PLAN/'conditions.json']},
@@ -111,15 +93,6 @@ def main():
     provpath=OUTPUT/f'render_{args.stage}_provenance.json'
     if provpath.exists() and read(provpath)!=provenance: raise ValueError('描画条件が固定記録と不一致')
     write(provpath,provenance)
-    if args.stage=='qa':
-        # 最終テスト用IDや寸法を見ず、別の開発用形状でメッシュ・描画だけを確認する。
-        rows=[]
-        for family in protocol['geometry']['test_structure_families']:
-            ratios={'bottom_diameter_ratio':1.6,'height_ratio':0.3,'wall_ratio':0.08}
-            shape={'shape_id':'qa_'+family,'family':family,'parameters':shape_parameters(ratios,'qa_'+family)}
-            rows.extend(render_group(OUTPUT/'qa',shape,conditions['validation'][:4],'basic','development',protocol))
-        write(OUTPUT/'qa/manifest.json',{'samples':rows})
-        return
     if args.stage=='test':
         rows=[]
         for s in shapes:

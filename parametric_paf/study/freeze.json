@@ -60,5 +60,6 @@
     "parametric_paf/summarize_diagnosis.py": "ff0088f372cdcb770591baed7230519c7cae8d8590bc6bdc9b609c912339c8cb",
     "parametric_paf/tune_geometry.py": "98a668675ef15c47b945abc101356b9aaeceaa59ee4b877d8f6aa2c4e7768e1b"
   },
-  "environment_sha256": "a2c37ff2b028e83ff1dbd1b107789e685b2e67580c0b6d3eb62f624450b9c4db"
+  "environment_sha256": "a2c37ff2b028e83ff1dbd1b107789e685b2e67580c0b6d3eb62f624450b9c4db",
+  "status": "reference_only"
 }

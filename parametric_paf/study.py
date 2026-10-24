@@ -76,11 +76,6 @@ def plan():
             sid=f'{split}_{i:02d}'
             shapes.append({'shape_id':sid,'split':split,'family':'tapered','ratios':ratios,
                            'parameters':shape_parameters(ratios,sid)})
-    for family in protocol['geometry']['test_structure_families']:
-        for i in range(protocol['test_structure_shapes_per_family']):
-            ratios=draw_shape(rng,protocol); sid=f'test_structure_{family}_{i:02d}'
-            shapes.append({'shape_id':sid,'split':'test_structure','family':family,'ratios':ratios,
-                           'parameters':shape_parameters(ratios,sid)})
     render=random.Random(protocol['render_seed'])
     slots=[i%16 for i in range(protocol['train_images_per_arm'])]; render.shuffle(slots)
     training=[{'condition_id':f'train_{i:04d}','shape_slot':slot,**draw_condition(render,protocol)} for i,slot in enumerate(slots)]
@@ -212,6 +207,8 @@ def verify_freeze(required=True):
         if required: raise ValueError('実験をfreezeしてから学習してください')
         return
     frozen=read(path)
+    if frozen.get('status') == 'reference_only':
+        raise ValueError('現行データ生成にはparametric_paf/random_dataset.pyを使用してください')
     for relative,digest in frozen['sha256'].items():
         if not (ROOT/relative).exists() or sha(ROOT/relative)!=digest:
             raise ValueError(f'凍結後の変更を検出: {relative}')
