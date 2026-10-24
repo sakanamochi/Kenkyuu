@@ -61,18 +61,18 @@ def region_mask(size: int, ellipse: Ellipse) -> np.ndarray:
 
 
 def sample_image(dataset_dir: Path, sample: dict) -> np.ndarray:
-    """固定seedの撮像効果を原画像に適用し、全方式へ同じ画像を渡す。"""
-    from paf_ring_detection.effects import training_effect
+    """固定劣化後のモノクロ画像を3chに複製し、全方式で共有する。"""
+    from paf_ring_detection.effects import apply_effect
 
     image = read_image(dataset_dir / sample["image"])
     if image is None:
         raise ValueError(f"画像を読めません: {sample['image']}")
     effect = sample.get("augmentation")
     if effect:
-        label = read_json(dataset_dir / sample["label"])
-        image = training_effect(image, effect["name"], effect["severity"],
-                                label_ellipse(label), np.random.default_rng(effect["seed"]))
-    return image
+        image = apply_effect(image, effect["name"], effect["severity"],
+                             np.random.default_rng(effect["seed"]))
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    return cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
 
 
 def load_samples(dataset_dir: Path, split: str) -> list[dict]:

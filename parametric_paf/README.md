@@ -6,4 +6,4 @@
 
 [生成済み1,024画像の一覧](output/paf_random_outer_d_v2/dataset_preview.png) と [manifest](output/paf_random_outer_d_v2/manifest.json) を確認できる。
 
-学習・比較の共通入口は[ルートREADME](../README.md)を参照する。通常条件での穴領域CNNの根拠は[保存済み報告](output/paf_convergence_v1/report/REPORT.md)。画像・重み・結果はローカルに保持する。
+モノクロ画像による学習・比較の共通入口は[ルートREADME](../README.md)を参照する。

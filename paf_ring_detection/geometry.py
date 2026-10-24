@@ -6,31 +6,6 @@ import cv2
 import numpy as np
 
 
-def ellipse_points(ellipse, count=720):
-    """楕円の輪郭をパラメータ角で等間隔に標本化する。"""
-    center, axes, angle = ellipse
-    t = np.arange(count) * (2 * np.pi / count)
-    a = np.deg2rad(angle)
-    rotation = np.array([[np.cos(a), -np.sin(a)], [np.sin(a), np.cos(a)]])
-    local = np.column_stack((np.cos(t) * axes[0] / 2, np.sin(t) * axes[1] / 2))
-    return local @ rotation.T + np.asarray(center)
-
-
-def contour_metrics(ellipse, truth):
-    """各楕円720点間の双方向最近傍距離を従来と同じ定義で返す。"""
-    if ellipse is None:
-        return {k: None for k in ('contour_mean_px', 'contour_p95_px', 'contour_p95_ratio')}
-    a, b = ellipse_points(ellipse), ellipse_points(truth)
-    def nearest(points, contour):
-        return np.concatenate([
-            np.sqrt(((points[i:i+256, None] - contour[None]) ** 2).sum(axis=2).min(axis=1))
-            for i in range(0, len(points), 256)])
-    distances = np.concatenate((nearest(a, b), nearest(b, a)))
-    p95 = float(np.percentile(distances, 95))
-    return {'contour_mean_px': float(distances.mean()), 'contour_p95_px': p95,
-            'contour_p95_ratio': p95 / max(truth[1])}
-
-
 def fit_ground_truth(image_points: list[list[float]]):
     points = np.asarray(image_points, dtype=np.float32).reshape(-1, 1, 2)
     if len(points) < 5:

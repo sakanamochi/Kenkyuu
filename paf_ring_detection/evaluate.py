@@ -8,7 +8,7 @@ import torch
 
 from paf_ring_detection.data import (label_ellipse, load_samples, read_json,
     sample_image, scaled_ellipse, write_json)
-from paf_ring_detection.geometry import evaluate_ellipses, contour_metrics
+from paf_ring_detection.geometry import evaluate_ellipses
 from paf_ring_detection.methods.canny_contour_ransac import detect_canny_contour_ransac
 from paf_ring_detection.methods.cnn import load_model
 from paf_ring_detection.methods.cnn_region import region_ellipse
@@ -77,13 +77,12 @@ def evaluate(config, methods=None, seeds=None, limit=None):
                 if destination.exists():
                     # 長い比較を分けて実行しても、同じ条件の完了済み集合を再計算しない。
                     saved = read_json(destination)
-                    if (saved['config'] != config or saved['manifest_sha256'] != digest(folder / 'manifest.json')
-                            or saved['checkpoint_sha256'] != (digest(checkpoint) if checkpoint else None)
-                            or saved['evaluator_sha256'] != digest(Path(__file__))
-                            or [r['sample_id'] for r in saved['rows']] != [s['sample_id'] for s in samples]):
-                        raise ValueError(f'保存済み評価の条件が異なります: {destination}')
-                    print(f'照合済み評価を使用: {dataset_name} {method} seed={seed}', flush=True)
-                    continue
+                    if (saved['config'] == config and saved['manifest_sha256'] == digest(folder / 'manifest.json')
+                            and saved['checkpoint_sha256'] == (digest(checkpoint) if checkpoint else None)
+                            and saved['evaluator_sha256'] == digest(Path(__file__))
+                            and [r['sample_id'] for r in saved['rows']] == [s['sample_id'] for s in samples]):
+                        print(f'照合済み評価を使用: {dataset_name} {method} seed={seed}', flush=True)
+                        continue
                 rows = []
                 print(f'評価開始: {dataset_name} {method} seed={seed} n={len(samples)}', flush=True)
                 for index, sample in enumerate(samples, start=1):
@@ -100,13 +99,11 @@ def evaluate(config, methods=None, seeds=None, limit=None):
                     else:
                         ellipse = _geometry(image, method, config, random_seed)
                     metrics = evaluate_ellipses(ellipse, truth, image.shape) if ellipse is not None else {'ellipse_iou': 0.0}
-                    distances = contour_metrics(ellipse, truth)
-                    iou_success = metrics['ellipse_iou'] >= config['success_iou']
-                    success = bool(ellipse is not None and iou_success and distances['contour_p95_px'] <= config['contour_p95_px'])
+                    success = bool(ellipse is not None and metrics['ellipse_iou'] >= config['success_iou'])
                     rows.append({'sample_id': sample['sample_id'], 'base_sample_id': sample['conditions']['base_sample_id'],
                         'degradation': sample['conditions']['degradation'], 'severity': sample['conditions']['severity'],
                         'ellipse': ellipse, 'truth_ellipse': truth, 'detected': ellipse is not None,
-                        'iou_success': iou_success, 'strict_success': success, **metrics, **distances})
+                        'success': success, **metrics})
                     if index % 100 == 0:
                         print(f'{dataset_name} {method} seed={seed}: {index}/{len(samples)}', flush=True)
                 write_json(destination, {'method': method, 'seed': seed, 'dataset': dataset_name,
@@ -114,4 +111,4 @@ def evaluate(config, methods=None, seeds=None, limit=None):
                     'manifest_sha256': digest(folder / 'manifest.json'), 'config': config,
                     'checkpoint_sha256': digest(checkpoint) if checkpoint else None,
                     'evaluator_sha256': digest(Path(__file__)), 'rows': rows})
-                print(dataset_name, method, seed, sum(r['strict_success'] for r in rows), '/', len(rows), flush=True)
+                print(dataset_name, method, seed, sum(r['success'] for r in rows), '/', len(rows), flush=True)

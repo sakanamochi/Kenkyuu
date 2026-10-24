@@ -55,11 +55,12 @@ def main():
         prepare_training_data(config)
     elif args.stage == 'train':
         verify_prepared(config)
-        # 同じ出力先に学習を重ねず、モデル選択と学習履歴の対応を守る。
+        # 指定した学習元・seedの重みと履歴を同じ保存先で更新する。
         for source in sources:
             for seed in seeds:
-                if checkpoint_path(config, source, seed).parent.exists():
-                    raise FileExistsError('学習出力が存在します。設定のoutputを別の保存先にしてください')
+                checkpoint = checkpoint_path(config, source, seed)
+                checkpoint.unlink(missing_ok=True)
+                (checkpoint.parent / 'training_history.json').unlink(missing_ok=True)
         for source in sources:
             for seed in seeds:
                 current = copy.deepcopy(config)

@@ -37,6 +37,8 @@ def _variants(split, settings, rng):
 
 def prepare_training_data(config):
     """原画像を複製せず、学習・validation枚数を二つの学習元で揃える。"""
+    if config['image_mode'] != 'grayscale':
+        raise ValueError('入力はモノクロで指定してください')
     selected, provenance = {}, {}
     for name, source in config['sources'].items():
         folder = Path(source['path'])
@@ -85,18 +87,19 @@ def prepare_training_data(config):
                 rng = np.random.default_rng(config['augmentation_seed'] + index)
                 for variant, (effect, severity) in enumerate(_variants(split, config['training_data'], rng)):
                     effect_seed = config['augmentation_seed'] + index * 100 + variant
+                    # 矩形は強度が変わっても同じ側から伸ばす。
+                    if effect == 'black_rectangle':
+                        effect_seed = config['augmentation_seed'] + index * 100 + 1
                     conditions = {**sample['conditions'], 'degradation': effect, 'severity': severity,
                                   'base_sample_id': sample['sample_id']}
                     records.append({**sample, 'sample_id': f'{sample["sample_id"]}__{variant:02d}',
                         'split': split, 'image': Path(os.path.relpath(source / sample['image'], output)).as_posix(),
                         'label': Path(os.path.relpath(source / sample['label'], output)).as_posix(),
                         'conditions': conditions, 'augmentation': {'name': effect, 'severity': severity, 'seed': effect_seed}})
-        value = {'source': name, 'source_manifest_sha256': provenance[name],
+        value = {'source': name, 'image_mode': config['image_mode'], 'source_manifest_sha256': provenance[name],
                  'split_seed': config['sources'][name]['split_seed'], 'base_counts': base_counts,
                  'counts': dict(Counter(s['split'] for s in records)), 'samples': records}
         path = output / 'manifest.json'
-        if path.exists() and read_json(path) != value:
-            raise ValueError(f'保存済み分割・入力と異なります。別のoutputを指定してください: {path}')
         write_json(path, value)
         manifests[name] = digest(path)
         print(name, '原画像', base_counts, '劣化込み', value['counts'], flush=True)
@@ -104,6 +107,18 @@ def prepare_training_data(config):
         'status': 'prepared', 'matched_base_counts': counts, 'source_manifests': provenance,
         'dataset_manifests': manifests,
         'config_sha256': hashlib.sha256(json.dumps(config, sort_keys=True).encode('utf-8')).hexdigest()})
+    # 学習・評価・集計が同じ設定と実装を使うことを記録する。
+    import platform
+    import cv2
+    import torch
+    paths = [Path('run.py'), Path('config/experiment.json'), *Path(__file__).parent.rglob('*.py')]
+    write_json(Path(config['output']) / 'provenance.json', {
+        'experiment_id': config['experiment_id'], 'image_mode': config['image_mode'],
+        'python': platform.python_version(), 'torch': torch.__version__,
+        'numpy': np.__version__, 'opencv': cv2.__version__, 'cuda': torch.version.cuda,
+        'gpu': torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
+        'sha256': {p.resolve().relative_to(Path.cwd()).as_posix(): digest(p) for p in paths},
+        'training_initialization': 'random', 'input_size': config['input_size']})
 
 
 def verify_prepared(config):
@@ -112,7 +127,7 @@ def verify_prepared(config):
     readiness = read_json(root / 'readiness.json')
     config_hash = hashlib.sha256(json.dumps(config, sort_keys=True).encode('utf-8')).hexdigest()
     if config_hash != readiness['config_sha256']:
-        raise ValueError('準備時と設定が異なります。別のoutputでprepareしてください')
+        raise ValueError('準備時と設定が異なります。prepareで同じ保存先を更新してください')
     for name in config['sources']:
         folder = root / 'datasets' / name
         path = folder / 'manifest.json'

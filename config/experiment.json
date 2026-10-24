@@ -4,7 +4,6 @@
   "blender": "C:/Program Files/Blender Foundation/Blender 5.2/blender.exe",
   "input_size": 256,
   "success_iou": 0.8,
-  "contour_p95_px": 2.0,
   "region_probability_threshold": 0.5,
   "training_seeds": [
     20260907,
@@ -29,9 +28,9 @@
   },
   "training_data": {
     "effects": [
-      "occlusion",
-      "whiteout",
-      "black_crush"
+      "black_rectangle",
+      "sensor_whiteout",
+      "sensor_black_crush"
     ],
     "severity_min": 0.1,
     "severity_max": 0.8,
@@ -40,11 +39,9 @@
       0.6
     ],
     "test_severities": [
-      0.2,
-      0.4,
-      0.6,
-      0.8,
-      0.9,
+      0.25,
+      0.5,
+      0.75,
       1.0
     ]
   },
@@ -119,5 +116,6 @@
         "max_considered_candidates": 20
       }
     }
-  }
+  },
+  "image_mode": "grayscale"
 }

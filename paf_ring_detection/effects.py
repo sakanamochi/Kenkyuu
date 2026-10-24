@@ -1,62 +1,46 @@
-"""通常画像へ遮蔽・白飛び・黒つぶれを加える。"""
-
-from __future__ import annotations
-
-import math
+"""矩形遮蔽とセンサの露光・飽和・黒レベルを近似する撮像効果。"""
 
 import cv2
 import numpy as np
 
-from paf_ring_detection.data import Ellipse
+
+def _encode(linear: np.ndarray) -> np.ndarray:
+    """線形輝度をクリップし、ガンマ符号化した8bit画像へ戻す。"""
+    return np.rint(np.clip(linear, 0.0, 1.0) ** (1.0 / 2.2) * 255.0).astype(np.uint8)
 
 
-def _sector_mask(shape, ellipse: Ellipse, severity: float, start: float) -> np.ndarray:
-    """楕円周上の連続区間から画像端までを覆うマスクを作る。"""
-    height, width = shape[:2]
-    if severity >= 1.0:
-        return np.ones((height, width), dtype=bool)
-
-    (cx, cy), (axis_1, axis_2), angle = ellipse
-    rows, columns = np.indices((height, width), dtype=np.float32)
-    x = columns - cx
-    y = rows - cy
-    rotation = math.radians(angle)
-    local_x = x * math.cos(rotation) + y * math.sin(rotation)
-    local_y = -x * math.sin(rotation) + y * math.cos(rotation)
-    ellipse_angle = np.degrees(
-        np.arctan2(local_y / (axis_2 / 2), local_x / (axis_1 / 2))
-    )
-    return np.mod(ellipse_angle - start, 360.0) <= severity * 360.0
-
-
-def training_effect(
-    image: np.ndarray,
-    name: str,
-    severity: float,
-    ellipse: Ellipse,
-    rng: np.random.Generator,
-) -> np.ndarray:
-    """学習・検証・評価に共通の撮像効果を適用する。"""
-    if name == "clean" or severity == 0:
-        return image.copy()
-
-    if name not in {'occlusion', 'whiteout', 'black_crush'}:
+def apply_effect(image: np.ndarray, name: str, severity: float, rng: np.random.Generator) -> np.ndarray:
+    """全分割に共通の劣化を適用する。正解形状は参照しない。"""
+    severity = float(severity)
+    if not 0 <= severity <= 1:
+        raise ValueError('劣化強度は0〜1で指定してください')
+    if name not in {'clean', 'black_rectangle', 'sensor_whiteout', 'sensor_black_crush'}:
         raise ValueError(f'未対応の撮像効果です: {name}')
-
-    normalized = image.astype(np.float32) / 255.0
-    if name == "black_crush":
-        threshold = 0.58 * severity
-        result = np.clip((normalized - threshold) / (1.0 - threshold), 0.0, 1.0)
-        return np.rint(result ** (1.0 + 1.8 * severity) * 255).astype(np.uint8)
-
-    start = float(rng.uniform(0, 360))
-    mask = _sector_mask(image.shape, ellipse, severity, start)
-    if name == "occlusion":
+    if name == 'clean' or severity == 0:
+        return image.copy()
+    if name == 'black_rectangle':
+        # 強度は画像幅に占める黒矩形の割合。左右の一方から覆う。
+        width = image.shape[1]
+        patch_width = max(1, round(width * severity))
+        left = 0 if int(rng.integers(0, 2)) == 0 else width - patch_width
         result = image.copy()
-        result[mask] = 0
+        result[:, left:left + patch_width] = 0
         return result
 
-    bloom = cv2.GaussianBlur(mask.astype(np.float32), (0, 0), 2 + 14 * severity)
-    exposed = np.clip(normalized * (1 + 1.8 * severity), 0, 1)
-    alpha = np.clip(bloom * (0.85 + 0.15 * severity), 0, 1)[..., None]
-    return np.rint((exposed * (1 - alpha) + alpha) * 255).astype(np.uint8)
+    linear = (image.astype(np.float32) / 255.0) ** 2.2
+    if name == 'sensor_whiteout':
+        # 露光を増やし、飽和した明部の拡散とショットノイズを近似する。
+        linear *= 2.0 ** (5.0 * severity)
+        saturated = np.clip((linear.mean(axis=2) - 0.82) / 0.18, 0.0, 1.0)
+        bloom = cv2.GaussianBlur(saturated, (0, 0), 1.0 + 18.0 * severity)[..., None]
+        noise = rng.normal(0.0, 0.002 + 0.006 * severity, linear.shape).astype(np.float32)
+        linear += noise * np.sqrt(np.maximum(linear, 0.0))
+        return _encode(linear + bloom * (0.15 + 0.85 * severity))
+
+    # 低露光・読み出しノイズ・黒レベル・6〜8bitの量子化を近似する。
+    linear *= 2.0 ** (-2.5 * severity ** 1.25)
+    linear += rng.normal(0.0, 0.0015 + 0.003 * severity, linear.shape).astype(np.float32)
+    black_level = 0.004 + 0.021 * severity ** 1.5
+    linear = np.clip((linear - black_level) / (1.0 - black_level), 0.0, 1.0)
+    levels = 2 ** max(6, round(8 - 2 * severity)) - 1
+    return _encode(np.rint(linear * levels) / levels)

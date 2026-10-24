@@ -9,7 +9,7 @@ from paf_ring_detection.evaluate import METHODS, result_path
 from paf_ring_detection.prepare import digest
 
 METHOD_LABELS = {'cnn_1194m': '穴領域CNN（1194M学習）',
-    'cnn_diversified': '穴領域CNN（汎化形状学習）', 'canny': 'Canny＋輪郭別RANSAC',
+    'cnn_diversified': '穴領域CNN（多様形状学習）', 'canny': 'Canny＋輪郭別RANSAC',
     'zhang2019': 'Zhang 2019型（再現実装）'}
 
 
@@ -23,11 +23,10 @@ def aggregate_scores(scores):
         count = rows[0]['sample_count']
         if any(row['sample_count'] != count for row in rows):
             raise ValueError('seed間で評価枚数が異なります')
-        rates = [row['strict_success_rate'] for row in rows]
+        rates = [row['success_rate'] for row in rows]
         result.append({'dataset': dataset, 'method': method, 'degradation': effect, 'severity': severity,
             'seed_count': len(rows) if rows[0]['seed'] is not None else 0, 'sample_count_per_model': count,
-            'strict_success_rate': sum(rates) / len(rows), 'strict_seed_min': min(rates), 'strict_seed_max': max(rates),
-            'iou_success_rate': sum(row['iou_success_rate'] for row in rows) / len(rows),
+            'success_rate': sum(rates) / len(rows), 'seed_min': min(rates), 'seed_max': max(rates),
             'missed_rate': sum(row['missed_count'] for row in rows) / (len(rows) * count)})
     return result
 
@@ -36,32 +35,32 @@ def write_comparison(root, config, aggregate, complete, limited):
     """二つの比較と条件別成績を、再計算可能な原記録に結び付ける。"""
     lines = ['# 穴領域CNNと幾何2方式の比較', '',
         f'全設定の評価完了：{complete}。少数画像による動作確認：{limited}。', '',
-        f"主成功はIoU≥{config['success_iou']}かつ双方向輪郭距離p95≤{config['contour_p95_px']}px、入力{config['input_size']}。未検出も分母に含む。",
+        f"成功はIoU≥{config['success_iou']}、全方式モノクロ{config['input_size']}入力。未検出も分母に含む。",
         f"CNNは同じ条件の{len(config['training_seeds'])}seed平均を用い、幾何は各画像一回の評価。seed別の値と劣化強度別の値はscores.csvを参照する。", '',
         f"学習には通常・遮蔽・白飛び・黒つぶれを含め、両学習元の枚数を揃える。validation loss最小の重みを選択し、各seedを{config['cnn']['epochs']}epoch学習する。", '']
     for number, (dataset, title) in enumerate((('1194m', '1194M'), ('diversified', '多様形状')), start=1):
         rows = [row for row in aggregate if row['dataset'] == dataset]
         lines += [f'## 比較{number}：{title}データセット', '',
-            '|方式|評価枚数／モデル|主成功率|seed別主成功率の範囲|IoU単独成功率|未検出率|',
-            '|---|---:|---:|---:|---:|---:|']
+            '|方式|評価枚数／モデル|成功率|seed別成功率の範囲|未検出率|',
+            '|---|---:|---:|---:|---:|']
         for method in METHOD_LABELS.values():
             overall = next((r for r in rows if r['method'] == method and r['degradation'] == 'all'), None)
             if overall:
                 r = overall
-                seed_range = f"{r['strict_seed_min']:.2%}〜{r['strict_seed_max']:.2%}" if r['seed_count'] else '—'
-                lines.append(f"|{method}|{r['sample_count_per_model']}|{r['strict_success_rate']:.2%}|{seed_range}|{r['iou_success_rate']:.2%}|{r['missed_rate']:.2%}|")
+                seed_range = f"{r['seed_min']:.2%}〜{r['seed_max']:.2%}" if r['seed_count'] else '—'
+                lines.append(f"|{method}|{r['sample_count_per_model']}|{r['success_rate']:.2%}|{seed_range}|{r['missed_rate']:.2%}|")
         lines += ['', '|方式|通常|遮蔽|白飛び|黒つぶれ|', '|---|---:|---:|---:|---:|']
         for method in METHOD_LABELS.values():
             values = []
-            for effect in ('clean', 'occlusion', 'whiteout', 'black_crush'):
+            for effect in ('clean', 'black_rectangle', 'sensor_whiteout', 'sensor_black_crush'):
                 r = next((r for r in rows if r['method'] == method and r['degradation'] == effect and r['severity'] is None), None)
-                values.append(f"{r['strict_success_rate']:.2%}" if r else '未評価')
+                values.append(f"{r['success_rate']:.2%}" if r else '未評価')
             lines.append('|' + '|'.join([method, *values]) + '|')
         lines += ['']
     lines += ['## 解釈の範囲', '',
         '1194Mのtestは1194M学習CNNにとって同一機体の撮影条件分割。多様形状のtestは学習寸法と非重複だが、同じ合成形状族・分布内の評価である。',
         '両原データの撮影・材質・投影サイズ分布は異なるため、この比較だけで形状多様化の単独因果効果や実画像への汎化を断定しない。',
-        '既存画像は方式検討で参照済みのため、今回の比較は参照評価。強度1.0の遮蔽・白飛びには画像が一様になる条件も含み、観測から形状を特定できない場合がある。通常画像と劣化強度別の値を併せて読む。', '',
+        '既存画像は方式検討で参照済みのため、この比較は参照評価。矩形遮蔽は画像端からの幅、白飛びは露光増加・飽和・ブルーム、黒つぶれは低露光・ノイズ・黒レベル・量子化の近似。通常画像と強度別の値を併せて読む。', '',
         '正本は各評価集合の推定JSON、summary.json、scores.csv。幾何の閾値は固定し、testで調整していない。',
         'Zhang 2019型（再現実装）：Zhang, Pan, Ma, Sensors 2019, DOI 10.3390/s19235243。著者コードの移植・論文性能の完全再現ではない。', '']
     (root / 'REPORT.md').write_text('\n'.join(lines), encoding='utf-8')
@@ -74,7 +73,7 @@ def audit_comparison(config):
     import torch
     from paf_ring_detection.data import label_ellipse, scaled_ellipse
     from paf_ring_detection.evaluate import checkpoint_path
-    from paf_ring_detection.geometry import contour_metrics, evaluate_ellipses
+    from paf_ring_detection.geometry import evaluate_ellipses
     from paf_ring_detection.prepare import verify_prepared
 
     verify_prepared(config)
@@ -143,16 +142,14 @@ def audit_comparison(config):
                     if ellipse is not None:
                         ellipse = (tuple(ellipse[0]), tuple(ellipse[1]), ellipse[2])
                     metrics = evaluate_ellipses(ellipse, truth, (config['input_size'], config['input_size'])) if ellipse else {'ellipse_iou': 0.0}
-                    metrics.update(contour_metrics(ellipse, truth))
                     for key, value in metrics.items():
                         if value is None:
                             if row[key] is not None:
                                 raise ValueError(f'未検出の指標が不一致です: {path}')
                         elif not math.isclose(row[key], value, rel_tol=1e-10, abs_tol=1e-10):
                             raise ValueError(f'指標の再計算が不一致です: {path} {key}')
-                    iou_success = metrics['ellipse_iou'] >= config['success_iou']
-                    strict = bool(ellipse and iou_success and metrics['contour_p95_px'] <= config['contour_p95_px'])
-                    if row['detected'] != bool(ellipse) or row['iou_success'] != iou_success or row['strict_success'] != strict:
+                    success = bool(ellipse and metrics['ellipse_iou'] >= config['success_iou'])
+                    if row['detected'] != bool(ellipse) or row['success'] != success:
                         raise ValueError(f'成功・未検出の判定が不一致です: {path}')
                     recomputed += 1
                 hashes[path.relative_to(root).as_posix()] = digest(path)
@@ -187,11 +184,10 @@ def build_report(config, limit=None):
                     count = len(rows)
                     summary.append({'dataset': dataset, 'method': METHOD_LABELS[method], 'seed': seed,
                         'degradation': effect, 'severity': severity, 'sample_count': count,
-                        'strict_success_count': sum(r['strict_success'] for r in rows),
-                        'strict_success_rate': sum(r['strict_success'] for r in rows) / count,
-                        'iou_success_rate': sum(r['iou_success'] for r in rows) / count,
+                        'success_count': sum(r['success'] for r in rows),
+                        'success_rate': sum(r['success'] for r in rows) / count,
                         'missed_count': sum(not r['detected'] for r in rows),
-                        'wrong_output_count': sum(r['detected'] and not r['strict_success'] for r in rows)})
+                        'wrong_output_count': sum(r['detected'] and not r['success'] for r in rows)})
     if not summary:
         raise ValueError('評価結果がありません。evaluateを先に実行してください')
     if not missing and limit is None:
