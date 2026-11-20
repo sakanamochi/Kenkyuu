@@ -1,0 +1,4 @@
+{
+  "checkpoint": "../../output/paf_generalization_v2/runs/boundary_projection_relative/20260907/best.pt",
+  "device": "auto"
+}

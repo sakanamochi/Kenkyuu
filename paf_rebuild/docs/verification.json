@@ -1,0 +1,112 @@
+{
+  "date": "2026-11-20",
+  "reference_commit": "97ae440",
+  "stage": "boundary_probability_only",
+  "torch": "2.13.0+cu130",
+  "numpy": "2.2.6",
+  "opencv": "4.13.0",
+  "device": "NVIDIA GeForce RTX 4070 Ti",
+  "same_initialization_and_state_keys": true,
+  "trained_models": 6,
+  "comparisons": [
+    {
+      "training_source": "1194m",
+      "seed": 20260907,
+      "test_source": "1194m",
+      "image": "output\\datasets\\base_cg\\images\\camera_t075_a270_d034.0_o00__light_t045_a120_e03.0.png",
+      "checkpoint_sha256": "2a0744c7eab0ec72414ae413e6daf195c7d6f1d60e093bf896c1eaae5a6bf068",
+      "maximum_absolute_probability_error": 0.0
+    },
+    {
+      "training_source": "1194m",
+      "seed": 20260907,
+      "test_source": "diversified",
+      "image": "parametric_paf\\output\\paf_random_outer_d_v2\\images\\paf_0431.png",
+      "checkpoint_sha256": "2a0744c7eab0ec72414ae413e6daf195c7d6f1d60e093bf896c1eaae5a6bf068",
+      "maximum_absolute_probability_error": 0.0
+    },
+    {
+      "training_source": "1194m",
+      "seed": 20260908,
+      "test_source": "1194m",
+      "image": "output\\datasets\\base_cg\\images\\camera_t075_a270_d034.0_o00__light_t045_a120_e03.0.png",
+      "checkpoint_sha256": "c749be7682219e288eca04b640a6c9e23a82c570a62210d626c0a968b6adee35",
+      "maximum_absolute_probability_error": 0.0
+    },
+    {
+      "training_source": "1194m",
+      "seed": 20260908,
+      "test_source": "diversified",
+      "image": "parametric_paf\\output\\paf_random_outer_d_v2\\images\\paf_0431.png",
+      "checkpoint_sha256": "c749be7682219e288eca04b640a6c9e23a82c570a62210d626c0a968b6adee35",
+      "maximum_absolute_probability_error": 0.0
+    },
+    {
+      "training_source": "1194m",
+      "seed": 20260909,
+      "test_source": "1194m",
+      "image": "output\\datasets\\base_cg\\images\\camera_t075_a270_d034.0_o00__light_t045_a120_e03.0.png",
+      "checkpoint_sha256": "44c6e887f2bfa125fe0609600c1ac3540474f7afc569ba09fa319d63a7296dff",
+      "maximum_absolute_probability_error": 0.0
+    },
+    {
+      "training_source": "1194m",
+      "seed": 20260909,
+      "test_source": "diversified",
+      "image": "parametric_paf\\output\\paf_random_outer_d_v2\\images\\paf_0431.png",
+      "checkpoint_sha256": "44c6e887f2bfa125fe0609600c1ac3540474f7afc569ba09fa319d63a7296dff",
+      "maximum_absolute_probability_error": 0.0
+    },
+    {
+      "training_source": "diversified",
+      "seed": 20260907,
+      "test_source": "1194m",
+      "image": "output\\datasets\\base_cg\\images\\camera_t075_a270_d034.0_o00__light_t045_a120_e03.0.png",
+      "checkpoint_sha256": "bd4efa5f5b289636aa079a07b5ef94c8094e4507e7e87891147bfca05a12538c",
+      "maximum_absolute_probability_error": 0.0
+    },
+    {
+      "training_source": "diversified",
+      "seed": 20260907,
+      "test_source": "diversified",
+      "image": "parametric_paf\\output\\paf_random_outer_d_v2\\images\\paf_0431.png",
+      "checkpoint_sha256": "bd4efa5f5b289636aa079a07b5ef94c8094e4507e7e87891147bfca05a12538c",
+      "maximum_absolute_probability_error": 0.0
+    },
+    {
+      "training_source": "diversified",
+      "seed": 20260908,
+      "test_source": "1194m",
+      "image": "output\\datasets\\base_cg\\images\\camera_t075_a270_d034.0_o00__light_t045_a120_e03.0.png",
+      "checkpoint_sha256": "13051a98cd347ad7d61071d2f3fa6aaa85431674423972fbcbd070e09fa4f656",
+      "maximum_absolute_probability_error": 0.0
+    },
+    {
+      "training_source": "diversified",
+      "seed": 20260908,
+      "test_source": "diversified",
+      "image": "parametric_paf\\output\\paf_random_outer_d_v2\\images\\paf_0431.png",
+      "checkpoint_sha256": "13051a98cd347ad7d61071d2f3fa6aaa85431674423972fbcbd070e09fa4f656",
+      "maximum_absolute_probability_error": 0.0
+    },
+    {
+      "training_source": "diversified",
+      "seed": 20260909,
+      "test_source": "1194m",
+      "image": "output\\datasets\\base_cg\\images\\camera_t075_a270_d034.0_o00__light_t045_a120_e03.0.png",
+      "checkpoint_sha256": "e43ee6e3708f46dd36ceab157954b2eb0437af91ca2ef2376f2443b49b07864c",
+      "maximum_absolute_probability_error": 0.0
+    },
+    {
+      "training_source": "diversified",
+      "seed": 20260909,
+      "test_source": "diversified",
+      "image": "parametric_paf\\output\\paf_random_outer_d_v2\\images\\paf_0431.png",
+      "checkpoint_sha256": "e43ee6e3708f46dd36ceab157954b2eb0437af91ca2ef2376f2443b49b07864c",
+      "maximum_absolute_probability_error": 0.0
+    }
+  ],
+  "uniform_input_cases": 18,
+  "runtime_imports_old_project": false,
+  "limits": "各test集合の固定先頭通常画像による確認。全test、劣化条件、楕円、再学習は未検証。"
+}
