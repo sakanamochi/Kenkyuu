@@ -1,9 +1,0 @@
-{
-  "seed": 20260907,
-  "calibration_maximum_strengths": [1.0, 1.5, 2.0],
-  "test_severities": [0.25, 0.5, 0.75, 1.0],
-  "minimum_drop_from_original_pp": 15.0,
-  "acceptable_pooled_success_percent": [10.0, 75.0],
-  "selection_rule": "両validation集合・4方式を等重みで集計し、元の強度1から15pp以上低下し、平均成功率10～75%を満たす最小の最大内部強度。方式の順位・方式間差は選択基準にしない。",
-  "scope": "既存重みを固定した白飛び耐性の追加評価。再学習なし。既存testは参照済み。"
-}

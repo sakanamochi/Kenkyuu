@@ -8,7 +8,9 @@
 
 実行用データは`data/`、両学習元×3seedのモデルは`models/`、固定推定は`references/`。設定とmanifestの参照はこのフォルダ内の相対パスで完結する。`data/inventory.json`が全ファイルの内容hashを保持する。検証記録内の過去のパス・実装hashは出典情報であり、実行時の依存先ではない。
 
-必要資産6,396ファイルのhashと参照先の自己完結を確認済み。`outputs/standalone_training_check/verification.json`の全5,446例は既存教師の配列hashと一致し、既定設定の単体推論も保存された確率・楕円・PNGと一致する。旧構成のコード・出力は作業ツリーに残っている。ルートの`Remove-LegacyFiles.ps1`は必要資産と入力照合の検査後、明示した旧構成だけを削除する手動実行用スクリプト。`-WhatIf`で対象を確認できる。Git履歴・仮想環境・研究関連書類・保護された設定フォルダは削除対象に含めない。
+必要資産6,396ファイルのhashと参照先の自己完結を確認済み。`outputs/standalone_training_check/verification.json`の全5,446例は既存教師の配列hashと一致し、既定設定の単体推論も保存された確率・楕円・PNGと一致する。ルートの旧`output/`・`research/`・`paf_ring_detection/`・`parametric_paf/`・旧設定・旧入口は存在しないことを確認済み。旧コードの参照先はGitの`codex/hole-region-comparison`ブランチ。研究関連書類・仮想環境・Git履歴・保護された設定フォルダは作業ツリーに保持する。
+
+結果の読み方は[outputs/README.md](../outputs/README.md)。現在の結果は保存済みモデルの推論・入力の検証であり、新構成による再学習結果ではない。`diversified`は多様形状学習を意味し、学習済み3seedのモデルは利用可能。新しい重みを学習するループと学習入口は未実装。
 
 画像単体の推論はTiny U-Net16の境界確率→中心線→確率重み付きRANSAC。入力・出力・幾何設定・実行コマンドは[README](../README.md)、学習元・分割・拡張・教師・損失は[学習仕様](TRAINING_DATA.md)を正とする。
 
@@ -39,7 +41,5 @@
 shuffle順・ネットワーク勾配・パラメータ更新・再学習の一致、CPU全test、異なる実行環境での完全一致、独立venv、実画像一般への性能は未検証。全testの境界確率配列は照合していない。評価に使うCG testは研究で参照済みで、新規盲検ではない。
 
 ## 次の具体的作業
-
-旧構成の削除スクリプトを実行した後、残存ファイルと新構成の動作を確認する。承認要求が無効になる実行環境では、自動削除を完了したと扱わない。
 
 `src/training/`に共通学習ループ、`scripts/train.py`に入口を実装する。条件はランダム初期化、AdamW、一定学習率0.001、weight decay0.0001、batch16、60epoch、元学習元validation loss最小のcheckpoint選択。まずseed20260907の短い学習でshuffle順・損失・ネットワーク勾配・保存重みの再読込を確認する。
