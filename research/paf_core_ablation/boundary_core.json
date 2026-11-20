@@ -1,0 +1,63 @@
+{
+  "experiment_id": "paf_core_boundary_factorial_v2",
+  "source": "diversified",
+  "seeds": [
+    20260907,
+    20260908,
+    20260909
+  ],
+  "epochs": 60,
+  "batch_size": 16,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "positive_weight": 12.0,
+  "surface_intervention_probability": 0.5,
+  "variants": {
+    "core_base": {
+      "spatial": false,
+      "geometry": false,
+      "new_view": "projection_coverage",
+      "retain_projection": false,
+      "retain_surface": false
+    },
+    "core_surface": {
+      "spatial": false,
+      "geometry": false,
+      "new_view": "projection_coverage",
+      "retain_projection": false,
+      "retain_surface": true
+    },
+    "core_projection": {
+      "spatial": false,
+      "geometry": false,
+      "new_view": "projection_coverage",
+      "retain_projection": true,
+      "retain_surface": false
+    }
+  },
+  "ransac": {
+    "iterations": 450,
+    "distance_threshold_px": 2.0,
+    "min_inliers": 12,
+    "min_axis_px": 6.0,
+    "min_axis_ratio": 0.1,
+    "max_axis_diagonal_ratio": 2.0,
+    "angular_bins": 72,
+    "refine_iterations": 3,
+    "perimeter_power": 0.0,
+    "random_seed": 20260716
+  },
+  "selection": "minimum_original_source_validation_loss",
+  "success_iou": 0.8,
+  "status": "exploratory_existing_test_already_inspected",
+  "view_probabilities": {
+    "original_plain": 0.25,
+    "original_surface": 0.25,
+    "new_plain": 0.25,
+    "new_surface": 0.25
+  },
+  "hypothesis": "最終候補と同じ可視境界CNN・中心線RANSACを固定し、投影・表面外観の学習が未知1194Mへの適用に与える大きな寄与を測る。",
+  "reference_both": "output/paf_generalization_v2/runs/boundary_projection_mix",
+  "reference_with_relative_occlusion": "output/paf_generalization_v2/runs/boundary_projection_relative",
+  "comparison_design": "4ビュー抽選を維持し、削除する要因だけ対応する元ビューへ写す。両要因ありは既存projection_mix全3seedと同じ学習・入力・推定器を参照する。"
+}

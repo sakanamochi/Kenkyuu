@@ -1,0 +1,80 @@
+{
+  "experiment_id": "paf_1194m_no_surface_v1",
+  "seeds": [
+    20260907,
+    20260908,
+    20260909
+  ],
+  "epochs": 60,
+  "batch_size": 16,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "positive_weight": 12.0,
+  "variants": {
+    "1194m": {
+      "spatial": false,
+      "geometry": false,
+      "new_view": "projection_coverage"
+    },
+    "diversified": {
+      "spatial": false,
+      "geometry": false,
+      "new_view": "projection_coverage"
+    }
+  },
+  "ransac": {
+    "iterations": 450,
+    "distance_threshold_px": 2.0,
+    "min_inliers": 12,
+    "min_axis_px": 6.0,
+    "min_axis_ratio": 0.1,
+    "max_axis_diagonal_ratio": 2.0,
+    "angular_bins": 72,
+    "refine_iterations": 3,
+    "perimeter_power": 0.0,
+    "random_seed": 20260716
+  },
+  "selection": "minimum_original_source_validation_loss",
+  "success_iou": 0.8,
+  "status": "exploratory_existing_test_already_inspected",
+  "occlusion_sampling": "aperture_relative_online_on_black_rectangle_examples_only",
+  "source_selection": "minimum original source validation boundary loss; no target checkpoint selection",
+  "sources": [
+    "1194m",
+    "diversified"
+  ],
+  "opencv_seed_per_image": 20261025,
+  "reject_uniform_images": true,
+  "view_mapping_by_source": {
+    "1194m": [
+      0,
+      0,
+      2,
+      2
+    ],
+    "diversified": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "surface_intervention_probability_by_source": {
+    "1194m": 0.0,
+    "diversified": 0.5
+  },
+  "view_probabilities_by_source": {
+    "1194m": {
+      "original_plain": 0.5,
+      "original_surface": 0.0,
+      "new_plain": 0.5,
+      "new_surface": 0.0
+    },
+    "diversified": {
+      "original_plain": 0.25,
+      "original_surface": 0.25,
+      "new_plain": 0.25,
+      "new_surface": 0.25
+    }
+  }
+}

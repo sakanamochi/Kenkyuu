@@ -2,6 +2,16 @@
 
 作業ブランチ：`codex/hole-region-comparison`。
 
+[点群処理・投影・学習時間の原因診断](research/paf_training_diagnosis/README.md)が完了。追加実験は今後seed20260907の1つを用いる。既存3seedの主比較は保持し、1seedの診断と区別する。
+
+1194M側の指定条件は[外観変更なし・投影拡張あり](research/paf_fair_comparison/NO_SURFACE.md)。教師・中心線RANSACなどの共通基礎は維持し、外観変更ありのモデルとの差も同じ3seedで比較する。入口は`research/paf_fair_comparison/no_surface.py`、保存先は`output/paf_1194m_no_surface_v1/`。
+
+外観変更ありの固定対照は[共通境界CNNによる学習元の公平比較](research/paf_fair_comparison/README.md)。1194M学習と多様形状学習で教師・中心線RANSAC・画像拡張・学習条件・3seedを揃える。入口は`research/paf_fair_comparison/experiment.py`、正本結果は`output/paf_fair_comparison_v1/`。発表で説明する変更理由は[発表用メモ](research/paf_fair_comparison/PRESENTATION_CHANGES.md)を参照する。
+
+以下の`run.py`と穴領域CNNの説明は、原データ・固定分割・幾何評価を提供する基礎比較の仕様である。現在の共通境界CNNを再実行する場合は、上記の研究入口を使う。
+
+## 原データと基礎比較
+
 「機体ごとの詳細CADに頼らず、合成形状を多様化して学習すれば、未知形状のPAF内周を検出しやすくなるか」を調べる。比較対象は次の4つ。
 
 - 穴領域CNN（1194M学習）
@@ -36,7 +46,7 @@ paf_ring_detection/
 output/                      データ参照・重み・結果（ローカル保存）
 ```
 
-## 実行
+## 基礎比較の実行
 
 既存の`.venv`を使う。新規環境はPython 3.10でvenvを作り、`requirements.txt`、対応するCUDA環境では`requirements-cuda.txt`をインストールする。
 
@@ -76,7 +86,7 @@ CNNは両方ともTiny U-Net16、60epoch、batch16、同じAdamWとBCE＋Dice、
 
 全方式の成功条件はIoU≥0.8。CNNは全3seedと平均、幾何は各画像一回の成績を報告する。幾何のCanny閾値30/90と既存RANSACは固定する。
 
-## 現在の状態
+## 基礎比較の状態
 
 本体全体を画面内へ収める多様形状データで、両CNN各3seed・60epochと二つのtest集合の4方式比較が完了。全27,664推定の照合と31件の回帰テストが合格。現行成績と確認用画像は下記の保存先を参照する。
 

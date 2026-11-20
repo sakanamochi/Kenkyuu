@@ -1,0 +1,33 @@
+{"kind":"deck","id":"pr/m48o79","name":"Deck"}
+{"kind":"layout","id":"ly/cral4vup","editable":false,"name":"Master","type":"master"}
+{"kind":"layout","id":"ly/21gvihg7","editable":false,"name":"Title Slide","type":"title","placeholders":[{"name":"title","type":"title"},{"name":"subtitle","type":"subtitle"}]}
+{"kind":"layout","id":"ly/xofqpwje","editable":false,"name":"Section Header","type":"sectionHeader","placeholders":[{"name":"title","type":"title"}]}
+{"kind":"layout","id":"ly/k7eh4z2t","editable":false,"name":"Title and Body","type":"tx","placeholders":[{"name":"title","type":"title"},{"name":"body","type":"body"}]}
+{"kind":"layout","id":"ly/b65o3mt0","editable":false,"name":"Title and Two Column","type":"twoColTx","placeholders":[{"name":"title","type":"title"},{"name":"Left column","type":"body"},{"name":"Right column","type":"body"}]}
+{"kind":"layout","id":"ly/psfixcfu","editable":false,"name":"Title and One Column","type":"tx","placeholders":[{"name":"title","type":"title"},{"name":"body","type":"body"}]}
+{"kind":"layout","id":"ly/4bilk3mh","editable":false,"name":"Blank","type":"blank"}
+{"kind":"slide","id":"sl/cx0cb4","slideIndex":0,"layout":{"id":"ly/4bilk3mh","name":"Blank"},"title":"Slide 1","textShapes":0,"backgroundColor":"rgba(255,255,255,1)"}
+{"kind":"image","id":"im/218b2xk7","slideIndex":0,"position":{"left":0,"top":0,"width":1280,"height":720},"name":"","isPlaceholder":true}
+{"kind":"notes","id":"nt/cx0cb4","slideIndex":0,"text":""}
+{"kind":"slide","id":"sl/jb8sg6","slideIndex":1,"layout":{"id":"ly/4bilk3mh","name":"Blank"},"title":"Slide 2","textShapes":0,"backgroundColor":"rgba(255,255,255,1)"}
+{"kind":"image","id":"im/nit4jitc","slideIndex":1,"position":{"left":0,"top":0,"width":1280,"height":720},"name":"","isPlaceholder":true}
+{"kind":"notes","id":"nt/jb8sg6","slideIndex":1,"text":""}
+{"kind":"slide","id":"sl/vzblar","slideIndex":2,"layout":{"id":"ly/4bilk3mh","name":"Blank"},"title":"Slide 3","textShapes":0,"backgroundColor":"rgba(255,255,255,1)"}
+{"kind":"image","id":"im/8zux43i5","slideIndex":2,"position":{"left":0,"top":0,"width":1280,"height":720},"name":"","isPlaceholder":true}
+{"kind":"notes","id":"nt/vzblar","slideIndex":2,"text":""}
+{"kind":"slide","id":"sl/3pujbj","slideIndex":3,"layout":{"id":"ly/4bilk3mh","name":"Blank"},"title":"Slide 4","textShapes":0,"backgroundColor":"rgba(255,255,255,1)"}
+{"kind":"image","id":"im/gbe9kzip","slideIndex":3,"position":{"left":0,"top":0,"width":1280,"height":720},"name":"","isPlaceholder":true}
+{"kind":"notes","id":"nt/3pujbj","slideIndex":3,"text":""}
+{"kind":"slide","id":"sl/kfaqhh","slideIndex":4,"layout":{"id":"ly/4bilk3mh","name":"Blank"},"title":"研究背景：先行研究","textShapes":8,"backgroundColor":"rgba(255,255,255,1)"}
+{"kind":"shape","id":"sh/vy9kbatw","slideIndex":4,"position":{"left":0,"top":0,"width":1280,"height":48.5},"geometry":"rect","fillColor":"#156082","lineWidth":0}
+{"kind":"shape","id":"sh/ud0325cb","slideIndex":4,"position":{"left":0,"top":671.5,"width":1280,"height":48.5},"geometry":"rect","fillColor":"#156082","lineWidth":0}
+{"kind":"textbox","id":"sh/tcr290bq","slideIndex":4,"position":{"left":29,"top":65,"width":1190,"height":65},"text":"研究背景：先行研究","geometry":"rect","lineWidth":0,"style":{"fontSize":40,"typeface":"ＭＳ ゴシック","color":"#202020","alignment":"left"}}
+{"kind":"textbox","id":"sh/8bil0vul","slideIndex":4,"position":{"left":55,"top":143,"width":1170,"height":42},"text":"学習手法","geometry":"rect","lineWidth":0,"style":{"fontSize":32,"typeface":"游ゴシック","color":"#202020","bold":true,"alignment":"left"}}
+{"kind":"textbox","id":"sh/7a9k7qt0","slideIndex":4,"position":{"left":55,"top":184,"width":1170,"height":82},"text":"CNN（畳み込みニューラルネットワーク）で画像の特徴を学習し、\n検出したい領域を選択的に抽出する。","geometry":"rect","lineWidth":0,"style":{"fontSize":32,"typeface":"游ゴシック","color":"#202020","alignment":"left"}}
+{"kind":"textbox","id":"sh/6903ylcf","slideIndex":4,"position":{"left":55,"top":307,"width":360,"height":148},"text":"例：Le Gentilら（2025）\n反射リングやマーカーをCNNで\n抽出し、幾何モデルを用いて\nドッキングポートの位置・姿勢\nを推定する。","geometry":"rect","lineWidth":0,"style":{"fontSize":24,"typeface":"游ゴシック","color":"#202020","alignment":"left"}}
+{"kind":"textbox","id":"sh/k7ilwbu9","slideIndex":4,"position":{"left":450,"top":477,"width":780,"height":27},"text":"図：RGB画像からの反射マーカー抽出（Fig. 3(b)）","geometry":"rect","lineWidth":0,"style":{"fontSize":18,"typeface":"游ゴシック","color":"#202020","alignment":"left"}}
+{"kind":"textbox","id":"sh/cr2lsv25","slideIndex":4,"position":{"left":65,"top":494,"width":1150,"height":42},"text":"【課題】","geometry":"rect","lineWidth":0,"style":{"fontSize":32,"typeface":"游ゴシック","color":"#202020","alignment":"left"}}
+{"kind":"textbox","id":"sh/xsvmlgjq","slideIndex":4,"position":{"left":55,"top":535,"width":1170,"height":111},"text":"・学習画像と撮影条件が異なると、検出精度が低下する場合がある。\n・強い反射でRGB画像が飽和すると、検出が困難になる。\n・反射リングやマーカーを前提とし、PAF内周への適用は別途検証が必要。","geometry":"rect","lineWidth":0,"style":{"fontSize":32,"typeface":"游ゴシック","color":"#202020","alignment":"left"}}
+{"kind":"textbox","id":"sh/apk3qlkz","slideIndex":4,"position":{"left":735,"top":650,"width":520,"height":20},"text":"出典：Le Gentil et al., ICRA 2025, Fig. 3(b).","geometry":"rect","lineWidth":0,"style":{"fontSize":15,"typeface":"游ゴシック","color":"#202020","alignment":"left"}}
+{"kind":"image","id":"im/2xonix43","slideIndex":4,"position":{"left":496.4,"top":275,"width":657.19,"height":201},"name":""}
+{"kind":"notes","id":"nt/kfaqhh","slideIndex":4,"text":"出典：Cedric Le Gentil, Jack Naylor, Nuwan Munasinghe, Jasprabhjit Mehami, Benny Dai, Mikhail Asavkin, Donald G. Dansereau, Teresa Vidal-Calleja, Mixing Data-driven and Geometric Models for Satellite Docking Port State Estimation using an RGB or Event Camera, IEEE International Conference on Robotics and Automation (ICRA), 2025. 著者プロジェクト https://uts-ri.github.io/rgb_event_docking_port/ 。参照したローカルPDFは研究関連書類/先行研究/legentil2025mixing.pdf（本文はarXiv:2409.15581v1、2024年9月23日）。発表年2025は著者公開の書誌情報に従う。図はユーザー添付legentil2025mixing.pngで、PDF p3 Fig.3(b)のRGB入力から反射マーカーを抽出する例。リング抽出やPAF内周境界の出力ではない。手法全体はCNNで反射リングとマーカーを強調し、リング画像の二値化・細線化とRANSAC楕円推定、およびポートの簡単な幾何モデルによって位置・姿勢を推定する（II-A～D）。衛星全体の詳細CADを不要とするsatellite-agnosticな構成であり、衛星ごとの再学習が必須とは述べない。課題1はIV-A.1の学習・評価間の照明や表面模様の差とRGB精度低下、課題2はIV-Bの強い反射によるRGBセンサ飽和の実験に基づく。課題3は対象が反射航法補助リング・マーカーを備えるLM-MAPであることから、本研究のPAF内周検出への適用には追加検証を要するという研究上の位置づけであり、論文がPAF上で失敗したという報告ではない。"}

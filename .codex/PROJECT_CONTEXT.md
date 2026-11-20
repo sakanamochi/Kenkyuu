@@ -2,7 +2,13 @@
 
 現在の作業状態・研究結果・次の手順は[RESEARCH_HANDOFF.md](RESEARCH_HANDOFF.md)を正とする。
 
-## 研究の主比較
+追加検証のうち原因診断は固定seed20260907の1つを使う。白飛び強度の追加評価はユーザーの最新指定により、1seed結果とは別に20260907・20260908・20260909の3seed平均も求める。入口は`research/paf_whiteout_strength/three_seed.py`、保存先は`output/paf_whiteout_strength_3seed_v1/`。既存の3seed結果は保持する。原因診断は`research/paf_training_diagnosis/`・`output/paf_training_diagnosis_v1/`で完了。1194M側は点群処理・投影の寄与を確認し、多様形状側は120epoch延長でも投影のみの不利が残る。詳細は引継ぎ冒頭を参照する。
+
+現在の指定条件は「1194M側の外観変更を外し、投影拡張は残す」。入口は`research/paf_fair_comparison/no_surface.py`、説明は`NO_SURFACE.md`、保存先は`output/paf_1194m_no_surface_v1/`。多様形状側と共通の教師・中心線RANSAC・最適化・欠損拡張は維持する。外観変更ありの共通条件比較は下記の固定対照として保持する。
+
+外観変更ありの固定対照は`research/paf_fair_comparison/`、結果は`output/paf_fair_comparison_v1/`。両学習元で採用済み可視境界教師・中心線RANSAC・投影/外観/遮蔽拡張・学習条件・3seedを共通化する。下記の穴領域CNNと`run.py`は原データ・分割・固定幾何を提供する基礎比較であり、現在のCNN比較とは区別する。発表用の変更理由は`research/paf_fair_comparison/PRESENTATION_CHANGES.md`。
+
+## 原データを提供する基礎比較
 
 問いは「機体ごとの詳細CADに頼らず、合成形状を多様化して学習すれば、未知形状のPAF内周を検出しやすくなるか」。比較対象は穴領域CNN（1194M学習）、穴領域CNN（多様形状学習）、Canny＋輪郭別RANSAC、Zhang 2019型（再現実装）の4つ。1194Mと多様形状の二つのtest集合に全方式を適用する。
 
@@ -32,7 +38,7 @@ Cannyは標準Canny・輪郭分離・共通RANSAC・同心候補対の内周選�
 
 1194Mのtestは同機体の撮影条件分割、多様形状のtestは同じ合成形状族内の未知寸法。両原データには撮影・材質・投影サイズの差もあるため、この比較だけで形状多様化の単独因果効果を断定しない。既存画像は参照比較に使い、未使用の最終未知形状集合・実画像への汎化・対象なし判定は未検証。
 
-## 確認済みの現行結果
+## 確認済みの基礎比較結果
 
 両学習元×3seed・各60epochの計6モデルと、二つのtest集合の4方式比較が完了。全方式モノクロ256、成功条件IoU≥0.8、通常と3劣化を含む。CNNは3seed平均、幾何は一回評価。
 
