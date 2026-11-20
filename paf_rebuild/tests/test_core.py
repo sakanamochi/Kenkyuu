@@ -10,8 +10,8 @@ import cv2
 import numpy as np
 import torch
 
-from paf.core.images import image_tensor, prepare_image
-from paf.core.model import TinyUNet
+from core.images import image_tensor, prepare_image
+from core.model import TinyUNet
 
 
 class InputTests(unittest.TestCase):

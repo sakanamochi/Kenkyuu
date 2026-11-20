@@ -1,7 +1,7 @@
 {
   "date": "2026-11-20",
   "reference_commit": "97ae440",
-  "stage": "boundary_probability_only",
+  "scope": "6モデル×2通常画像の境界確率と初期化の照合",
   "torch": "2.13.0+cu130",
   "numpy": "2.2.6",
   "opencv": "4.13.0",
@@ -108,5 +108,5 @@
   ],
   "uniform_input_cases": 18,
   "runtime_imports_old_project": false,
-  "limits": "各test集合の固定先頭通常画像による確認。全test、劣化条件、楕円、再学習は未検証。"
+  "limits": "本記録の確率照合は各test集合の固定先頭通常画像に限定する。楕円の全件照合はoutputs/reference_verification/REPORT.mdを参照する。再学習は対象外。"
 }

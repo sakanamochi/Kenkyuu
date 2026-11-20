@@ -19,6 +19,14 @@ def read_image(path: Path) -> np.ndarray:
     return image
 
 
+def write_png(path: Path, image: np.ndarray) -> None:
+    """日本語を含むパスへPNGを書き出し、変換失敗を検出する。"""
+    encoded, data = cv2.imencode(".png", image)
+    if not encoded:
+        raise RuntimeError(f"PNG変換に失敗しました: {path}")
+    path.write_bytes(data.tobytes())
+
+
 def prepare_image(image: np.ndarray) -> np.ndarray:
     """正方形uint8画像をモノクロ256pxにする。"""
     if not isinstance(image, np.ndarray) or image.dtype != np.uint8:

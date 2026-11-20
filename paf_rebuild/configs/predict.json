@@ -1,4 +1,17 @@
 {
-  "checkpoint": "../../output/paf_generalization_v2/runs/boundary_projection_relative/20260907/best.pt",
-  "device": "auto"
+  "checkpoint": "../models/diversified/20260907/best.pt",
+  "device": "auto",
+  "ellipse": {
+    "probability_threshold": 0.5,
+    "iterations": 450,
+    "distance_threshold_px": 2.0,
+    "min_inliers": 12,
+    "min_axis_px": 6.0,
+    "min_axis_ratio": 0.1,
+    "max_axis_diagonal_ratio": 2.0,
+    "angular_bins": 72,
+    "refine_iterations": 3,
+    "random_seed": 20260716,
+    "opencv_seed": 20261025
+  }
 }

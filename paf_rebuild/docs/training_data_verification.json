@@ -1,0 +1,80 @@
+{
+  "seed": 20260907,
+  "torch": "2.13.0+cu130",
+  "numpy": "2.2.6",
+  "device": "cpu",
+  "sample_order": "manifest order; independent view and occlusion RNGs initialized per source/split",
+  "summaries": [
+    {
+      "source": "1194m",
+      "split": "train",
+      "samples": 1988,
+      "image_mismatches": 0,
+      "mask_mismatches": 0,
+      "boundary_mismatches": 0,
+      "rng_states_match": true,
+      "tensor_sequence_sha256": "44aee20895817ea37ddbe0e99678d187fc20fbb821cff9a2c0baf6b6aade5a7f"
+    },
+    {
+      "source": "1194m",
+      "split": "validation",
+      "samples": 735,
+      "image_mismatches": 0,
+      "mask_mismatches": 0,
+      "boundary_mismatches": 0,
+      "rng_states_match": true,
+      "tensor_sequence_sha256": "4bf5aa18fdd1d63eae0687fdac003421aaef8677cd850dda6a89264dca5464b4"
+    },
+    {
+      "source": "diversified",
+      "split": "train",
+      "samples": 1988,
+      "image_mismatches": 0,
+      "mask_mismatches": 0,
+      "boundary_mismatches": 0,
+      "rng_states_match": true,
+      "tensor_sequence_sha256": "4f3c4263908f8bb5330baffec21fac428f6853c54b12ea7d74c372da00ecaf12"
+    },
+    {
+      "source": "diversified",
+      "split": "validation",
+      "samples": 735,
+      "image_mismatches": 0,
+      "mask_mismatches": 0,
+      "boundary_mismatches": 0,
+      "rng_states_match": true,
+      "tensor_sequence_sha256": "552f2e1b94f9d8cb8962aaaad02cb404de05d65c50d750b179bb2f1d574df227"
+    }
+  ],
+  "loss_and_logit_gradient_checks": 56,
+  "cached_view_samples_checked_twice": 192,
+  "effect_checks": 28,
+  "default_evaluation_multiplier_checks": 28,
+  "files_sha256": {
+    "paf_rebuild\\src\\core\\effects.py": "184b0e6e2b4297d68f7543e8477960f241ef67f22477886655eeb3d94754e18f",
+    "paf_rebuild\\src\\core\\ellipse.py": "1c61d0c777af5b1fe7be6040980748d569e2a19510d615e89ddc9d1b3d2e504d",
+    "paf_rebuild\\src\\core\\images.py": "2867c8e3093b2905a592949ba15cc7a09cde0a105f96ff237395d73d71cbfe8a",
+    "paf_rebuild\\src\\core\\model.py": "eb4dbc28f66e392d30c5999684d3d8143ffbf4e8f3efe3fa0d77a4200c1c4c28",
+    "paf_rebuild\\src\\core\\__init__.py": "fcd854d096bbeff16feebebeedd9446a12e18d8bb583490c1778471e2e317dde",
+    "paf_rebuild\\src\\evaluation\\metrics.py": "748b3e910eba0fa9a1a013bcc544312b18fa62cc769cde7fb485f17663c901f7",
+    "paf_rebuild\\src\\evaluation\\reference.py": "e234fe14bc05977c3eb9c282709219b42c7b80c5d57f22105ed958c9fdad1a9d",
+    "paf_rebuild\\src\\evaluation\\__init__.py": "3c0eaf35e7df32b3d62a4d3958b31b7c0f63cbbb9f982ac14dfdd2275a60ff7d",
+    "paf_rebuild\\src\\inference\\predictor.py": "dc8dfb71ca769e257617842a2fa8ea5fdc3aeef2bc05a777e2bcdefac6db3e53",
+    "paf_rebuild\\src\\inference\\__init__.py": "38fa041b2d3f0c5382656d79db85da3dad00ec35d11b6c35074d2f3c25a409d4",
+    "paf_rebuild\\src\\training\\data.py": "cdbbed5e6632eab1baf9ee740c4d43213545ed4e472e84e26775da44f0068c3c",
+    "paf_rebuild\\src\\training\\objective.py": "19cb039fec94b7db0710a83308d4842c9cbfb0b48bb49642c53812b84e7e4a03",
+    "paf_rebuild\\src\\training\\__init__.py": "5df6626408bffae3b696cd19f01539c2cd728db3413277a74ac43bc58b38b02e",
+    "paf_rebuild\\configs\\training_data.json": "c5f7785b5747d55fb8c2c7ab52202558f57f87e398de77890942933d5de01a9c",
+    "research\\paf_fair_comparison\\no_surface.py": "9bca895f9de23f72a7bc77e7eef7084f3998e0bd54d3bc8c3b9da0b524ff3efe",
+    "research\\paf_fair_comparison\\experiment.py": "66eb353da84e34660ec445f2d80dbf71b91aa2b2d261c44a054ce80c550fcbc4",
+    "research\\paf_generalization\\boundary.py": "c9141d1157ae556ba6762a9d9d56b2aea02238e168e3e8c6fb4cf2f657dcd0c6",
+    "research\\paf_generalization_v2\\projection.py": "03fe5d7e185d3f82abee0997b70a8e9bd40270fd70dbc0121b27c91093104da3",
+    "research\\paf_generalization_v2\\projection_occlusion.py": "faa4b00498dafbaad73449b9c821a86884e39883aafb56b8127a120e7634d0e4",
+    "research\\paf_generalization_v2\\occlusion_sampling.py": "11602435b3711ace35b084f6947ece5c3d450b9c6446b0c35de243e1584ed573",
+    "paf_ring_detection\\data.py": "ecaadc8b4acc3816efdd7c3857404a77224455966a8d66cf148a855dde8f7670",
+    "paf_ring_detection\\effects.py": "0b72b4ebadcd384bd01a2922e9bdcefc94ed188079ca7712802b091fb53ee14a",
+    "paf_ring_detection\\train.py": "80bb33fdd98044cc141497f79bce03f103ee0ccc0c02f08c5c58efc9ee5827d0"
+  },
+  "seconds": 298.875,
+  "scope": "入力・教師・損失・logit勾配の同値性。再学習・モデル更新の同値性ではない。"
+}

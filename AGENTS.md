@@ -2,10 +2,9 @@
 
 - 日本語コメント・文書を含むため、テキストファイルは原則UTF-8を明示して読む。
 - 既存コードは依頼範囲に必要な変更を優先し、無関係な変更や成果物の削除を行わない。
-- 研究上の主比較、採用理由、出典、再現上の注意は
-  [`.codex/PROJECT_CONTEXT.md`](.codex/PROJECT_CONTEXT.md) を最初に確認する。
-- 続けて [`.codex/RESEARCH_HANDOFF.md`](.codex/RESEARCH_HANDOFF.md) を読む。
-  現在の研究方針・実験計画・作業状態はこの引継ぎ資料を正とする。
+- 実行入口・配置は [`paf_rebuild/README.md`](paf_rebuild/README.md) を最初に確認する。
+- 続けて [`paf_rebuild/docs/HANDOFF.md`](paf_rebuild/docs/HANDOFF.md) を読む。
+  現在の仕様・検証結果・作業状態はこの引継ぎ資料を正とする。
 - 研究関連の作業を担当したCodexは最終回答前に引継ぎ資料を更新する。
   更新日、現在の仕様・方針、研究結果の根拠、未検証事項、次の具体的作業を記載し、仮説と確認済み事実を区別する。
 - コードには日本語のコメントを残し、実装した構成の要点をユーザーに説明する。

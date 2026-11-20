@@ -1,0 +1,13 @@
+{
+  "scope": "単体推論の通常画像1枚",
+  "input": "C:\\Users\\siomi\\OneDrive\\デスクトップ\\Kenkyuu\\output\\datasets\\base_cg\\images\\camera_t075_a270_d034.0_o00__light_t045_a120_e03.0.png",
+  "input_sha256": "cbd474461d91eb6a98d27707aaf60244d6916b918414b5d9296ce31f2955a6ab",
+  "checkpoint_sha256": "bd4efa5f5b289636aa079a07b5ef94c8094e4507e7e87891147bfca05a12538c",
+  "gpu_probability_exact": true,
+  "gpu_original_coordinate_ellipse_exact": true,
+  "gpu_overlay_exact": true,
+  "probability_png_encoding_exact": true,
+  "cpu_probability_and_ellipse_exact": true,
+  "representative_conditions_matched": 26,
+  "limits": "全件再推論の成績はoutputs/reference_verification/REPORT.mdを参照する。CPU全testは未検証。"
+}

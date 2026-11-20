@@ -1,0 +1,23 @@
+{
+  "seeds": [
+    20260907,
+    20260908,
+    20260909
+  ],
+  "sources": [
+    "1194m",
+    "diversified"
+  ],
+  "manifest": "data/{dataset}/base/manifest.json",
+  "checkpoints": {
+    "1194m": "models/1194m/{seed}/best.pt",
+    "diversified": "models/diversified/{seed}/best.pt"
+  },
+  "results": "references/results/{source}/{seed}/test_{dataset}.json",
+  "whiteout_results": {
+    "20260907": "references/whiteout/20260907/{dataset}_s{severity:g}.json",
+    "20260908": "references/whiteout/20260908/{dataset}_s{severity:g}.json",
+    "20260909": "references/whiteout/20260909/{dataset}_s{severity:g}.json"
+  },
+  "success_iou": 0.8
+}

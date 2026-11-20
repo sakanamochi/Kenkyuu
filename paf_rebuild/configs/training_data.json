@@ -1,0 +1,23 @@
+{
+  "whiteout_multiplier": 1.0,
+  "sources": {
+    "1194m": {
+      "base": "../data/1194m/base",
+      "train_views": [
+        "../data/1194m/base",
+        "../data/1194m/base",
+        "../data/1194m/projection_plain",
+        "../data/1194m/projection_plain"
+      ]
+    },
+    "diversified": {
+      "base": "../data/diversified/base",
+      "train_views": [
+        "../data/diversified/base",
+        "../data/diversified/surface",
+        "../data/diversified/projection_plain",
+        "../data/diversified/projection_surface"
+      ]
+    }
+  }
+}
