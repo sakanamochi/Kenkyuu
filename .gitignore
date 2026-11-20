@@ -1,16 +1,43 @@
-# 研究資料・再現用データ・学習重みはローカルで保存する
+# ローカル保持する大容量データ・学習重み・参照結果・実行出力・研究資料
+/data/
+/models/
+/references/
+/outputs/
 /研究関連書類/
-output/
 
-# 一時作業・外部依存パッケージ
-/.codex/tmp/
+# Codex一時生成物（仕様・引継ぎ資料の2ファイルのみ追跡）
+/.codex/*
+!/.codex/PROJECT_CONTEXT.md
+!/.codex/RESEARCH_HANDOFF.md
+
+# エージェント・一時作業・外部依存
+/.agents/
+/.chart-data-*/
+/NVIDIA Corporation/
 node_modules/
-.venv/
 
-# Pythonの実行・テストキャッシュ
+# Python仮想環境・キャッシュ・テスト生成物
+.venv/
+venv/
 __pycache__/
 *.py[cod]
+*$py.class
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+.mplcache/
 
-# Blenderの自動バックアップ
+# Blender・エディタ・OS一時ファイル
 *.blend[0-9]*
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
+*.tmp
+*.log

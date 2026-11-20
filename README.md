@@ -1,118 +1,109 @@
-# PAF内周検出
+# PAF内周検出システム
 
-作業ブランチ：`codex/hole-region-comparison`。
+多様な合成PAF画像で学習した単一境界CNN（Tiny U-Net16＋形態学的スケルトン＋確率重み付きRANSAC）を中心に、1194M学習CNN・Canny＋輪郭別RANSAC・Zhang 2019型（再現実装）の推論・評価・集計・学習およびCG原画像再生成をまとめた最小構成です。
 
-[点群処理・投影・学習時間の原因診断](research/paf_training_diagnosis/README.md)が完了。追加実験は今後seed20260907の1つを用いる。既存3seedの主比較は保持し、1seedの診断と区別する。
+## フォルダ構成と役割
 
-1194M側の指定条件は[外観変更なし・投影拡張あり](research/paf_fair_comparison/NO_SURFACE.md)。教師・中心線RANSACなどの共通基礎は維持し、外観変更ありのモデルとの差も同じ3seedで比較する。入口は`research/paf_fair_comparison/no_surface.py`、保存先は`output/paf_1194m_no_surface_v1/`。
-
-外観変更ありの固定対照は[共通境界CNNによる学習元の公平比較](research/paf_fair_comparison/README.md)。1194M学習と多様形状学習で教師・中心線RANSAC・画像拡張・学習条件・3seedを揃える。入口は`research/paf_fair_comparison/experiment.py`、正本結果は`output/paf_fair_comparison_v1/`。発表で説明する変更理由は[発表用メモ](research/paf_fair_comparison/PRESENTATION_CHANGES.md)を参照する。
-
-以下の`run.py`と穴領域CNNの説明は、原データ・固定分割・幾何評価を提供する基礎比較の仕様である。現在の共通境界CNNを再実行する場合は、上記の研究入口を使う。
-
-## 原データと基礎比較
-
-「機体ごとの詳細CADに頼らず、合成形状を多様化して学習すれば、未知形状のPAF内周を検出しやすくなるか」を調べる。比較対象は次の4つ。
-
-- 穴領域CNN（1194M学習）
-- 穴領域CNN（多様形状学習）
-- Canny＋輪郭別RANSAC
-- Zhang 2019型（再現実装）
-
-学習・validation・testは全てモノクロ256入力。通常・矩形遮蔽・白飛び・黒つぶれを含める。成功条件はIoU≥0.8とし、未検出も分母に含める。
-
-## 構成
+直接実行するスクリプトはすべて `scripts/` に集約し、本体は役割ごとに `src/` 直下へ分離しています。
 
 ```text
-run.py                       render / prepare / train / evaluate / report
-config/experiment.json       学習元・劣化・学習・幾何条件
-config/render_base.json      1194Mの描画設定
-assets/1194M_3/              1194MのOBJ・MTL
-blender/generate_dataset.py   1194Mの描画・正解投影
-parametric_paf/
-  paf_model.py               多様形状の寸法とメッシュ定義
-  generate.py                閉メッシュの作成・検査
-  random_dataset.py          多様形状の描画・全件検査
-  random_paf/config.json     多様形状の数値仕様
-paf_ring_detection/
-  data.py / effects.py       穴領域教師・撮像効果・共通モノクロ入力
-  prepare.py                 固定分割・枚数統制・入力と実装のhash
-  train.py                   共通CNN学習
-  evaluate.py / report.py    共通評価・集計・全件照合
-  geometry.py                楕円IoUなどの共通計算
-  methods/                   Tiny U-Net・穴領域楕円化・幾何2方式
-.codex/                      仕様と引継ぎ資料
-研究関連書類/                研究資料（ローカル保存）
-output/                      データ参照・重み・結果（ローカル保存）
+Kenkyuu/
+  scripts/                  # ユーザーが直接実行するスクリプト（全5本）
+    predict.py              # 推論用：画像1枚を検出（多様形状CNN / 1194M CNN / Canny / Zhang 2019型）
+    train.py                # 学習用：Tiny U-Net16を可視内周境界教師で学習
+    evaluate.py             # 評価用：4方式×2評価集合×13条件の評価＋確定参照との全件照合
+    report.py               # 集計用：REPORT.md・summary.json・CSV・比較図の生成
+    render_cg.py            # CG生成用：Blenderによる1194M／多様形状の原CG再生成と検証
+  configs/                  # 設定ファイル
+    experiment.json         # 学習・推論・評価・幾何比較器・レポート図の正本設定
+    render_1194m.json       # 1194M原CG（714枚）のBlender描画設定
+    render_diversified.json # 多様形状原CG（1,024枚）の寸法・Blender描画設定
+  src/                      # 役割別に分離した本体パッケージ
+    defaults.py             # 基準パスと既定設定パスの定義
+    core/                   # 基本システム共通部品（io / geometry / effects / model / ransac）
+    inference/              # 推論処理（predictor / canny / zhang2019）※学習へ非依存
+    training/               # 学習処理（dataset / trainer）※推論へ非依存
+    evaluation/             # 評価・集計処理（evaluator / reporter）
+    cg/                     # CG原画像再生成処理（geometry_model / blender_common / render_1194m / render_diversified）
+  assets/1194M_3/           # 1194MのCAD素材（OBJ・MTL）
+  data/                     # 固定分割済みの学習・検証・評価データ（1194M 2ビュー / 多様形状 4ビュー）
+  models/                   # 学習済み採用重み（1194M×3seed・多様形状×3seed）
+  references/               # 確定参照推定結果（再現性照合用）
+  outputs/                  # 推論・評価・学習・CG再生成の出力先
+  tests/                    # 単体・結合・層分離テスト（test_paf_system.py）
+  研究関連書類/             # 発表資料・先行研究（ローカル保持）
+  .codex/                   # 研究仕様と引継ぎ資料（PROJECT_CONTEXT.md / RESEARCH_HANDOFF.md）
 ```
 
-## 基礎比較の実行
+## 設定の変更場所
 
-既存の`.venv`を使う。新規環境はPython 3.10でvenvを作り、`requirements.txt`、対応するCUDA環境では`requirements-cuda.txt`をインストールする。
+| 変えたい内容 | 編集する場所 | 主な項目 |
+|---|---|---|
+| 学習条件 | `configs/experiment.json` の `training`・`seeds`・`input_size` | `epochs`, `batch_size`, `learning_rate`, `weight_decay`, `positive_weight`, `base_channels`, `presets.{1194m,diversified}.view_slots`（実行時は `scripts/train.py` の `--source`, `--seeds`, `--epochs`, `--output` で上書き可） |
+| 推論・RANSAC・幾何比較器 | `configs/experiment.json` の `probability_threshold`, `ransac_cnn`, `ransac_geometry`, `canny_contour_ransac`, `zhang2019` | 確率閾値、RANSAC反復数・最小支持点数、Canny閾値、Zhang設定 |
+| 評価条件（白飛び強度等） | `configs/experiment.json` の `evaluation`・`success_iou` | 評価対象方式・データセット、評価時の白飛び最大内部強度（2.0）、成功IoU閾値（0.8） |
+| レポート比較図の体裁 | `configs/experiment.json` の `report.figures` | `dpi`, `format`（`png`/`svg`）, `font_family`, `font_size`, `overall_figsize`, `degradation_figsize`, `colors`, `markers` |
+| CG原画像の寸法・撮影条件 | `configs/render_1194m.json` / `configs/render_diversified.json` | カメラ角度・距離・照明・寸法比範囲・生成枚数 |
+
+## 実行コマンド
+
+ルートディレクトリから既存の `.venv` で実行します。
+
+### 1. 推論（画像1枚）
 
 ```powershell
-# 原画像がない場合の描画
-.venv/Scripts/python.exe -X utf8 -B run.py render
+# 多様形状学習CNN（既定）で推論
+.venv/Scripts/python.exe -X utf8 -B scripts/predict.py --image data/1194m/base/images/camera_t000_a000_d044.0_o00__light_t000_a000_e03.0.png --output outputs/predict_example
 
-# 固定分割と撮像条件・実装を保存
-.venv/Scripts/python.exe -X utf8 -B run.py prepare
+# 方式切替（cnn_1194m / canny / zhang2019）
+.venv/Scripts/python.exe -X utf8 -B scripts/predict.py --method cnn_1194m --seed 20260907 --image <画像> --output outputs/predict_1194m
+.venv/Scripts/python.exe -X utf8 -B scripts/predict.py --method canny --image <画像> --output outputs/predict_canny
+.venv/Scripts/python.exe -X utf8 -B scripts/predict.py --method zhang2019 --image <画像> --output outputs/predict_zhang
 
-# 二つの学習元×3seedを初期化から60epoch学習
-.venv/Scripts/python.exe -u -X utf8 -B run.py train
-
-# 二つのtest集合を全4方式で評価・照合・集計
-.venv/Scripts/python.exe -u -X utf8 -B run.py evaluate
-.venv/Scripts/python.exe -X utf8 -B run.py report
+# 実画像など非正方形画像は黒余白を付けて正方形化（--pad-square）
+.venv/Scripts/python.exe -X utf8 -B scripts/predict.py --image <実画像> --pad-square --output outputs/predict_real
 ```
 
-一部を学習する場合は`train --source 1194m --seeds 20260907`。重み・履歴は同じ保存先で更新する。`prepare`は現在の設定とコードを固定するため、コードを編集した場合は再実行する。設定は`--config`でも指定できる。描画先は各描画設定に従う。
-
-少数画像の動作確認は`evaluate --methods canny zhang2019 --limit 2`、集計は`report --limit 2`。確認用出力は`checks/limit_2/`へ分離し、正式評価には混ぜない。
-
-## データと条件
-
-1194Mの原画像は714枚、多様形状は1,024枚。1194Mはカメラ、多様形状は寸法単位で分割してから劣化を適用する。学習・validationの枚数と劣化強度を両学習元で揃える。
-
-|学習元|学習の原画像／劣化込み|validationの原画像／劣化込み|testの原画像／劣化込み|
-|---|---:|---:|---:|
-|1194M|497／1,988|105／735|112／1,456|
-|多様形状|497／1,988|105／735|154／2,002|
-
-矩形遮蔽は画像端から幅×強度を覆い、強度間で左右を固定する。白飛びは露光増加・飽和・明部のブルーム・ショットノイズ、黒つぶれは低露光・読み出しノイズ・黒レベル・6〜8bit量子化を近似する。学習強度は0.1〜0.8、validationは0.3/0.6、testは0.25/0.5/0.75/1.0。
-
-原画像の複製を作らず、manifestの固定seedで480画像へ劣化を適用する。共通読込処理でグレー化し、同じ輝度を3chへ複製して256へ縮小する。CNNと幾何へ同じ画像を渡す。固定した学習・validation入力はRAMに保持する。
-
-CNNは両方ともTiny U-Net16、60epoch、batch16、同じAdamWとBCE＋Dice、seed20260907/20260908/20260909。多様形状CNNには1194MのCAD・画像・重みを使わず、両CNNをランダム初期化する。完全な穴領域を教師とし、確率0.5以上の最大領域外周へ楕円を当てはめる。重みはvalidation loss最小で選ぶ。
-
-全方式の成功条件はIoU≥0.8。CNNは全3seedと平均、幾何は各画像一回の成績を報告する。幾何のCanny閾値30/90と既存RANSACは固定する。
-
-## 基礎比較の状態
-
-本体全体を画面内へ収める多様形状データで、両CNN各3seed・60epochと二つのtest集合の4方式比較が完了。全27,664推定の照合と31件の回帰テストが合格。現行成績と確認用画像は下記の保存先を参照する。
-
-## 保存先
-
-`output/hole_region_comparison_v1/`内の同じファイルを更新する。
-
-- `datasets/{1194m,diversified}/manifest.json`：原画像参照・分割・劣化条件・hash。
-- `readiness.json`・`provenance.json`：準備時の設定・入力・実装・実行環境。
-- `models/{学習元}/{seed}/best.pt`・`training_history.json`：採用重みと全epoch履歴。
-- `results/{評価集合}/{方式}_{seedまたはfixed}.json`：全画像の推定楕円・正解・指標。
-- `results/REPORT.md`・`summary.json`・`scores.csv`：二つの比較、条件・強度・seed別の成績。
-- `results/audit.json`：全epoch・最小validation重み・全推定の再計算照合。
-- `results/training_preview_{1194m,diversified}.png`：各学習元のtrain6例の入力・正解・CNN出力・重ね合わせ。
-- `results/training_preview.json`：表示対象・重み・入力参照・hash・推定の記録。
-
-[比較結果](output/hole_region_comparison_v1/results/REPORT.md)と[現在の状態・次の手順](.codex/RESEARCH_HANDOFF.md)を参照する。原素材と研究関連書類はローカルに保持する。Git管理外の画像・重み・結果は別端末へ別途コピーする。
-
-1194M testは同機体の撮影条件分割、多様形状testは同じ形状族内の未知寸法。両原データには撮影・材質・投影サイズの差もあるため、形状多様化の単独効果や実画像への汎化はこの比較だけで断定しない。
-
-## 検証と出典
+### 2. 評価と集計・図生成
 
 ```powershell
-.venv/Scripts/python.exe -X utf8 -B -m pytest -q -p no:cacheprovider
+# 全4方式×2データセット×13条件（白飛び最大内部強度2.0）の評価と確定参照照合
+.venv/Scripts/python.exe -u -X utf8 -B scripts/evaluate.py --verify-reference
+
+# REPORT.md・summary.json・CSV・比較図（overall.png / degradation.png）の生成
+.venv/Scripts/python.exe -X utf8 -B scripts/report.py
 ```
 
-形状・幾何検出・撮像効果・全分割のモノクロ入力・固定分割・短い学習から全方式評価と照合までを確認する。検証用画像・重み・結果はテスト終了時に削除する。
+### 3. 学習
 
-Zhang, Pan, Ma, Sensors 2019, DOI `10.3390/s19235243`。Zhang 2019型（再現実装）は論文の構成を参考にし、PAF固有の候補評価を分離した実装である。著者コードの移植・論文性能の完全再現ではない。詳しくは[実装仕様](.codex/PROJECT_CONTEXT.md)を参照する。
+```powershell
+# 多様形状CNN（4ビュー・開口幅遮蔽・60epoch）を学習
+.venv/Scripts/python.exe -u -X utf8 -B scripts/train.py --source diversified --seeds 20260907
+
+# 1194M CNN（元材質2ビュー・開口幅遮蔽・60epoch）を3seedすべて学習
+.venv/Scripts/python.exe -u -X utf8 -B scripts/train.py --source 1194m
+```
+
+※ GPU学習は決定的アルゴリズムを強制していないため、再学習時の重みは保存重みとビット単位では一致しません。
+
+### 4. CG原画像の再生成（Blender使用）
+
+```powershell
+# 1194Mの原CGを生成（少数確認は --limit 4 を指定）
+.venv/Scripts/python.exe -u -X utf8 -B scripts/render_cg.py 1194m
+
+# 多様形状の原CGを生成（plan → render → verify）
+.venv/Scripts/python.exe -X utf8 -B scripts/render_cg.py diversified --stage plan
+.venv/Scripts/python.exe -u -X utf8 -B scripts/render_cg.py diversified --stage render
+.venv/Scripts/python.exe -X utf8 -B scripts/render_cg.py diversified --stage verify
+```
+
+### 5. テスト
+
+```powershell
+.venv/Scripts/python.exe -X utf8 -B -m pytest -v -p no:cacheprovider tests/test_paf_system.py
+```
+
+## 比較手法の出典
+
+- **Zhang 2019型（再現実装）**：Limin Zhang, Wang Pan, Xianghua Ma, "Real-Time Docking Ring Detection Based on the Geometrical Shape for an On-Orbit Spacecraft," *Sensors*, 19(23), 5243, 2019, DOI `10.3390/s19235243`。著者コードの移植ではなく、論文の処理構成を参考にしたPython再現実装へPAF固有の全周エッジ支持・内包内周選択を追加したものです。

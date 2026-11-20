@@ -1,6 +1,39 @@
 # PAF内周検出：研究方針と引継ぎ
 
-最終更新：2026-10-26（JST）
+最終更新：2026-11-21（JST）
+
+## 現行システム構成（Kenkyuu/ 直下・最小自己完結構成）
+
+研究の中心比較（1194M学習CNN・多様形状学習CNN・Canny＋輪郭別RANSAC・Zhang 2019型（再現実装）の4方式、全13条件・評価時の白飛び最大内部強度2.0・再学習なし）とCG原画像再生成を `Kenkyuu/` 直下で完結して実行できる構成とする。
+
+- 直接実行するスクリプト（`scripts/` に集約）：`predict.py`（推論）、`train.py`（学習）、`evaluate.py`（評価・確定参照照合）、`report.py`（集計・図生成）、`render_cg.py`（Blenderによる1194M／多様形状の原CG再生成と検証）。
+- 設定正本（`configs/`）：`experiment.json`（学習・推論・評価・幾何・レポート図設定）、`render_1194m.json`、`render_diversified.json`。
+- 本体パッケージ（`src/`、役割別に依存分離）：
+  - `defaults.py`：基準パスと既定設定パス
+  - `core/`：共通部品（`io.py`・`geometry.py`・`effects.py`・`model.py`・`ransac.py`）
+  - `inference/`：推論処理（`predictor.py`・`canny.py`・`zhang2019.py`、学習コードへ非依存）
+  - `training/`：学習処理（`dataset.py`・`trainer.py`、推論コードへ非依存）
+  - `evaluation/`：評価・集計（`evaluator.py`・`reporter.py`）
+  - `cg/`：CG原画像再生成（`geometry_model.py`・`blender_common.py`・`render_1194m.py`・`render_diversified.py`）
+- データ・重み・素材：`assets/1194M_3/`（1194M CAD）、`data/`（固定分割済み1194M 2ビュー・多様形状 4ビュー）、`models/`（採用重み6モデル）、`references/`（確定参照JSON）、`outputs/`（評価・推論・学習・CG出力先）。
+
+確認済みの検証根拠（2026-11-21、Python 3.10.11 / PyTorch 2.13.0+cu130 / RTX 4070 Ti）：
+- 回帰テスト `tests/test_paf_system.py` 全9件合格（層分離・Tiny U-Net16 482,737パラメータ・重み厳密読込・撮像劣化・RANSAC/スケルトン・幾何2方式・パラメトリックPAF形状と計画・データセット・統一推論・1epoch学習動作確認）。
+- 既存採用重み6モデルの再推論（全13条件・白飛び最大内部強度2.0）は、全20,748推定について `references/` と楕円・IoU・成功判定・入力SHA256が不一致0件で完全一致（`outputs/evaluation/reference_verification.json`）。
+- 全13条件の総合成功率（`outputs/evaluation/REPORT.md`・`summary.json`、塗りつぶし楕円IoU ≥ 0.8、CNNは3seed平均）：
+  - 1194M評価データ：1194M学習CNN 79.97% / 多様形状学習CNN 67.88% / Canny＋輪郭別RANSAC 46.09% / Zhang 2019型（再現実装）42.99%。
+  - 多様形状評価データ：1194M学習CNN 55.48% / 多様形状学習CNN 72.14% / Canny＋輪郭別RANSAC 49.80% / Zhang 2019型（再現実装）56.19%。
+- 単体推論 `scripts/predict.py` による代表画像の楕円・確率出力（`outputs/predict_example/`）、比較図2枚（`outputs/evaluation/figures/overall.png`・`degradation.png`）、および `scripts/render_cg.py diversified --stage plan` による1,024形状計画の生成を確認済み。
+
+未検証事項と制約：
+- `scripts/train.py` による60epoch・3seedの本学習再現は未実行（1epochの動作確認まで実施）。GPU学習のビット単位一致は保証しない。
+- `scripts/render_cg.py` によるBlender実描画は未実行（`make_geometry` と `plan` 生成まで検証済み）。
+- 評価範囲は黒背景・モノクロ256px・単一開口CGであり、実画像一般・任意背景・未知機体一般への汎化は未検証。
+- Zhangの正規出典は Zhang, Pan, Ma, Sensors 2019, DOI `10.3390/s19235243`、実装は「Zhang 2019型（再現実装）」である。
+
+次の具体的作業：
+- 必要に応じて `scripts/train.py` による60epoch再学習または `scripts/render_cg.py` によるBlender少数描画テスト（`--limit 2`）を実施する。
+- 研究面では強い白飛び・黒つぶれ・短い残存輪郭の失敗整理と、未使用形状・実画像での定量評価計画を具体化する。
 
 ## 20分弱の発表用ノート
 
