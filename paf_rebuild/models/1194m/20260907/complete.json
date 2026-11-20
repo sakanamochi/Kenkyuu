@@ -1,0 +1,5 @@
+{
+  "epochs": 60,
+  "best_validation_loss": 0.2030193042998411,
+  "checkpoint_sha256": "2a0744c7eab0ec72414ae413e6daf195c7d6f1d60e093bf896c1eaae5a6bf068"
+}
