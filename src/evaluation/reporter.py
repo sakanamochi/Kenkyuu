@@ -267,7 +267,7 @@ def _plot_comparison_figures(
                     linewidth=1.8,
                     markersize=5,
                 )
-                if method in CNN_METHODS:
+                if method in CNN_METHODS and len(config["seeds"]) > 1:
                     ax.fill_between(valid_x, lows, highs, color=colors[method], alpha=0.14)
             if row_idx == 0:
                 ax.set_title(DEGRADATION_LABELS[deg])
@@ -285,10 +285,16 @@ def _plot_comparison_figures(
     handles, labels = axes[0, 0].get_legend_handles_labels()
     fig.suptitle("劣化条件・強度別の検出成功率", fontsize=14)
     fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.035), ncol=4, frameon=False)
+    seeds_cfg = [int(s) for s in config["seeds"]]
+    curve_note = (
+        f"CNNは固定1seed（{seeds_cfg[0]}）、幾何2方式は固定1回。成功条件：塗りつぶし楕円IoU ≥ 0.8。"
+        if len(seeds_cfg) == 1
+        else f"帯はCNN {len(seeds_cfg)}seedの最小〜最大（信頼区間ではない）。幾何2方式は固定1回。成功条件：塗りつぶし楕円IoU ≥ 0.8。"
+    )
     fig.text(
         0.5,
         0.008,
-        "帯はCNN 3seedの最小〜最大（信頼区間ではない）。幾何2方式は固定1回。成功条件：塗りつぶし楕円IoU ≥ 0.8。",
+        curve_note,
         ha="center",
         fontsize=9.5,
     )
@@ -339,6 +345,12 @@ def generate_report(
             writer.writeheader()
             writer.writerows(rows)
 
+    seeds_cfg = [int(s) for s in config["seeds"]]
+    cnn_eval_note = (
+        f"- CNN評価：固定1seed（{seeds_cfg[0]}）による単一モデル評価。"
+        if len(seeds_cfg) == 1
+        else f"- CNN評価：独立に学習した{len(seeds_cfg)}seed（{', '.join(str(s) for s in seeds_cfg)}）の算術平均（モデル統合ではない）。"
+    )
     lines = [
         "# PAF内周検出：評価レポート",
         "",
@@ -347,7 +359,7 @@ def generate_report(
         "- 入力仕様：モノクロ256×256（同一輝度3ch複製）、一様画像は未検出。",
         f"- 成功条件：正解楕円と推定楕円の**塗りつぶし領域 IoU ≥ {config['success_iou']:.1f}**（未検出も全件を分母に含む）。",
         f"- 白飛び評価：最大内部強度 {whiteout_max:g}（表示強度 0.25 / 0.5 / 0.75 / 1.0）。",
-        f"- CNN評価：独立に学習した3seed（{', '.join(str(s) for s in config['seeds'])}）の算術平均（モデル統合ではない）。",
+        cnn_eval_note,
         "- 幾何比較器：学習seedを持たない固定設定1回の評価。",
         f"- 比較器出典：{ZHANG_2019_REFERENCE['label']} は "
         f"{', '.join(ZHANG_2019_REFERENCE['authors'])}, "

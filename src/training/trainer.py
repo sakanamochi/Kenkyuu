@@ -70,10 +70,19 @@ def train_model(
     device_name: str = "auto",
     limit_samples: int | None = None,
     overwrite: bool = False,
+    view_dirs_override: dict[str, Path] | None = None,
+    view_slots_override: list[str] | None = None,
+    use_aperture_occlusion: bool = True,
 ) -> dict[str, Any]:
     """指定学習元とseedでTiny U-Net16を学習し、最小validation loss重みを保存する。"""
-    preset, view_dirs = resolve_preset_views(config, base_dir, source_name)
-    source = preset["source"]
+    if view_dirs_override is not None and view_slots_override is not None:
+        source = source_name
+        view_dirs = {k: Path(v).resolve() for k, v in view_dirs_override.items()}
+        view_slots = list(view_slots_override)
+    else:
+        preset, view_dirs = resolve_preset_views(config, base_dir, source_name)
+        source = preset["source"]
+        view_slots = list(preset["view_slots"])
     train_cfg = config["training"]
     total_epochs = int(train_cfg["epochs"] if epochs is None else epochs)
     input_size = int(config["input_size"])
@@ -98,13 +107,14 @@ def train_model(
     train_whiteout_max = float(train_cfg.get("whiteout_maximum_strength", 1.0))
     train_dataset = MultiViewBoundaryDataset(
         view_dirs=view_dirs,
-        view_slots=preset["view_slots"],
+        view_slots=view_slots,
         split="train",
         input_size=input_size,
         whiteout_maximum_strength=train_whiteout_max,
         cache=True,
         seed=seed,
         limit=limit_samples,
+        use_aperture_occlusion=use_aperture_occlusion,
     )
     val_dataset = MultiViewBoundaryDataset(
         view_dirs=view_dirs,
@@ -115,6 +125,7 @@ def train_model(
         cache=True,
         seed=seed,
         limit=limit_samples,
+        use_aperture_occlusion=False,
     )
 
     loader_kwargs = {
@@ -147,7 +158,8 @@ def train_model(
         "learning_rate": float(train_cfg["learning_rate"]),
         "weight_decay": float(train_cfg["weight_decay"]),
         "positive_weight": float(train_cfg["positive_weight"]),
-        "view_slots": list(preset["view_slots"]),
+        "view_slots": list(view_slots),
+        "use_aperture_occlusion": bool(use_aperture_occlusion),
         "train_samples": len(train_dataset),
         "validation_samples": len(val_dataset),
         "torch_version": torch.__version__,

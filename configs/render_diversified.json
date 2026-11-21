@@ -1,12 +1,17 @@
 {
-  "dataset_id": "paf_random_outer_d_v2",
-  "output_dir": "outputs/cg/diversified",
-  "seed": 2026102402,
-  "image_count": 1024,
+  "dataset_id": "diversified_limited_size",
+  "output_dir": "data/diversified_limited_size",
+  "seed": 2026112101,
+  "image_count": 756,
+  "splits": {
+    "train": 497,
+    "validation": 105,
+    "test": 154
+  },
   "top_outer_diameter": 1.0,
-  "bottom_outer_diameter_ratio": [1.0, 3.0],
-  "height_ratio": [0.5, 3.0],
-  "hole_diameter_ratio": [0.4, 0.95],
+  "bottom_outer_diameter_ratio": [1.0, 2.5],
+  "height_ratio": [0.2, 1.2],
+  "hole_diameter_ratio": [0.75, 0.95],
   "wall_thickness_ratio": 0.02,
   "segments": 192,
   "camera": {
@@ -15,6 +20,11 @@
     "lens_mm": 55,
     "margin": 0.08
   },
+  "projection": {
+    "major_px_256": [24.0, 180.0],
+    "aspect_ratio": [0.1, 0.996],
+    "center_range": [0.3, 0.7]
+  },
   "appearance": {
     "brightness": [0.1, 0.75],
     "metallic": [0.0, 0.85],
@@ -22,6 +32,15 @@
     "light_tilt_deg": [5, 85],
     "energy": [1.5, 5.0],
     "exposure": [-0.5, 0.5]
+  },
+  "surface": {
+    "albedo_low": [0.05, 0.35],
+    "albedo_high": [0.45, 0.85],
+    "metallic": [0.0, 0.85],
+    "roughness": [0.15, 0.7],
+    "stripe_cycles": [12, 48],
+    "noise_scale": [3.0, 14.0],
+    "checker_scale": [6.0, 24.0]
   },
   "resolution": 480,
   "background": "black"

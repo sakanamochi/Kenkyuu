@@ -8,16 +8,17 @@
 
 ```text
 Kenkyuu/
-  scripts/                  # ユーザーが直接実行するスクリプト（全5本）
+  scripts/                  # ユーザーが直接実行するスクリプト（全6本）
     predict.py              # 推論用：画像1枚を検出（多様形状CNN / 1194M CNN / Canny / Zhang 2019型）
     train.py                # 学習用：Tiny U-Net16を可視内周境界教師で学習
     evaluate.py             # 評価用：4方式×2評価集合×13条件の評価＋確定参照との全件照合
     report.py               # 集計用：REPORT.md・summary.json・CSV・比較図の生成
     render_cg.py            # CG生成用：Blenderによる1194M／多様形状の原CG再生成と検証
+    ablation.py             # 要因分解用：現実PAF範囲のCG生成・外観/投影/遮蔽/形状アブレーション実行・集計
   configs/                  # 設定ファイル
     experiment.json         # 学習・推論・評価・幾何比較器・レポート図の正本設定
     render_1194m.json       # 1194M原CG（714枚）のBlender描画設定
-    render_diversified.json # 多様形状原CG（1,024枚）の寸法・Blender描画設定
+    render_diversified.json # 現実PAF範囲（756形状）の寸法・Blender描画設定
   src/                      # 役割別に分離した本体パッケージ
     defaults.py             # 基準パスと既定設定パスの定義
     core/                   # 基本システム共通部品（io / geometry / effects / model / ransac）
@@ -26,10 +27,10 @@ Kenkyuu/
     evaluation/             # 評価・集計処理（evaluator / reporter）
     cg/                     # CG原画像再生成処理（geometry_model / blender_common / render_1194m / render_diversified）
   assets/1194M_3/           # 1194MのCAD素材（OBJ・MTL）
-  data/                     # 固定分割済みの学習・検証・評価データ（1194M 2ビュー / 多様形状 4ビュー）
-  models/                   # 学習済み採用重み（1194M×3seed・多様形状×3seed）
+  data/                     # 全データセット統一配置（1194m / diversified / diversified_limited_size / single_cone）
+  models/                   # 全学習済み重み統一配置（1194m / diversified / diversified_limited_size / ablation）
   references/               # 確定参照推定結果（再現性照合用）
-  outputs/                  # 推論・評価・学習・CG再生成の出力先
+  outputs/                  # 評価・推論・アブレーションの予測・レポート・図出力先
   tests/                    # 単体・結合・層分離テスト（test_paf_system.py）
   研究関連書類/             # 発表資料・先行研究（ローカル保持）
   .codex/                   # 研究仕様と引継ぎ資料（PROJECT_CONTEXT.md / RESEARCH_HANDOFF.md）
@@ -77,11 +78,14 @@ Kenkyuu/
 ### 3. 学習
 
 ```powershell
-# 多様形状CNN（4ビュー・開口幅遮蔽・60epoch）を学習
-.venv/Scripts/python.exe -u -X utf8 -B scripts/train.py --source diversified --seeds 20260907
+# 多様形状CNN（既定1seed: 20260907、4ビュー・開口幅遮蔽・60epoch）を学習
+.venv/Scripts/python.exe -u -X utf8 -B scripts/train.py --source diversified
 
-# 1194M CNN（元材質2ビュー・開口幅遮蔽・60epoch）を3seedすべて学習
-.venv/Scripts/python.exe -u -X utf8 -B scripts/train.py --source 1194m
+# 現実PAF範囲CNN（既定1seed: 20260907）を学習
+.venv/Scripts/python.exe -u -X utf8 -B scripts/train.py --source diversified_limited_size
+
+# 明示的に3seedで学習したい場合
+.venv/Scripts/python.exe -u -X utf8 -B scripts/train.py --source 1194m --seeds 20260907 20260908 20260909
 ```
 
 ※ GPU学習は決定的アルゴリズムを強制していないため、再学習時の重みは保存重みとビット単位では一致しません。

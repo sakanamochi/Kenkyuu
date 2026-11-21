@@ -134,11 +134,13 @@ class MultiViewBoundaryDataset(Dataset):
         cache: bool = False,
         seed: int | None = None,
         limit: int | None = None,
+        use_aperture_occlusion: bool = True,
     ) -> None:
         if split not in ("train", "validation"):
             raise ValueError("splitはtrainまたはvalidationを指定してください。")
         self.split = split
         self.input_size = int(input_size)
+        self.use_aperture_occlusion = bool(use_aperture_occlusion)
 
         active_slots = list(view_slots) if split == "train" else ["base"]
         loaded_views: dict[str, BoundaryViewDataset] = {}
@@ -176,7 +178,11 @@ class MultiViewBoundaryDataset(Dataset):
         image, masks, _ = view[index]
         sample = view.samples[index]
 
-        if self.split != "train" or sample["conditions"]["degradation"] != "black_rectangle":
+        if (
+            not self.use_aperture_occlusion
+            or self.split != "train"
+            or sample["conditions"]["degradation"] != "black_rectangle"
+        ):
             return image, masks, index
 
         cache_key = (slot_name, sample["image"])

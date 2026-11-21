@@ -9,9 +9,7 @@
   "reject_uniform_images": true,
   "evaluation_seed": 2026102404,
   "seeds": [
-    20260907,
-    20260908,
-    20260909
+    20260907
   ],
   "paths": {
     "data_dir": "data",
@@ -36,6 +34,22 @@
         "surface": "diversified/surface",
         "projection_plain": "diversified/projection_plain",
         "projection_surface": "diversified/projection_surface"
+      }
+    },
+    "diversified_limited_size": {
+      "label": "現実PAF範囲",
+      "base": "diversified_limited_size/base",
+      "views": {
+        "base": "diversified_limited_size/base",
+        "base_albedo": "diversified_limited_size/base_albedo",
+        "base_stripe": "diversified_limited_size/base_stripe",
+        "base_noise": "diversified_limited_size/base_noise",
+        "base_checker": "diversified_limited_size/base_checker",
+        "projection_plain": "diversified_limited_size/projection_plain",
+        "projection_albedo": "diversified_limited_size/projection_albedo",
+        "projection_stripe": "diversified_limited_size/projection_stripe",
+        "projection_noise": "diversified_limited_size/projection_noise",
+        "projection_checker": "diversified_limited_size/projection_checker"
       }
     }
   },
@@ -68,6 +82,24 @@
           "projection_surface"
         ],
         "description": "多様形状学習（元／拡張投影×元／拡張外観の4ビュー各25%、開口幅基準オンライン遮蔽）"
+      },
+      "diversified_limited_size": {
+        "source": "diversified_limited_size",
+        "view_slots": [
+          "base",
+          "base",
+          "base",
+          "base_stripe",
+          "base_noise",
+          "base_checker",
+          "projection_plain",
+          "projection_plain",
+          "projection_plain",
+          "projection_stripe",
+          "projection_noise",
+          "projection_checker"
+        ],
+        "description": "現実PAF寸法範囲学習（元／拡張投影×無地／3種模様各25%、開口幅基準オンライン遮蔽）"
       }
     }
   },

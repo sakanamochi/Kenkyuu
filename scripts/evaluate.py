@@ -29,7 +29,7 @@ def main() -> None:
     )
     parser.add_argument("--methods", nargs="+", choices=list(ALL_METHODS), default=None, help="評価する方式")
     parser.add_argument("--datasets", nargs="+", choices=["1194m", "diversified"], default=None, help="評価対象データセット")
-    parser.add_argument("--seeds", nargs="+", type=int, default=None, help="CNNの評価seed（省略時は全3seed）")
+    parser.add_argument("--seeds", nargs="+", type=int, default=None, help="CNNの評価seed（省略時は既定の1seed: 20260907）")
     parser.add_argument("--output", type=Path, default=None, help="出力先ディレクトリ（既定: outputs/evaluation）")
     parser.add_argument("--models-dir", type=Path, default=None, help="CNN重みの格納ディレクトリ")
     parser.add_argument("--device", default="auto", help="実行デバイス（auto / cuda / cpu）")
@@ -60,7 +60,7 @@ def main() -> None:
     )
 
     if args.verify_reference:
-        result = verify_against_references(config, base_dir, output_dir)
+        result = verify_against_references(config, base_dir, output_dir, seeds=args.seeds)
         print(
             f"[VERIFY] checked={result['checked_predictions']} "
             f"mismatches={result['ellipse_mismatches']}/{result['iou_mismatches']}/{result['success_mismatches']} "

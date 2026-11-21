@@ -124,6 +124,48 @@ def _evaluate_dataset(
     return payload
 
 
+def evaluate_checkpoint(
+    config: dict[str, Any],
+    *,
+    dataset_dir: Path,
+    dataset_name: str,
+    method: str,
+    destination: Path,
+    checkpoint_path: Path | None = None,
+    seed: int | None = None,
+    device_name: str = "auto",
+    overwrite: bool = False,
+) -> dict[str, Any]:
+    """任意のチェックポイント（または幾何方式）を単一テスト集合で統一評価する。"""
+    whiteout_max = float(config["evaluation"]["whiteout_maximum_strength"])
+    samples = load_manifest_samples(Path(dataset_dir).resolve(), "test")
+    device = resolve_device(device_name) if method in CNN_METHODS else None
+    model = None
+    if method in CNN_METHODS:
+        if checkpoint_path is None:
+            raise ValueError("CNN方式の評価にはcheckpoint_pathが必要です。")
+        assert device is not None
+        model, _ = load_checkpoint(
+            checkpoint_path,
+            device,
+            default_base_channels=int(config["training"]["base_channels"]),
+        )
+    return _evaluate_dataset(
+        config,
+        Path(dataset_dir).resolve(),
+        dataset_name,
+        samples,
+        method,
+        seed=seed,
+        model=model,
+        checkpoint_path=checkpoint_path,
+        device=device,
+        whiteout_maximum_strength=whiteout_max,
+        destination=Path(destination).resolve(),
+        overwrite=overwrite,
+    )
+
+
 def run_evaluation(
     config: dict[str, Any],
     base_dir: Path,
@@ -226,12 +268,14 @@ def verify_against_references(
     config: dict[str, Any],
     base_dir: Path,
     output_dir: Path,
+    *,
+    seeds: list[int] | None = None,
 ) -> dict[str, Any]:
     """全13条件（白飛び最大内部強度2.0）のCNN評価出力を確定参照JSONと全件照合する。"""
     references_dir = resolve_path(base_dir, config["paths"]["references_dir"])
     out_root = Path(output_dir).resolve()
     datasets = list(config["evaluation"]["test_datasets"])
-    seeds = [int(s) for s in config["seeds"]]
+    active_seeds = [int(s) for s in (config["seeds"] if seeds is None else seeds)]
 
     checked = 0
     ellipse_mismatches = 0
@@ -241,7 +285,7 @@ def verify_against_references(
     details: list[dict[str, Any]] = []
 
     for source, method in (("1194m", "cnn_1194m"), ("diversified", "cnn_diversified")):
-        for seed in seeds:
+        for seed in active_seeds:
             for dataset in datasets:
                 new_path = out_root / "predictions" / f"{method}_{seed}" / f"test_{dataset}.json"
                 base_ref_path = references_dir / "results" / source / str(seed) / f"test_{dataset}.json"
