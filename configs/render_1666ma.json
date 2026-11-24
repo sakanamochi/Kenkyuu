@@ -1,0 +1,56 @@
+{
+  "dataset_id": "base_cg_1666ma",
+  "source_name": "1666ma",
+  "model_path": "assets/1666MA/1666MA.obj",
+  "output_dir": "data/1666ma/base",
+  "raw_manifest_filename": "raw_manifest.json",
+  "evaluation_manifest_seed": 2026112416,
+  "save_preview_blend": true,
+  "normalize_model_axes": true,
+  "render": {
+    "engine": "BLENDER_EEVEE",
+    "width": 480,
+    "height": 480
+  },
+  "world": {
+    "color": [0.0, 0.0, 0.0],
+    "strength": 0.0
+  },
+  "target_ring": {
+    "description": "1666MA PAF内周面のカメラ側エッジ（直径1540mm）",
+    "z": 0.48,
+    "radius": 0.77,
+    "tolerance": 0.0005,
+    "expected_vertex_count": 35
+  },
+  "materials": {
+    "アルミニウム_-_サテン": {
+      "base_color": [0.62, 0.65, 0.70],
+      "metallic": 0.85,
+      "roughness": 0.32
+    },
+    "default": {
+      "base_color": [0.62, 0.65, 0.70],
+      "metallic": 0.85,
+      "roughness": 0.32
+    }
+  },
+  "camera_grid": {
+    "tilt_deg": [0, 20, 40, 60, 75],
+    "azimuth_deg": [0, 90],
+    "collapse_axis_azimuth": true,
+    "distances": [4.0, 5.2],
+    "targets": [
+      [0.0, 0.0, 0.0],
+      [0.15, 0.0, 0.0]
+    ],
+    "lens_mm": 55.0
+  },
+  "lighting_grid": {
+    "tilt_deg": [0, 45, 75],
+    "azimuth_deg": [0, 120, 240],
+    "collapse_axis_azimuth": true,
+    "energy": 3.0,
+    "angle_deg": 0.0
+  }
+}

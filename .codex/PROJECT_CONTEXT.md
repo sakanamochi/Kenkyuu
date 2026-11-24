@@ -1,74 +1,42 @@
 # PAF内周検出：実装仕様と出典
 
-現在の作業状態・研究結果・次の手順は[RESEARCH_HANDOFF.md](RESEARCH_HANDOFF.md)を正とする。
+現在の作業状態・研究方針・実験結果・次の手順は [RESEARCH_HANDOFF.md](RESEARCH_HANDOFF.md) を正とする。
 
-追加検証のうち原因診断は固定seed20260907の1つを使う。白飛び強度の追加評価はユーザーの最新指定により、1seed結果とは別に20260907・20260908・20260909の3seed平均も求める。入口は`research/paf_whiteout_strength/three_seed.py`、保存先は`output/paf_whiteout_strength_3seed_v1/`。既存の3seed結果は保持する。原因診断は`research/paf_training_diagnosis/`・`output/paf_training_diagnosis_v1/`で完了。1194M側は点群処理・投影の寄与を確認し、多様形状側は120epoch延長でも投影のみの不利が残る。詳細は引継ぎ冒頭を参照する。
+## 研究の問いと構成
 
-現在の指定条件は「1194M側の外観変更を外し、投影拡張は残す」。入口は`research/paf_fair_comparison/no_surface.py`、説明は`NO_SURFACE.md`、保存先は`output/paf_1194m_no_surface_v1/`。多様形状側と共通の教師・中心線RANSAC・最適化・欠損拡張は維持する。外観変更ありの共通条件比較は下記の固定対照として保持する。
+問いは「国際標準クランプバンド規格（937 / 1194 / 1666 / 2624 mm 等）に代表される現実のPAF寸法・構造に基づき合成データを設計すれば、特定機体の詳細CADを学習に使わずに、幾何手法を上回る劣化耐性と未知PAFへの汎化を両立できるか」。
 
-外観変更ありの固定対照は`research/paf_fair_comparison/`、結果は`output/paf_fair_comparison_v1/`。両学習元で採用済み可視境界教師・中心線RANSAC・投影/外観/遮蔽拡張・学習条件・3seedを共通化する。下記の穴領域CNNと`run.py`は原データ・分割・固定幾何を提供する基礎比較であり、現在のCNN比較とは区別する。発表用の変更理由は`research/paf_fair_comparison/PRESENTATION_CHANGES.md`。
+比較対象は境界CNN（1194M学習）、境界CNN（多様形状学習）、Canny＋輪郭別RANSAC、Zhang 2019型（再現実装）の4方式。1194MのCAD・画像は1194M学習CNNの比較基準および未知評価にのみ用い、多様形状学習CNNのtrain・validation・初期化には混ぜない。両CNNは同一の Tiny U-Net16（482,737パラメータ）をランダム初期化する。
 
-## 原データを提供する基礎比較
+## 現行システムとデータ仕様
 
-問いは「機体ごとの詳細CADに頼らず、合成形状を多様化して学習すれば、未知形状のPAF内周を検出しやすくなるか」。比較対象は穴領域CNN（1194M学習）、穴領域CNN（多様形状学習）、Canny＋輪郭別RANSAC、Zhang 2019型（再現実装）の4つ。1194Mと多様形状の二つのtest集合に全方式を適用する。
-
-1194MのCAD・画像は1194M学習CNNの比較基準に使う。多様形状学習CNNのtrain・validation・初期化には混ぜない。両CNNは同じTiny U-Net16をランダム初期化して学習する。方式・形状族・背景を独断で増やさない。シミュレーションを対象とする。
-
-## データと学習
-
-- 実行入口は`run.py`、正本設定は`config/experiment.json`。比較の保存先は`output/hole_region_comparison_v1/`に統一し、同じファイルを更新する。
-- 1194Mの原画像は`output/datasets/base_cg/`714枚。CADは`assets/1194M_3/`、描画設定は`config/render_base.json`。
-- 多様形状の原画像は`parametric_paf/output/paf_random_outer_d_v2/`1,024枚。正本仕様は`parametric_paf/random_paf/config.json`。
-- 上端外径D=1m、下端外径1D〜3D、全高0.5D〜3D、穴径0.4D〜0.95Dを独立一様抽選する。肉厚0.02D固定。開口を持つ環状の上板・閉じた底・法線方向に一定厚の側壁からなる。台座やリブを付けない。
-- 多様形状は全分割で本体全体を画面内へ収めるカメラ距離を使い、本体中央を注視する。撮影条件の変更はユーザーの指示に基づいて扱う。
-- 1194Mはカメラ、多様形状は寸法単位で分割する。両学習元の学習原画像497枚・validation105枚を揃える。testは1194M112枚、多様形状154枚。
-- 各分割へ通常・矩形遮蔽・白飛び・黒つぶれを含める。学習強度0.1〜0.8、validation強度0.3/0.6、test強度0.25/0.5/0.75/1.0。学習各1,988枚、validation各735枚、testは1,456/2,002枚。
-- 矩形遮蔽は画像端から画像幅×強度を黒くし、同じ原画像では強度間で左右を固定する。白飛びは線形露光の増加・飽和・明部のブルーム・ショットノイズ、黒つぶれは低露光・読み出しノイズ・黒レベル・6〜8bit量子化を近似する。
-- `effects.py`は正解形状を使わずに劣化を適用する。`data.py`の共通読込処理で480画像へ劣化を適用した後、グレースケールへ変換して同じ輝度を3chへ複製し、256へ縮小する。学習・validation・testと幾何2方式で同じ画像を共有する。
-- Tiny U-Net16、60epoch、batch16、AdamW・BCE＋Dice。seed20260907/20260908/20260909を両学習元で共通にする。固定した学習・validation入力はRAMへ保持する。
-- 教師は不可視部分を含む完全な穴内部。推論は確率0.5以上の最大領域外周へ楕円を当てはめる。採用重みはvalidation loss最小とし、testで選び直さない。
-
-## 幾何と評価
-
-全方式の入力はモノクロ256。成功条件はIoU≥0.8のみ。未検出と誤楕円も全画像を分母に数える。CNNは全3seedとその平均、幾何は各画像一回の成績を報告する。
-
-Cannyは標準Canny・輪郭分離・共通RANSAC・同心候補対の内周選択。Zhang 2019型（再現実装）は弧抽出・三弧統合・楕円推定とPAF固有の候補評価。Canny閾値30/90、RANSACの`perimeter_power=0.0`を固定し、testで調整しない。
-
-保存するのは原画像参照のmanifest、重み・全epoch履歴、全画像の推定JSON、条件・強度・seed別CSVと集計JSON・比較表・照合結果。準備時に固定した設定・実装・入力hashと最小validation checkpointを確認し、推定指標を元ラベルから全件再計算する。
-
-1194Mのtestは同機体の撮影条件分割、多様形状のtestは同じ合成形状族内の未知寸法。両原データには撮影・材質・投影サイズの差もあるため、この比較だけで形状多様化の単独因果効果を断定しない。既存画像は参照比較に使い、未使用の最終未知形状集合・実画像への汎化・対象なし判定は未検証。
-
-## 確認済みの基礎比較結果
-
-両学習元×3seed・各60epochの計6モデルと、二つのtest集合の4方式比較が完了。全方式モノクロ256、成功条件IoU≥0.8、通常と3劣化を含む。CNNは3seed平均、幾何は一回評価。
-
-|方式|1194M test（1,456枚）|多様形状 test（2,002枚）|
-|---|---:|---:|
-|穴領域CNN（1194M学習）|67.26%|0.93%|
-|穴領域CNN（多様形状学習）|21.93%|71.83%|
-|Canny＋輪郭別RANSAC|49.18%|53.00%|
-|Zhang 2019型（再現実装）|46.91%|61.24%|
-
-通常画像の成功率は、1194M学習CNNが1194M上100.00%・多様形状上1.95%、多様形状学習CNNが1194M上37.20%・多様形状上96.97%。自分の学習元に対応するtestでは各CNNが幾何を上回るが、学習元をまたぐ適用は弱い。形状多様化の単独効果や未知機体への十分な汎化は、この比較だけで主張しない。
-
-採用epochはseed20260907/20260908/20260909の順に、1194M学習55/51/44、多様形状学習17/21/41。正本は`results/REPORT.md`、`summary.json`、`scores.csv`、全推定JSON、`audit.json`。全16設定・27,664推定の指標と正解を元ラベルから照合し、全6モデルの60epoch・最小validation loss重み・有限性を確認済み。回帰テスト31件が合格。入力・設定・実装のhashは`readiness.json`と`provenance.json`を参照する。
+- 直接実行スクリプト（`scripts/`）：`predict.py`・`train.py`・`evaluate.py`・`report.py`・`render_cg.py`・`ablation.py`。
+- 正本設定（`configs/`）：`experiment.json`（学習・推論・評価・幾何・図設定）、`render_1194m.json`、`render_diversified.json`。
+- 基本運用は固定1seed（`20260907`）。3seed（`20260907`・`20260908`・`20260909`）は明示指定時のみ実行する。
+- 1194M原画像は `assets/1194M_3/1194M_3.obj` から生成した714枚（train 497 / val 105 / test 112）。
+- 多様形状PAFの現行形状モデル（`src/cg/geometry_model.py`、`configs/render_diversified.json`）：
+  - **下部円筒部（固定・コップ状）**：下端外径 $B = 1.0\text{ m}$ 固定、円筒高さ $H_{\mathrm{cyl}} = 0.25 B = 0.25\text{ m}$ 固定、平底で閉じる。
+  - **上部アダプタ部（可変・円錐台）**：上端外径比 $T/B \in [0.40, 1.00]$、アダプタ高さ比 $H/T \in [0.20, 0.80]$、穴径比 $\text{hole}/T \in [0.75, 0.95]$ を独立一様抽選する。
+  - **肉厚と内部空間**：法線方向肉厚 $t = 0.02 T$。上端リング幅 $(T - \text{hole})/2 > t$ を満たすことを検証し、上端開口から下部円筒底面まで一続きの内部空間を成す10点回転断面の閉メッシュを生成する。
+  - 出力先は `data/diversified_paf_cylinder/`（756形状：train 497 / val 105 / test 154）。
+- 撮像劣化は通常・矩形遮蔽・白飛び・黒つぶれ。480px原画像へ劣化適用後、グレースケール3ch複製・256px縮小する。評価は全13条件（白飛び最大内部強度2.0）、成功判定は塗りつぶし楕円 IoU ≥ 0.8（未検出・誤楕円を分母に含む）。
+- 境界CNNの教師は矩形遮蔽のみを除いた可視内周境界。損失は正例重み12のBCE＋Dice、60epoch、batch 16、AdamW。推論は確率0.5以上で二値化・形態学的スケルトン細線化・確率重み付きRANSACで楕円を推定する。
 
 ## Zhang型の正規出典
 
 Limin Zhang, Wang Pan, Xianghua Ma,
-“Real-Time Docking Ring Detection Based on the Geometrical Shape for an On-Orbit Spacecraft,” Sensors, 19(23), 5243, 2019.
+“Real-Time Docking Ring Detection Based on the Geometrical Shape for an On-Orbit Spacecraft,” *Sensors*, 19(23), 5243, 2019.
 
 - DOI: https://doi.org/10.3390/s19235243
 - Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC6928708/
 
 対象は軌道上宇宙機のドッキングリング。投影楕円となる内周を分断弧の統合で検出する問題として比較に用いる。
 
-`paf_ring_detection/methods/zhang2019.py`は論文の処理構成を参考にしたPython再現実装であり、著者コードの移植ではない。少なくとも以下の相違がある。
+`src/inference/zhang2019.py` は論文の処理構成を参考にしたPython再現実装であり、著者コードの移植ではない。少なくとも以下の相違がある。
 
 - OpenCVのCanny・Sobel・`fitEllipseDirect`を使用。
 - 計算量を固定するため弧数・組合せ数を制限。
 - 平行弦中点法は離散弧上の補間と`fitLine`で数値実装。
-- `zhang2019_paf.py`で全周エッジ支持・角度被覆を検証。
-- 内包関係があれば最も内側、なければ全周支持率最大を選ぶPAF固有の最終選択を追加。
+- 全周エッジ支持・角度被覆を検証し、内包関係があれば最も内側、なければ全周支持率最大を選ぶPAF固有の最終選択を追加。
 
 成果物では必ず「Zhang 2019型（再現実装）」と表記し、論文そのものの性能として結果を引用しない。

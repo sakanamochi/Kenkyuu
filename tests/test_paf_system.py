@@ -15,6 +15,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from defaults import DEFAULT_CONFIG_PATH, DEFAULT_RENDER_DIVERSIFIED_CONFIG
+from cg.cad_dataset import build_cad_evaluation_manifest, inspect_cad_obj, verify_cad_dataset
 from cg.geometry_model import build_dimensions, generate_diversified_plan, make_geometry
 from core.effects import apply_effect
 from core.geometry import evaluate_ellipses
@@ -139,18 +140,75 @@ def test_parametric_cg_model_and_plan(tmp_path: Path) -> None:
     cfg = read_json(DEFAULT_RENDER_DIVERSIFIED_CONFIG)
     dims = build_dimensions(
         cfg,
-        {"bottom_outer_diameter_ratio": 2.0, "height_ratio": 1.5, "hole_diameter_ratio": 0.7},
+        {"top_outer_diameter_ratio": 0.55, "adapter_height_ratio": 0.40, "hole_diameter_ratio": 0.89},
     )
     vertices, faces, rim, profile = make_geometry(dims, int(cfg["segments"]))
     assert len(rim) == int(cfg["segments"])
-    assert len(vertices) > 0 and len(faces) > 0 and len(profile) == 8
+    assert len(vertices) > 0 and len(faces) > 0 and len(profile) == 10
+    assert dims["bottom_outer_diameter"] == pytest.approx(1.0)
+    assert dims["cylinder_height"] == pytest.approx(0.25)
+    assert dims["wall_thickness"] == pytest.approx(0.02 * dims["top_outer_diameter"])
 
+    # 範囲の端8点すべてで有効な一続き空間メッシュを生成できることを確認する。
+    for top_r in cfg["top_outer_diameter_ratio"]:
+        for h_r in cfg["adapter_height_ratio"]:
+            for hole_r in cfg["hole_diameter_ratio"]:
+                corner = build_dimensions(
+                    cfg,
+                    {
+                        "top_outer_diameter_ratio": top_r,
+                        "adapter_height_ratio": h_r,
+                        "hole_diameter_ratio": hole_r,
+                    },
+                )
+                _, _, _, corner_profile = make_geometry(corner, 64)
+                assert len(corner_profile) == 10
+
+    # 上端リング幅が肉厚以下になる穴径は拒否されることを確認する。
     with pytest.raises(ValueError):
-        make_geometry({**dims, "hole_diameter": 0.99}, 64)
+        make_geometry({**dims, "hole_diameter": dims["top_outer_diameter"] - 2.0 * dims["wall_thickness"]}, 64)
 
     plan = generate_diversified_plan(DEFAULT_RENDER_DIVERSIFIED_CONFIG, tmp_path / "cg_plan")
     assert len(plan["samples"]) == int(cfg["image_count"])
     assert (tmp_path / "cg_plan" / "plan.json").exists()
+
+
+def test_cad_obj_inspection_and_1666ma_dataset(tmp_path: Path) -> None:
+    """外部CAD(.obj)の検査機能・13条件manifest構築・1666MA評価データセットの整合性を確認する。"""
+    obj_path = PROJECT_ROOT / "assets" / "1666MA" / "1666MA.obj"
+    info = inspect_cad_obj(obj_path)
+    assert info["vertex_count"] > 0
+    assert info["top_ring_candidates"], "上端リング候補が検出されること"
+    top_ring = info["top_ring_candidates"][0]
+    assert top_ring["z"] == pytest.approx(0.48, abs=1e-4)
+    assert top_ring["radius"] == pytest.approx(0.77, abs=1e-4)
+    assert top_ring["vertex_count"] == 35
+
+    # 1枚のダミー画像から13条件評価manifestが正しく展開されることを確認する。
+    mock_dir = tmp_path / "mock_cad"
+    (mock_dir / "images").mkdir(parents=True)
+    (mock_dir / "labels").mkdir(parents=True)
+    img_path = mock_dir / "images" / "s0.png"
+    lbl_path = mock_dir / "labels" / "s0.json"
+    img_path.write_bytes(b"png")
+    lbl_path.write_text("{}", encoding="utf-8")
+    (mock_dir / "raw_manifest.json").write_text(
+        '{"dataset_id":"mock","samples":[{"sample_id":"s0","image":"images/s0.png","label":"labels/s0.json","conditions":{"camera_id":"cam0"}}]}\n',
+        encoding="utf-8",
+    )
+    manifest_path = build_cad_evaluation_manifest(mock_dir, source_name="mock", seed=12345)
+    expanded = read_json(manifest_path)
+    assert expanded["counts"]["test"] == 13
+    assert all(row["split"] == "test" for row in expanded["samples"])
+
+    render_cfg = PROJECT_ROOT / "configs" / "render_1666ma.json"
+    dataset_dir = PROJECT_ROOT / "data" / "1666ma" / "base"
+    if (dataset_dir / "manifest.json").exists():
+        result = verify_cad_dataset(render_cfg, dataset_dir)
+        assert result["status"] == "passed"
+        assert result["raw_image_count"] == 252
+        assert result["evaluation_sample_count"] == 252 * 13
+        assert result["min_ring_margin_px"] >= 0.0
 
 
 def test_multiview_dataset_and_boundary_target() -> None:

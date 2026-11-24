@@ -26,6 +26,12 @@ from cg.blender_common import (
 )
 
 
+def _format_distance_tag(distance: float) -> str:
+    if abs(distance * 10.0 - round(distance * 10.0)) < 1e-6:
+        return f"{distance:05.1f}"
+    return f"{distance:06.2f}"
+
+
 def _expand_cameras(grid: dict[str, Any]) -> list[dict[str, Any]]:
     settings = []
     for tilt_deg in grid["tilt_deg"]:
@@ -34,9 +40,10 @@ def _expand_cameras(grid: dict[str, Any]) -> list[dict[str, Any]]:
             azimuths, grid["distances"], range(len(grid["targets"]))
         ):
             location = spherical_direction(float(tilt_deg), float(azimuth_deg)) * float(distance)
+            dist_tag = _format_distance_tag(float(distance))
             settings.append(
                 {
-                    "id": f"camera_t{int(tilt_deg):03d}_a{int(azimuth_deg):03d}_d{float(distance):05.1f}_o{target_idx:02d}",
+                    "id": f"camera_t{int(tilt_deg):03d}_a{int(azimuth_deg):03d}_d{dist_tag}_o{target_idx:02d}",
                     "tilt_deg": float(tilt_deg),
                     "azimuth_deg": float(azimuth_deg),
                     "location": list(location),
@@ -118,11 +125,13 @@ def _assign_target_ring(objects: list[bpy.types.Object], settings: dict[str, Any
 
 
 def _apply_materials(settings: dict[str, Any]) -> None:
+    default_values = settings.get("default")
     for material in bpy.data.materials:
-        values = settings.get(material.name)
+        values = settings.get(material.name, default_values)
         if values is None:
             continue
-        material.use_nodes = True
+        if material.node_tree is None:
+            material.use_nodes = True
         principled = next((n for n in material.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
         if principled is None:
             continue
@@ -232,7 +241,8 @@ def render_1194m(
         "sample_count": len(samples),
         "samples": samples,
     }
-    (dataset_dir / "manifest.json").write_text(
+    manifest_name = str(config.get("raw_manifest_filename", "manifest.json"))
+    (dataset_dir / manifest_name).write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     if config.get("save_preview_blend", True):

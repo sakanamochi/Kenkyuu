@@ -9,7 +9,7 @@ import random
 from pathlib import Path
 from typing import Any
 
-RATIO_KEYS = ("bottom_outer_diameter_ratio", "height_ratio", "hole_diameter_ratio")
+RATIO_KEYS = ("top_outer_diameter_ratio", "adapter_height_ratio", "hole_diameter_ratio")
 DEGRADATION_NAMES = ("black_rectangle", "sensor_whiteout", "sensor_black_crush")
 VAL_SEVERITIES = (0.3, 0.6)
 TEST_SEVERITIES = (0.25, 0.5, 0.75, 1.0)
@@ -32,33 +32,51 @@ def make_geometry(
     parameters: dict[str, float],
     segments: int = 192,
 ) -> tuple[list[tuple[float, float, float]], list[tuple[int, ...]], list[int], list[tuple[float, float]]]:
-    """上端外径を基準に、独立した穴径と法線方向一定肉厚を持つ閉メッシュを作る。"""
-    diameter = float(parameters["top_outer_diameter"])
+    """下部固定円筒と上部可変アダプタが一続きの内部空間を成す閉メッシュを作る。"""
     bottom = float(parameters["bottom_outer_diameter"])
-    height = float(parameters["height"])
+    cylinder_height = float(parameters["cylinder_height"])
+    top = float(parameters["top_outer_diameter"])
+    adapter_height = float(parameters["adapter_height"])
     hole = float(parameters["hole_diameter"])
     thickness = float(parameters["wall_thickness"])
 
-    if not all(math.isfinite(v) and v > 0.0 for v in (diameter, bottom, height, hole, thickness)):
+    if not all(
+        math.isfinite(v) and v > 0.0
+        for v in (bottom, cylinder_height, top, adapter_height, hole, thickness)
+    ):
         raise ValueError("寸法は有限の正数で指定してください。")
-    if bottom < diameter or not (0.0 < hole < diameter) or height <= 2.0 * thickness:
-        raise ValueError("下端径・穴径・高さの組合せが不正です。")
+    if top > bottom or not (0.0 < hole < top):
+        raise ValueError("上端径・下端径・穴径の組合せが不正です。")
+    if adapter_height <= thickness or cylinder_height <= 2.0 * thickness:
+        raise ValueError("アダプタ高さまたは円筒高さが肉厚に対して不足しています。")
 
-    outer_top, outer_bottom, opening = diameter / 2.0, bottom / 2.0, hole / 2.0
-    slope = (outer_bottom - outer_top) / height
-    radial_offset = thickness * math.sqrt(1.0 + slope * slope)
-    inner_top = outer_top + slope * thickness - radial_offset
-    inner_bottom = outer_bottom - slope * thickness - radial_offset
-    if inner_top <= opening or inner_bottom <= 0.0:
-        raise ValueError("穴径と肉厚を両立できません。")
+    outer_top = top / 2.0
+    outer_bottom = bottom / 2.0
+    opening = hole / 2.0
+    if outer_top - opening <= thickness + 1e-12:
+        raise ValueError("上端リング幅が肉厚以下になるため生成できません。")
+
+    total_height = adapter_height + cylinder_height
+    slope = (outer_bottom - outer_top) / adapter_height
+    hypot_slope = math.hypot(1.0, slope)
+    # アダプタ内側壁と上板下面(z=-t)・円筒内側壁(r=outer_bottom-t)との交点を求める。
+    inner_top = outer_top - thickness / (hypot_slope + slope)
+    joint_z = -adapter_height - thickness * slope / (hypot_slope + 1.0)
+    inner_bottom = outer_bottom - thickness
+    inner_floor_z = -total_height + thickness
+
+    if inner_top <= opening or inner_bottom <= 0.0 or joint_z <= inner_floor_z or joint_z >= -thickness:
+        raise ValueError("内壁と開口または底面が干渉し、有効な空間を構成できません。")
 
     profile = [
         (opening, 0.0),
         (outer_top, 0.0),
-        (outer_bottom, -height),
-        (0.0, -height),
-        (0.0, -height + thickness),
-        (inner_bottom, -height + thickness),
+        (outer_bottom, -adapter_height),
+        (outer_bottom, -total_height),
+        (0.0, -total_height),
+        (0.0, inner_floor_z),
+        (inner_bottom, inner_floor_z),
+        (inner_bottom, joint_z),
         (inner_top, -thickness),
         (opening, -thickness),
     ]
@@ -96,14 +114,21 @@ def make_geometry(
 
 
 def build_dimensions(config: dict[str, Any], ratios: dict[str, float]) -> dict[str, float]:
-    """上端外径Dと比率辞書から実寸法辞書を作成する。"""
-    diameter = float(config["top_outer_diameter"])
+    """下端外径B固定の円筒部と上端外径T基準のアダプタ部から実寸法辞書を作成する。"""
+    bottom = float(config["bottom_outer_diameter"])
+    cylinder_height = bottom * float(config["cylinder_height_ratio"])
+    top = bottom * float(ratios["top_outer_diameter_ratio"])
+    adapter_height = top * float(ratios["adapter_height_ratio"])
+    hole = top * float(ratios["hole_diameter_ratio"])
+    thickness = top * float(config["wall_thickness_ratio"])
     return {
-        "top_outer_diameter": diameter,
-        "bottom_outer_diameter": diameter * float(ratios["bottom_outer_diameter_ratio"]),
-        "height": diameter * float(ratios["height_ratio"]),
-        "hole_diameter": diameter * float(ratios["hole_diameter_ratio"]),
-        "wall_thickness": diameter * float(config["wall_thickness_ratio"]),
+        "bottom_outer_diameter": bottom,
+        "cylinder_height": cylinder_height,
+        "top_outer_diameter": top,
+        "adapter_height": adapter_height,
+        "total_height": adapter_height + cylinder_height,
+        "hole_diameter": hole,
+        "wall_thickness": thickness,
     }
 
 
@@ -352,10 +377,10 @@ def verify_diversified_dataset(config_path: Path, output_dir: Path) -> dict[str,
         x, y = (index % 4) * 256, (index // 4) * 294
         canvas.paste(img, (x, y))
         ratios = sample["ratios"]
-        draw.text((x + 3, y + 257), f"{sample['sample_id']}  D=1", fill="black")
+        draw.text((x + 3, y + 257), f"{sample['sample_id']}  B=1 C={config['cylinder_height_ratio']:.2f}", fill="black")
         draw.text(
             (x + 3, y + 275),
-            f"B={ratios[RATIO_KEYS[0]]:.2f} H={ratios[RATIO_KEYS[1]]:.2f} hole={ratios[RATIO_KEYS[2]]:.2f}",
+            f"T={ratios[RATIO_KEYS[0]]:.2f} H/T={ratios[RATIO_KEYS[1]]:.2f} h/T={ratios[RATIO_KEYS[2]]:.2f}",
             fill="black",
         )
     canvas.save(out / "dataset_preview.png")

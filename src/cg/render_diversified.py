@@ -169,10 +169,10 @@ def _place_base_camera(
 ) -> tuple[float, Vector]:
     """モデル全体が余白margin内に収まるカメラ距離・注視点を配置する。"""
     conditions = sample["conditions"]
-    height = float(sample["parameters"]["height"])
-    center = Vector((0.0, 0.0, -height / 2.0))
+    total_height = float(sample["parameters"]["total_height"])
+    center = Vector((0.0, 0.0, -total_height / 2.0))
     direction = spherical_direction(conditions["camera_tilt"], conditions["camera_azimuth"])
-    extent = math.hypot(float(sample["parameters"]["bottom_outer_diameter"]) / 2.0, height / 2.0)
+    extent = math.hypot(float(sample["parameters"]["bottom_outer_diameter"]) / 2.0, total_height / 2.0)
     distance = 2.0 * extent / math.tan(camera.data.angle / 2.0)
 
     for _ in range(24):

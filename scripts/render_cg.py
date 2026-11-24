@@ -1,8 +1,9 @@
-"""CG原画像再生成用スクリプト：Blender経由で1194Mまたは多様形状の原CGを生成・検証する。"""
+"""CG原画像生成・検査用スクリプト：Blender経由で1194M・任意CADモデル・多様形状の原CGを生成・検証する。"""
 
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -10,13 +11,14 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
+from cg.cad_dataset import build_cad_evaluation_manifest, inspect_cad_obj, verify_cad_dataset
+from cg.geometry_model import generate_diversified_plan, verify_diversified_dataset
+from core.io import load_config, read_json, resolve_path
 from defaults import (
     DEFAULT_CONFIG_PATH,
     DEFAULT_RENDER_1194M_CONFIG,
     DEFAULT_RENDER_DIVERSIFIED_CONFIG,
 )
-from cg.geometry_model import generate_diversified_plan, verify_diversified_dataset
-from core.io import load_config, read_json, resolve_path
 
 
 def _run_blender(
@@ -51,14 +53,15 @@ def main() -> None:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
 
-    parser = argparse.ArgumentParser(description="1194Mまたは多様形状の原CGデータセットを再生成します。")
-    parser.add_argument("target", choices=["1194m", "diversified"], help="生成対象（1194m / diversified）")
+    parser = argparse.ArgumentParser(description="1194M・任意CADモデル・多様形状のCGデータセットを生成・検証します。")
+    parser.add_argument("target", choices=["1194m", "cad", "diversified"], help="生成対象（1194m / cad / diversified）")
     parser.add_argument(
         "--stage",
-        choices=["plan", "render", "verify"],
+        choices=["inspect", "plan", "render", "manifest", "verify"],
         default="render",
-        help="実行段階（1194mはrenderのみ、diversifiedはplan / render / verify）",
+        help="実行段階（cadはinspect / render / manifest / verify、diversifiedはplan / render / verify）",
     )
+    parser.add_argument("--model", type=Path, default=None, help="cad inspect用のOBJモデルパス")
     parser.add_argument("--output", type=Path, default=None, help="出力先ディレクトリ（省略時は設定ファイルの既定先）")
     parser.add_argument("--limit", type=int, default=None, help="動作確認用に描画枚数を先頭N枚へ制限する")
     parser.add_argument("--blender", type=Path, default=None, help="Blender実行ファイルのパス")
@@ -77,6 +80,33 @@ def main() -> None:
         _run_blender(blender_path, script, render_cfg, base_dir, args.output, args.limit)
         return
 
+    if args.target == "cad":
+        if args.stage == "inspect":
+            if args.model is None:
+                raise ValueError("cad --stage inspect には --model <OBJパス> が必要です。")
+            info = inspect_cad_obj(resolve_path(base_dir, args.model))
+            print(json.dumps(info, ensure_ascii=False, indent=2))
+            return
+        if args.render_config is None:
+            raise ValueError("cadでは --render-config <描画設定JSON> を指定してください。")
+        render_cfg = resolve_path(base_dir, args.render_config)
+        cfg_data = read_json(render_cfg)
+        out_dir = resolve_path(base_dir, cfg_data["output_dir"]) if args.output is None else args.output.resolve()
+        if args.stage == "render":
+            script = PROJECT_ROOT / "src" / "cg" / "render_1194m.py"
+            _run_blender(blender_path, script, render_cfg, base_dir, out_dir, args.limit)
+        elif args.stage == "manifest":
+            source_name = str(cfg_data.get("source_name", cfg_data["dataset_id"]))
+            seed = int(cfg_data.get("evaluation_manifest_seed", exp_config["evaluation_seed"]))
+            dest = build_cad_evaluation_manifest(out_dir, source_name=source_name, seed=seed)
+            print(f"MANIFEST saved: {dest}")
+        elif args.stage == "verify":
+            result = verify_cad_dataset(render_cfg, out_dir)
+            print(f"VERIFIED: {result}")
+        else:
+            raise ValueError("cadでは --stage inspect / render / manifest / verify のみ対応しています。")
+        return
+
     render_cfg = (DEFAULT_RENDER_DIVERSIFIED_CONFIG if args.render_config is None else args.render_config).resolve()
     cfg_data = read_json(render_cfg)
     out_dir = resolve_path(base_dir, cfg_data["output_dir"]) if args.output is None else args.output.resolve()
@@ -87,9 +117,11 @@ def main() -> None:
     elif args.stage == "verify":
         result = verify_diversified_dataset(render_cfg, out_dir)
         print(f"VERIFIED: {result}")
-    else:
+    elif args.stage == "render":
         script = PROJECT_ROOT / "src" / "cg" / "render_diversified.py"
         _run_blender(blender_path, script, render_cfg, base_dir, out_dir, args.limit)
+    else:
+        raise ValueError("diversifiedでは --stage plan / render / verify のみ対応しています。")
 
 
 if __name__ == "__main__":

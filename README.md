@@ -18,7 +18,7 @@ Kenkyuu/
   configs/                  # 設定ファイル
     experiment.json         # 学習・推論・評価・幾何比較器・レポート図の正本設定
     render_1194m.json       # 1194M原CG（714枚）のBlender描画設定
-    render_diversified.json # 現実PAF範囲（756形状）の寸法・Blender描画設定
+    render_diversified.json # 多様形状PAF（アダプタ部＋固定円筒部・756形状）の寸法・Blender描画設定
   src/                      # 役割別に分離した本体パッケージ
     defaults.py             # 基準パスと既定設定パスの定義
     core/                   # 基本システム共通部品（io / geometry / effects / model / ransac）

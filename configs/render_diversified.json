@@ -1,16 +1,17 @@
 {
-  "dataset_id": "diversified_limited_size",
-  "output_dir": "data/diversified_limited_size",
-  "seed": 2026112101,
+  "dataset_id": "diversified_paf_cylinder",
+  "output_dir": "data/diversified_paf_cylinder",
+  "seed": 2026112401,
   "image_count": 756,
   "splits": {
     "train": 497,
     "validation": 105,
     "test": 154
   },
-  "top_outer_diameter": 1.0,
-  "bottom_outer_diameter_ratio": [1.0, 2.5],
-  "height_ratio": [0.2, 1.2],
+  "bottom_outer_diameter": 1.0,
+  "cylinder_height_ratio": 0.25,
+  "top_outer_diameter_ratio": [0.4, 1.0],
+  "adapter_height_ratio": [0.2, 0.8],
   "hole_diameter_ratio": [0.75, 0.95],
   "wall_thickness_ratio": 0.02,
   "segments": 192,

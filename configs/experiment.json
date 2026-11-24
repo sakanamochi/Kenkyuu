@@ -26,6 +26,13 @@
         "projection_plain": "1194m/projection_plain"
       }
     },
+    "1666ma": {
+      "label": "1666MA",
+      "base": "1666ma/base",
+      "views": {
+        "base": "1666ma/base"
+      }
+    },
     "diversified": {
       "label": "多様形状",
       "base": "diversified/base",

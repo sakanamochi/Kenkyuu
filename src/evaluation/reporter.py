@@ -36,16 +36,40 @@ DEGRADATION_LABELS = {
 DEGRADATION_ORDER = ("clean", "black_rectangle", "sensor_whiteout", "sensor_black_crush")
 
 
-def _aggregate(config: dict[str, Any], out_root: Path) -> dict[str, Any]:
+def _dataset_label(config: dict[str, Any], dataset: str) -> str:
+    if dataset in DATASET_LABELS:
+        return DATASET_LABELS[dataset]
+    meta = config.get("datasets", {}).get(dataset, {})
+    base = str(meta.get("label", dataset))
+    return base if base.endswith("評価データ") else f"{base}評価データ"
+
+
+def _resolve_datasets(config: dict[str, Any], out_root: Path, datasets: list[str] | None) -> list[str]:
+    if datasets is not None:
+        return list(datasets)
+    index_path = out_root / "evaluation_index.json"
+    if index_path.exists():
+        indexed = read_json(index_path).get("datasets")
+        if indexed:
+            return list(indexed)
+    return list(config["evaluation"]["test_datasets"])
+
+
+def _aggregate(
+    config: dict[str, Any],
+    out_root: Path,
+    *,
+    datasets: list[str] | None = None,
+) -> dict[str, Any]:
     methods = list(config["evaluation"]["methods"])
-    datasets = list(config["evaluation"]["test_datasets"])
+    active_datasets = _resolve_datasets(config, out_root, datasets)
     seeds = [int(s) for s in config["seeds"]]
 
     overall_rows: list[dict[str, Any]] = []
     condition_rows: list[dict[str, Any]] = []
     seed_records: list[dict[str, Any]] = []
 
-    for dataset in datasets:
+    for dataset in active_datasets:
         for method in methods:
             method_seeds: list[int | None] = seeds if method in CNN_METHODS else [None]
             loaded_per_seed: list[tuple[int | None, list[dict[str, Any]]]] = []
@@ -156,10 +180,14 @@ def _plot_comparison_figures(
     overall = data["overall"]
     by_condition = data["by_condition"]
     methods = [m for m in METHOD_LABELS if any(r["method"] == m for r in overall)]
-    datasets = [d for d in ("1194m", "diversified") if any(r["dataset"] == d for r in overall)]
+    datasets: list[str] = []
+    for r in overall:
+        if r["dataset"] not in datasets:
+            datasets.append(r["dataset"])
 
     # 図1: 全13条件の総合成功率（棒グラフ）
-    fig, ax = plt.subplots(figsize=tuple(fig_cfg["overall_figsize"]))
+    base_w, base_h = tuple(fig_cfg["overall_figsize"])
+    fig, ax = plt.subplots(figsize=(max(base_w, 2.8 * len(datasets) + 2.0), base_h))
     x = np.arange(len(datasets))
     width = 0.19
     offsets = (np.arange(len(methods)) - (len(methods) - 1) / 2.0) * width
@@ -200,7 +228,7 @@ def _plot_comparison_figures(
             )
 
     ax.set_xticks(x)
-    ax.set_xticklabels([DATASET_LABELS[d] for d in datasets])
+    ax.set_xticklabels([_dataset_label(config, d) for d in datasets])
     ax.set_ylabel("検出成功率 [%]（IoU ≥ 0.8）")
     ax.set_ylim(0, 106)
     ax.yaxis.set_minor_locator(AutoMinorLocator(2))
@@ -216,7 +244,9 @@ def _plot_comparison_figures(
 
     # 図2: 劣化条件・強度別曲線
     degs = ("black_rectangle", "sensor_whiteout", "sensor_black_crush")
-    fig, axes = plt.subplots(len(datasets), len(degs), figsize=tuple(fig_cfg["degradation_figsize"]), sharex=True, sharey=True)
+    deg_w, deg_h = tuple(fig_cfg["degradation_figsize"])
+    scaled_h = deg_h if len(datasets) == 2 else max(4.2, deg_h * (len(datasets) / 2.0))
+    fig, axes = plt.subplots(len(datasets), len(degs), figsize=(deg_w, scaled_h), sharex=True, sharey=True)
     if len(datasets) == 1:
         axes = np.asarray([axes])
     xs = [0.0, 0.25, 0.5, 0.75, 1.0]
@@ -274,7 +304,7 @@ def _plot_comparison_figures(
             if row_idx == len(datasets) - 1:
                 ax.set_xlabel("劣化強度")
             if col_idx == 0:
-                ax.set_ylabel(f"{DATASET_LABELS[dataset]}\n検出成功率 [%]")
+                ax.set_ylabel(f"{_dataset_label(config, dataset)}\n検出成功率 [%]")
             ax.set_xlim(-0.04, 1.04)
             ax.set_ylim(-2, 104)
             ax.set_xticks(xs)
@@ -313,11 +343,12 @@ def generate_report(
     config: dict[str, Any],
     output_dir: Path,
     *,
+    datasets: list[str] | None = None,
     with_figures: bool = True,
 ) -> dict[str, Any]:
     """保存済み評価結果を集計し、summary.json・CSV・REPORT.md・図を出力する。"""
     out_root = Path(output_dir).resolve()
-    data = _aggregate(config, out_root)
+    data = _aggregate(config, out_root, datasets=datasets)
     verification_path = out_root / "reference_verification.json"
     verification = read_json(verification_path) if verification_path.exists() else None
     whiteout_max = float(config["evaluation"]["whiteout_maximum_strength"])
@@ -373,8 +404,13 @@ def generate_report(
         "|評価対象|1194M学習CNN|多様形状学習CNN|Canny＋輪郭別RANSAC|Zhang 2019型（再現実装）|",
         "|---|---:|---:|---:|---:|",
     ]
-    for dataset in ("1194m", "diversified"):
-        cells = [DATASET_LABELS[dataset]]
+    active_datasets: list[str] = []
+    for r in data["overall"]:
+        if r["dataset"] not in active_datasets:
+            active_datasets.append(r["dataset"])
+
+    for dataset in active_datasets:
+        cells = [_dataset_label(config, dataset)]
         for method in ("cnn_1194m", "cnn_diversified", "canny", "zhang2019"):
             match = next(
                 (r for r in data["overall"] if r["dataset"] == dataset and r["method"] == method),
@@ -400,7 +436,7 @@ def generate_report(
         ("sensor_black_crush", 0.5),
         ("sensor_black_crush", 1.0),
     ]
-    for dataset in ("1194m", "diversified"):
+    for dataset in active_datasets:
         for method in ("cnn_1194m", "cnn_diversified", "canny", "zhang2019"):
             if not any(r["dataset"] == dataset and r["method"] == method for r in data["overall"]):
                 continue
@@ -418,7 +454,7 @@ def generate_report(
                     None,
                 )
                 vals.append(f"{m['success_percent']:.2f}%" if m is not None else "-")
-            lines.append(f"|{DATASET_LABELS[dataset]}|{METHOD_LABELS[method]}|" + "|".join(vals) + "|")
+            lines.append(f"|{_dataset_label(config, dataset)}|{METHOD_LABELS[method]}|" + "|".join(vals) + "|")
 
     if verification is not None:
         lines.extend(

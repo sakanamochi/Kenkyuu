@@ -28,7 +28,7 @@ def main() -> None:
         description="固定テスト集合（全13条件）で4方式を評価し、必要に応じて確定参照結果と照合します。"
     )
     parser.add_argument("--methods", nargs="+", choices=list(ALL_METHODS), default=None, help="評価する方式")
-    parser.add_argument("--datasets", nargs="+", choices=["1194m", "diversified"], default=None, help="評価対象データセット")
+    parser.add_argument("--datasets", nargs="+", default=None, help="評価対象データセット（configs/experiment.jsonのdatasets名）")
     parser.add_argument("--seeds", nargs="+", type=int, default=None, help="CNNの評価seed（省略時は既定の1seed: 20260907）")
     parser.add_argument("--output", type=Path, default=None, help="出力先ディレクトリ（既定: outputs/evaluation）")
     parser.add_argument("--models-dir", type=Path, default=None, help="CNN重みの格納ディレクトリ")
@@ -40,6 +40,10 @@ def main() -> None:
     args = parser.parse_args()
 
     config, base_dir = load_config(args.config)
+    if args.datasets is not None:
+        unknown = [d for d in args.datasets if d not in config["datasets"]]
+        if unknown:
+            raise ValueError(f"設定に未登録のデータセットです: {unknown}（登録済み: {list(config['datasets'])}）")
     output_dir = (
         resolve_path(base_dir, config["paths"]["outputs_dir"]) / "evaluation"
         if args.output is None

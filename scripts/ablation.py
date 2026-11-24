@@ -48,10 +48,10 @@ SINGLE_CONE_VIEWS = [
     "projection_noise",
     "projection_checker",
 ]
-# 現実PAF範囲の中央値に近い代表円錐（形状多様化なしの対照用）
+# 現実PAF範囲の中央値に近い代表形状（形状多様化なしの対照用）
 SINGLE_CONE_RATIOS = {
-    "bottom_outer_diameter_ratio": 1.75,
-    "height_ratio": 0.55,
+    "top_outer_diameter_ratio": 0.57,
+    "adapter_height_ratio": 0.45,
     "hole_diameter_ratio": 0.88,
 }
 DIAGNOSIS_SEED = 20260907

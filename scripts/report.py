@@ -20,6 +20,7 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="評価結果から集計表・REPORT.md・比較図を生成します。")
     parser.add_argument("--output", type=Path, default=None, help="評価結果ディレクトリ（既定: outputs/evaluation）")
+    parser.add_argument("--datasets", nargs="+", default=None, help="集計対象データセット（省略時はevaluation_index.jsonまたは既定）")
     parser.add_argument("--no-figures", action="store_true", help="グラフ画像の生成を省略する")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH, help="設定JSONのパス")
     args = parser.parse_args()
@@ -30,7 +31,7 @@ def main() -> None:
         if args.output is None
         else args.output.resolve()
     )
-    summary = generate_report(config, output_dir, with_figures=not args.no_figures)
+    summary = generate_report(config, output_dir, datasets=args.datasets, with_figures=not args.no_figures)
     print(f"REPORT: {output_dir / 'REPORT.md'}")
     print(f"SUMMARY: {output_dir / 'summary.json'}")
     for fig in summary["figures"]:
