@@ -32,6 +32,13 @@ from core.ransac import boundary_ellipse, fit_ellipse_ransac, skeleton_points
 from inference.canny import detect_canny_contour_ransac
 from inference.predictor import PAFDetector
 from inference.zhang2019 import ZHANG_2019_REFERENCE, detect_zhang2019
+from training.bg_suppression import (
+    composite_background_on_gray,
+    extract_outer_background_mask,
+    extract_outer_silhouette_edge,
+    outer_weighted_boundary_loss,
+    synthesize_background,
+)
 from training.dataset import MultiViewBoundaryDataset
 from training.trainer import boundary_loss, boundary_target, resolve_preset_views, train_model
 
@@ -353,3 +360,29 @@ def test_ellseg_model_loss_and_outer_ring_rejection() -> None:
     detected = predict_ellseg_ellipse(prob_rim, prob_hole, config["ransac_cnn"], mode="fused")
     assert detected is not None
     assert evaluate_ellipses(detected, inner, (256, 256))["ellipse_iou"] > 0.9
+
+
+def test_outer_background_mask_preserves_inner_hole() -> None:
+    """外側背景マスクが穴内部の真っ黒領域を含まず、外周負例重み損失が有限であることを確認する。"""
+    gray = np.zeros((256, 256), dtype=np.uint8)
+    cv2.circle(gray, (128, 128), 70, 180, -1)
+    cv2.circle(gray, (128, 128), 40, 0, -1)  # 穴内部が完全0（真っ黒）
+
+    outer_bg = extract_outer_background_mask(gray)
+    assert bool(outer_bg[0, 0]) is True
+    assert bool(outer_bg[128, 128]) is False, "穴の内部を背景と誤認してはならない"
+
+    bg = synthesize_background(256, np.random.default_rng(42), mode="earth_clouds")
+    comp = composite_background_on_gray(gray, outer_bg, bg)
+    assert int(comp[128, 128]) == 0, "背景合成で穴内部の画素が変わってはならない"
+
+    outer_edge = extract_outer_silhouette_edge(outer_bg, band_px=3)
+    assert float(outer_edge[128, 198]) == 1.0  # 外周(r=70)
+    assert float(outer_edge[128, 168]) == 0.0  # 内周(r=40)は含まない
+
+    hole = np.zeros((256, 256), dtype=np.float32)
+    cv2.circle(hole, (128, 128), 40, 1.0, -1)
+    vis = np.ones((256, 256), dtype=np.float32)
+    masks = torch.from_numpy(np.stack([hole, vis, outer_edge], axis=0))[None]
+    loss = outer_weighted_boundary_loss(torch.zeros((1, 1, 256, 256)), masks)
+    assert torch.isfinite(loss)
