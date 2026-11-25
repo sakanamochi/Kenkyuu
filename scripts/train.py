@@ -24,9 +24,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Tiny U-Net16を可視内周境界教師で学習します。")
     parser.add_argument(
         "--source",
-        choices=["diversified", "diversified_limited_size", "1194m"],
+        choices=["diversified", "1194m"],
         default="diversified",
-        help="学習データ源（diversified / diversified_limited_size / 1194m）",
+        help="学習データ源（diversified / 1194m）",
     )
     parser.add_argument("--seeds", nargs="+", type=int, default=None, help="学習seed（省略時は既定の1seed: 20260907）")
     parser.add_argument("--epochs", type=int, default=None, help="学習epoch数（省略時は60epoch）")

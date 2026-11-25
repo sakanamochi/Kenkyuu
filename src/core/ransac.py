@@ -190,15 +190,135 @@ def skeleton_points(probability: np.ndarray, threshold: float = 0.5) -> tuple[np
     return np.stack([xs, ys], axis=1).astype(np.float32), probability[ys, xs]
 
 
+def _ellipse_normalized_radius_sq(points: np.ndarray, ellipse: Ellipse) -> np.ndarray:
+    """各点の楕円正規化二乗半径 (x'/a)^2 + (y'/b)^2 を返す（<=1.0 が内部）。"""
+    (cx, cy), (axis_1, axis_2), angle = ellipse
+    half_1 = max(float(axis_1) * 0.5, 1e-9)
+    half_2 = max(float(axis_2) * 0.5, 1e-9)
+    centered = np.asarray(points, dtype=np.float64) - np.array([cx, cy], dtype=np.float64)
+    radians = math.radians(float(angle))
+    cos_a, sin_a = math.cos(radians), math.sin(radians)
+    local_x = centered[:, 0] * cos_a + centered[:, 1] * sin_a
+    local_y = -centered[:, 0] * sin_a + centered[:, 1] * cos_a
+    return (local_x / half_1) ** 2 + (local_y / half_2) ** 2
+
+
+def _sample_ellipse_points(ellipse: Ellipse, sample_count: int = 72) -> np.ndarray:
+    """楕円輪郭上の等角度サンプル点群を返す。"""
+    (cx, cy), (axis_1, axis_2), angle = ellipse
+    half_1 = float(axis_1) * 0.5
+    half_2 = float(axis_2) * 0.5
+    theta = np.linspace(0.0, 2.0 * np.pi, sample_count, endpoint=False)
+    radians = math.radians(float(angle))
+    cos_a, sin_a = math.cos(radians), math.sin(radians)
+    lx = half_1 * np.cos(theta)
+    ly = half_2 * np.sin(theta)
+    x = cx + lx * cos_a - ly * sin_a
+    y = cy + lx * sin_a + ly * cos_a
+    return np.column_stack((x, y))
+
+
+def _is_valid_inner_ellipse(
+    outer: dict[str, Any],
+    inner: dict[str, Any],
+    all_points: np.ndarray,
+    all_weights: np.ndarray,
+    settings: dict[str, Any],
+) -> bool:
+    """残差RANSACで得た第2候補が、第1候補に内包される本物の内周リングかを検証する。"""
+    outer_e = outer["ellipse"]
+    inner_e = inner["ellipse"]
+
+    outer_major = max(float(outer_e[1][0]), float(outer_e[1][1]))
+    inner_major = max(float(inner_e[1][0]), float(inner_e[1][1]))
+    major_ratio = inner_major / max(outer_major, 1e-9)
+    min_ratio = float(settings.get("inner_major_ratio_min", 0.30))
+    max_ratio = float(settings.get("inner_major_ratio_max", 0.90))
+    if not (min_ratio <= major_ratio <= max_ratio):
+        return False
+
+    # 第2候補の輪郭サンプル点のほぼ全てが第1候補の内部（上端接近の微小マージン含む）に収まること
+    samples = _sample_ellipse_points(inner_e, sample_count=72)
+    inside_fraction = float(np.mean(_ellipse_normalized_radius_sq(samples, outer_e) <= 1.06))
+    if inside_fraction < float(settings.get("inner_containment_min", 0.95)):
+        return False
+
+    # 全スケルトン点群上で第2候補の角度被覆と周長あたり支持密度を再評価し、局所ノイズ円を排除する
+    dist_threshold = float(settings["distance_threshold_px"])
+    distances = _point_distances(all_points, inner_e)
+    inliers = distances <= dist_threshold
+    if int(np.count_nonzero(inliers)) < int(settings["min_inliers"]):
+        return False
+
+    coverage = _angular_coverage(all_points[inliers], inner_e, int(settings["angular_bins"]))
+    outer_coverage = float(outer["angular_coverage"])
+    min_cov = float(settings.get("inner_min_coverage", 0.40))
+    rel_cov = float(settings.get("inner_relative_coverage_min", 0.70))
+    if coverage < max(min_cov, outer_coverage * rel_cov):
+        return False
+
+    weight_density = float(all_weights[inliers].sum()) / max(_ellipse_perimeter(inner_e), 1e-9)
+    if weight_density < float(settings.get("inner_min_weight_density", 0.45)):
+        return False
+    return True
+
+
 def boundary_ellipse(
     probability: np.ndarray,
     ransac_settings: dict[str, Any],
     *,
     threshold: float = 0.5,
 ) -> Ellipse | None:
-    """境界確率マップから中心線点群を作り、確率重み付きRANSACで内周楕円を推定する。"""
+    """境界確率マップから中心線点群を作り、確率重み付きRANSACで内周楕円を推定する。
+
+    prefer_inner_ellipse=True の場合、第1候補楕円の内側に残る点群へ残差RANSACを適用し、
+    完全内包かつ十分な全周支持を持つ内周リングが存在すれば最内周を選択する。
+    """
     points, weights = skeleton_points(probability, threshold=threshold)
-    if len(points) < int(ransac_settings["min_inliers"]):
+    min_inliers = int(ransac_settings["min_inliers"])
+    if len(points) < min_inliers:
         return None
-    fitted = fit_ellipse_ransac(points, probability.shape, ransac_settings, weights=weights)
-    return fitted["ellipse"] if fitted is not None else None
+    current = fit_ellipse_ransac(points, probability.shape, ransac_settings, weights=weights)
+    if current is None:
+        return None
+
+    if not bool(ransac_settings.get("prefer_inner_ellipse", False)):
+        return current["ellipse"]
+
+    # 外周と内周が同時反応した場合に最内周を選ぶ（最大2段の残差探索）
+    base_seed = int(ransac_settings["random_seed"])
+    for step in range(1, 3):
+        distances = _point_distances(points, current["ellipse"])
+        not_on_outer = distances > float(ransac_settings["distance_threshold_px"])
+        inside_outer = _ellipse_normalized_radius_sq(points, current["ellipse"]) <= 1.02
+        residual_mask = not_on_outer & inside_outer
+        if int(np.count_nonzero(residual_mask)) < min_inliers:
+            break
+        inner = fit_ellipse_ransac(
+            points[residual_mask],
+            probability.shape,
+            ransac_settings,
+            weights=weights[residual_mask],
+            random_seed=base_seed + step * 1009,
+        )
+        if inner is None or not _is_valid_inner_ellipse(current, inner, points, weights, ransac_settings):
+            break
+        # 採用した内周楕円を全点群インライアで最終精緻化する
+        all_dist = _point_distances(points, inner["ellipse"])
+        all_inliers = all_dist <= float(ransac_settings["distance_threshold_px"])
+        if int(np.count_nonzero(all_inliers)) >= min_inliers:
+            try:
+                refined = cv2.fitEllipse(points[all_inliers].reshape(-1, 1, 2))
+                if _is_valid_ellipse(refined, probability.shape, ransac_settings):
+                    inner = {
+                        **inner,
+                        "ellipse": refined,
+                        "angular_coverage": _angular_coverage(
+                            points[all_inliers], refined, int(ransac_settings["angular_bins"])
+                        ),
+                    }
+            except cv2.error:
+                pass
+        current = inner
+
+    return current["ellipse"]

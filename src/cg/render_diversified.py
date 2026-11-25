@@ -172,7 +172,11 @@ def _place_base_camera(
     total_height = float(sample["parameters"]["total_height"])
     center = Vector((0.0, 0.0, -total_height / 2.0))
     direction = spherical_direction(conditions["camera_tilt"], conditions["camera_azimuth"])
-    extent = math.hypot(float(sample["parameters"]["bottom_outer_diameter"]) / 2.0, total_height / 2.0)
+    max_radius = max(
+        float(sample["parameters"]["bottom_outer_diameter"]),
+        float(sample["parameters"]["top_outer_diameter"]),
+    ) / 2.0
+    extent = math.hypot(max_radius, total_height / 2.0)
     distance = 2.0 * extent / math.tan(camera.data.angle / 2.0)
 
     for _ in range(24):

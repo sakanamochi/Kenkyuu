@@ -12,7 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from cg.cad_dataset import build_cad_evaluation_manifest, inspect_cad_obj, verify_cad_dataset
-from cg.geometry_model import generate_diversified_plan, verify_diversified_dataset
+from cg.geometry_model import build_split_manifests, generate_diversified_plan, verify_diversified_dataset
 from core.io import load_config, read_json, resolve_path
 from defaults import (
     DEFAULT_CONFIG_PATH,
@@ -28,6 +28,7 @@ def _run_blender(
     base_dir: Path,
     output_dir: Path | None,
     limit: int | None,
+    views: list[str] | None = None,
 ) -> None:
     if not blender_path.exists():
         raise FileNotFoundError(f"Blender実行ファイルが見つかりません: {blender_path}")
@@ -46,6 +47,9 @@ def _run_blender(
         command.extend(["--output", str(output_dir.resolve())])
     if limit is not None:
         command.extend(["--limit", str(limit)])
+    if views:
+        command.append("--views")
+        command.extend(views)
     subprocess.run(command, check=True)
 
 
@@ -64,6 +68,7 @@ def main() -> None:
     parser.add_argument("--model", type=Path, default=None, help="cad inspect用のOBJモデルパス")
     parser.add_argument("--output", type=Path, default=None, help="出力先ディレクトリ（省略時は設定ファイルの既定先）")
     parser.add_argument("--limit", type=int, default=None, help="動作確認用に描画枚数を先頭N枚へ制限する")
+    parser.add_argument("--views", nargs="+", default=None, help="diversifiedで生成・manifest化するビュー名一覧")
     parser.add_argument("--blender", type=Path, default=None, help="Blender実行ファイルのパス")
     parser.add_argument("--render-config", type=Path, default=None, help="描画設定JSONのパス")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH, help="基本設定JSONのパス")
@@ -114,14 +119,18 @@ def main() -> None:
     if args.stage == "plan":
         plan = generate_diversified_plan(render_cfg, out_dir)
         print(f"PLAN saved: {out_dir / 'plan.json'} (samples={len(plan['samples'])})")
+    elif args.stage == "manifest":
+        views = args.views or list(exp_config["datasets"]["diversified"]["views"].keys())
+        written = build_split_manifests(out_dir, views)
+        print(f"MANIFESTS saved: {len(written)} views under {out_dir}")
     elif args.stage == "verify":
         result = verify_diversified_dataset(render_cfg, out_dir)
         print(f"VERIFIED: {result}")
     elif args.stage == "render":
         script = PROJECT_ROOT / "src" / "cg" / "render_diversified.py"
-        _run_blender(blender_path, script, render_cfg, base_dir, out_dir, args.limit)
+        _run_blender(blender_path, script, render_cfg, base_dir, out_dir, args.limit, views=args.views)
     else:
-        raise ValueError("diversifiedでは --stage plan / render / verify のみ対応しています。")
+        raise ValueError("diversifiedでは --stage plan / render / manifest / verify のみ対応しています。")
 
 
 if __name__ == "__main__":

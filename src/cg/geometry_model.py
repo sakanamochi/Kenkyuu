@@ -45,8 +45,8 @@ def make_geometry(
         for v in (bottom, cylinder_height, top, adapter_height, hole, thickness)
     ):
         raise ValueError("寸法は有限の正数で指定してください。")
-    if top > bottom or not (0.0 < hole < top):
-        raise ValueError("上端径・下端径・穴径の組合せが不正です。")
+    if not (0.0 < hole < top):
+        raise ValueError("上端径と穴径の組合せが不正です。")
     if adapter_height <= thickness or cylinder_height <= 2.0 * thickness:
         raise ValueError("アダプタ高さまたは円筒高さが肉厚に対して不足しています。")
 
@@ -114,11 +114,11 @@ def make_geometry(
 
 
 def build_dimensions(config: dict[str, Any], ratios: dict[str, float]) -> dict[str, float]:
-    """下端外径B固定の円筒部と上端外径T基準のアダプタ部から実寸法辞書を作成する。"""
+    """下端外径B基準の円筒部・アダプタ部と上端外径T基準の穴・肉厚から実寸法辞書を作成する。"""
     bottom = float(config["bottom_outer_diameter"])
     cylinder_height = bottom * float(config["cylinder_height_ratio"])
     top = bottom * float(ratios["top_outer_diameter_ratio"])
-    adapter_height = top * float(ratios["adapter_height_ratio"])
+    adapter_height = bottom * float(ratios["adapter_height_ratio"])
     hole = top * float(ratios["hole_diameter_ratio"])
     thickness = top * float(config["wall_thickness_ratio"])
     return {
@@ -380,7 +380,7 @@ def verify_diversified_dataset(config_path: Path, output_dir: Path) -> dict[str,
         draw.text((x + 3, y + 257), f"{sample['sample_id']}  B=1 C={config['cylinder_height_ratio']:.2f}", fill="black")
         draw.text(
             (x + 3, y + 275),
-            f"T={ratios[RATIO_KEYS[0]]:.2f} H/T={ratios[RATIO_KEYS[1]]:.2f} h/T={ratios[RATIO_KEYS[2]]:.2f}",
+            f"T/B={ratios[RATIO_KEYS[0]]:.2f} H/B={ratios[RATIO_KEYS[1]]:.2f} h/T={ratios[RATIO_KEYS[2]]:.2f}",
             fill="black",
         )
     canvas.save(out / "dataset_preview.png")

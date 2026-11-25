@@ -18,6 +18,13 @@ from defaults import DEFAULT_CONFIG_PATH, DEFAULT_RENDER_DIVERSIFIED_CONFIG
 from cg.cad_dataset import build_cad_evaluation_manifest, inspect_cad_obj, verify_cad_dataset
 from cg.geometry_model import build_dimensions, generate_diversified_plan, make_geometry
 from core.effects import apply_effect
+from core.ellseg_model import TinyEllSegUNet, ellseg_loss, predict_ellseg_ellipse
+from core.ellipse_regressor import (
+    TinyEllipseRegressor,
+    ellipse_to_normalized_vector,
+    normalized_vector_to_ellipse,
+    prob_iou_loss,
+)
 from core.geometry import evaluate_ellipses
 from core.io import load_config, read_json, resolve_path
 from core.model import TinyUNet, count_parameters, load_checkpoint
@@ -117,6 +124,15 @@ def test_geometry_ransac_and_skeleton() -> None:
     assert detected is not None
     assert evaluate_ellipses(detected, truth, (256, 256))["ellipse_iou"] > 0.9
 
+    # 内周と外周が同時反応した2重リング確率マップから、残差RANSAC内側優先選択が内周を選ぶこと
+    outer_ring = ((128.0, 128.0), (160.0, 120.0), 25.0)
+    dual_prob = np.zeros((256, 256), dtype=np.float32)
+    cv2.ellipse(dual_prob, truth, 0.95, 3)
+    cv2.ellipse(dual_prob, outer_ring, 0.95, 3)
+    inner_detected = boundary_ellipse(dual_prob, {**config["ransac_cnn"], "prefer_inner_ellipse": True})
+    assert inner_detected is not None
+    assert evaluate_ellipses(inner_detected, truth, (256, 256))["ellipse_iou"] > 0.9
+
 
 def test_geometric_baselines_and_zhang_citation() -> None:
     config, _ = load_config(DEFAULT_CONFIG_PATH)
@@ -140,16 +156,17 @@ def test_parametric_cg_model_and_plan(tmp_path: Path) -> None:
     cfg = read_json(DEFAULT_RENDER_DIVERSIFIED_CONFIG)
     dims = build_dimensions(
         cfg,
-        {"top_outer_diameter_ratio": 0.55, "adapter_height_ratio": 0.40, "hole_diameter_ratio": 0.89},
+        {"top_outer_diameter_ratio": 0.55, "adapter_height_ratio": 0.22, "hole_diameter_ratio": 0.92},
     )
     vertices, faces, rim, profile = make_geometry(dims, int(cfg["segments"]))
     assert len(rim) == int(cfg["segments"])
     assert len(vertices) > 0 and len(faces) > 0 and len(profile) == 10
     assert dims["bottom_outer_diameter"] == pytest.approx(1.0)
     assert dims["cylinder_height"] == pytest.approx(0.25)
-    assert dims["wall_thickness"] == pytest.approx(0.02 * dims["top_outer_diameter"])
+    assert dims["adapter_height"] == pytest.approx(0.22)
+    assert dims["wall_thickness"] == pytest.approx(0.012 * dims["top_outer_diameter"])
 
-    # 範囲の端8点すべてで有効な一続き空間メッシュを生成できることを確認する。
+    # 範囲の端8点すべて（わずかな逆テーパを含む）で有効な一続き空間メッシュを生成できることを確認する。
     for top_r in cfg["top_outer_diameter_ratio"]:
         for h_r in cfg["adapter_height_ratio"]:
             for hole_r in cfg["hole_diameter_ratio"]:
@@ -278,3 +295,61 @@ def test_training_smoke_one_epoch(tmp_path: Path) -> None:
     assert (tmp_path / "smoke_run" / "best.pt").exists()
     assert (tmp_path / "smoke_run" / "complete.json").exists()
     assert (tmp_path / "smoke_run" / "training_history.json").exists()
+
+
+def test_direct_ellipse_regressor_and_prob_iou_invariance() -> None:
+    """直接楕円回帰モデルの出力範囲・パラメータ規模・ProbIoU損失の幾何不変性を確認する。"""
+    model = TinyEllipseRegressor(16)
+    params = count_parameters(model)
+    assert 400_000 <= params <= 600_000
+    out = model(torch.zeros((2, 3, 256, 256)))
+    assert out.shape == (2, 6)
+    assert torch.isfinite(out).all()
+
+    gt = ((120.0, 140.0), (110.0, 70.0), 35.0)
+    vec_gt = torch.tensor([ellipse_to_normalized_vector(gt, 256)], dtype=torch.float32)
+    restored = normalized_vector_to_ellipse(vec_gt[0], 256)
+    assert evaluate_ellipses(restored, gt, (256, 256))["ellipse_iou"] > 0.99
+
+    # 同一楕円・180度回転・長短軸入替+90度回転でProbIoU損失がほぼ0になること
+    gt_rot180 = ((120.0, 140.0), (110.0, 70.0), 215.0)
+    gt_swapped = ((120.0, 140.0), (70.0, 110.0), 125.0)
+    gt_shifted = ((160.0, 140.0), (110.0, 70.0), 35.0)
+    for equiv in (gt, gt_rot180, gt_swapped):
+        vec_eq = torch.tensor([ellipse_to_normalized_vector(equiv, 256)], dtype=torch.float32)
+        assert float(prob_iou_loss(vec_eq, vec_gt).item()) < 1e-3
+
+    vec_shift = torch.tensor([ellipse_to_normalized_vector(gt_shifted, 256)], dtype=torch.float32, requires_grad=True)
+    loss = prob_iou_loss(vec_shift, vec_gt)
+    assert float(loss.item()) > 0.1
+    loss.backward()
+    assert vec_shift.grad is not None and torch.isfinite(vec_shift.grad).all()
+
+
+def test_ellseg_model_loss_and_outer_ring_rejection() -> None:
+    """EllSeg型2chモデルの規模・損失・穴マスクゲートによる外周誤認排除を確認する。"""
+    model = TinyEllSegUNet(16)
+    assert count_parameters(model) == 482_754
+    logits = model(torch.zeros((1, 3, 256, 256)))
+    assert logits.shape == (1, 2, 256, 256)
+
+    masks = torch.zeros((1, 2, 256, 256))
+    masks[0, 0, 88:168, 88:168] = 1.0
+    masks[0, 1] = 1.0
+    bce = torch.nn.BCEWithLogitsLoss(pos_weight=torch.tensor([12.0]))
+    loss, parts = ellseg_loss(logits, masks, bce)
+    assert torch.isfinite(loss) and all(np.isfinite(v) for v in parts.values())
+
+    # 内周(半径40)と外周(半径80)の両方が境界マップで反応しても、穴マスク(半径40)により内周を選ぶこと
+    inner = ((128.0, 128.0), (80.0, 64.0), 10.0)
+    outer = ((128.0, 128.0), (160.0, 128.0), 10.0)
+    prob_rim = np.zeros((256, 256), dtype=np.float32)
+    cv2.ellipse(prob_rim, inner, 0.95, 3)
+    cv2.ellipse(prob_rim, outer, 0.95, 3)
+    prob_hole = np.zeros((256, 256), dtype=np.float32)
+    cv2.ellipse(prob_hole, inner, 0.95, -1)
+
+    config, _ = load_config(DEFAULT_CONFIG_PATH)
+    detected = predict_ellseg_ellipse(prob_rim, prob_hole, config["ransac_cnn"], mode="fused")
+    assert detected is not None
+    assert evaluate_ellipses(detected, inner, (256, 256))["ellipse_iou"] > 0.9
