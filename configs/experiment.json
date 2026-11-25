@@ -36,6 +36,12 @@
     "diversified": {
       "label": "多様形状",
       "base": "diversified/base",
+      "test_views": [
+        "base",
+        "base_stripe",
+        "base_noise",
+        "base_checker"
+      ],
       "views": {
         "base": "diversified/base",
         "base_stripe": "diversified/base_stripe",

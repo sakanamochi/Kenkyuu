@@ -362,8 +362,9 @@ def evaluate_ellipse_regressor(
 
     results: dict[str, Any] = {}
     for dataset_name in datasets:
-        dataset_dir = (data_root / config["datasets"][dataset_name]["base"]).resolve()
-        samples = load_manifest_samples(dataset_dir, "test")
+        from core.io import load_evaluation_test_samples
+
+        dataset_dir, samples = load_evaluation_test_samples(config, data_root, dataset_name)
         dest = out_root / "predictions" / f"cnn_direct_{seed}" / f"test_{dataset_name}.json"
 
         if dest.exists() and not overwrite:

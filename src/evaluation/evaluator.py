@@ -12,6 +12,7 @@ import torch
 from core.effects import load_sample_and_truth
 from core.geometry import ellipse_to_list, evaluate_ellipses
 from core.io import (
+    load_evaluation_test_samples,
     load_manifest_samples,
     read_json,
     resolve_path,
@@ -212,8 +213,7 @@ def run_evaluation(
 
             tag = _method_tag(method, seed)
             for dataset_name in active_datasets:
-                dataset_dir = (data_root / config["datasets"][dataset_name]["base"]).resolve()
-                all_test = load_manifest_samples(dataset_dir, "test")
+                dataset_dir, all_test = load_evaluation_test_samples(config, data_root, dataset_name)
                 samples = all_test[:limit] if limit is not None else all_test
                 dest = out_root / "predictions" / tag / f"test_{dataset_name}.json"
                 res = _evaluate_dataset(

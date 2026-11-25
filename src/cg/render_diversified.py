@@ -410,6 +410,12 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--views", nargs="+", default=None, help="複数ビューを一括描画する際のビュー名一覧")
+    parser.add_argument(
+        "--splits",
+        nargs="+",
+        default=["train"],
+        help="投影拡張・表面模様を描画するsplit一覧（既定: train）",
+    )
     parser.add_argument("--fixed-ratios", type=str, default=None, help="固定寸法比JSON（単一代表円錐対照用）")
     args = parser.parse_args(arguments)
     fixed = json.loads(args.fixed_ratios) if args.fixed_ratios else None
@@ -420,6 +426,7 @@ def main() -> None:
         limit=args.limit,
         views=args.views,
         fixed_ratios=fixed,
+        projected_splits=tuple(args.splits),
     )
 
 
